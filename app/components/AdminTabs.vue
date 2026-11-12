@@ -9,6 +9,7 @@ const items = [
   { to: '/admin/ratings', label: 'Pagelle' },
   { to: '/admin/announcements', label: 'Annunci' },
   { to: '/admin/news', label: 'Gazzetta' },
+  { to: '/admin/instagram', label: 'Instagram', roles: ['admin'] as const },
   { to: '/admin/users', label: 'Utenti', roles: ['admin'] as const },
 ]
 const visible = computed(() => items.filter((i) => !i.roles || hasRole(role.value, i.roles)))

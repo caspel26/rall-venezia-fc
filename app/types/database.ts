@@ -127,6 +127,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"instagram_connection": {
+                  Row: {
+                    "access_token": string,"expires_at": string | null,"id": boolean,"last_error": string | null,"last_synced_at": string | null,"token_refreshed_at": string,"updated_at": string,"username": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "access_token": string,"expires_at"?: string | null,"id"?: boolean,"last_error"?: string | null,"last_synced_at"?: string | null,"token_refreshed_at"?: string,"updated_at"?: string,"username"?: string | null
+                  }
+                  Update: {
+                    "access_token"?: string,"expires_at"?: string | null,"id"?: boolean,"last_error"?: string | null,"last_synced_at"?: string | null,"token_refreshed_at"?: string,"updated_at"?: string,"username"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"mascot": {
                   Row: {
                     "bio": string | null,"created_at": string,"id": string,"name": string,"photo_path": string | null,"updated_at": string
@@ -283,14 +297,14 @@ isOneToOne: false
                   ]
                 },"news_articles": {
                   Row: {
-                    "author_id": string | null,"author_name": string | null,"body": string,"cover_path": string | null,"created_at": string,"id": string,"is_lead": boolean,"kicker": string | null,"match_id": string | null,"published_at": string | null,"slug": string,"summary": string | null,"title": string,"updated_at": string
+                    "author_id": string | null,"author_name": string | null,"body": string,"cover_path": string | null,"created_at": string,"external_id": string | null,"external_url": string | null,"id": string,"is_lead": boolean,"kicker": string | null,"match_id": string | null,"published_at": string | null,"slug": string,"source": string,"summary": string | null,"title": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "author_id"?: string | null,"author_name"?: string | null,"body": string,"cover_path"?: string | null,"created_at"?: string,"id"?: string,"is_lead"?: boolean,"kicker"?: string | null,"match_id"?: string | null,"published_at"?: string | null,"slug": string,"summary"?: string | null,"title": string,"updated_at"?: string
+                    "author_id"?: string | null,"author_name"?: string | null,"body": string,"cover_path"?: string | null,"created_at"?: string,"external_id"?: string | null,"external_url"?: string | null,"id"?: string,"is_lead"?: boolean,"kicker"?: string | null,"match_id"?: string | null,"published_at"?: string | null,"slug": string,"source"?: string,"summary"?: string | null,"title": string,"updated_at"?: string
                   }
                   Update: {
-                    "author_id"?: string | null,"author_name"?: string | null,"body"?: string,"cover_path"?: string | null,"created_at"?: string,"id"?: string,"is_lead"?: boolean,"kicker"?: string | null,"match_id"?: string | null,"published_at"?: string | null,"slug"?: string,"summary"?: string | null,"title"?: string,"updated_at"?: string
+                    "author_id"?: string | null,"author_name"?: string | null,"body"?: string,"cover_path"?: string | null,"created_at"?: string,"external_id"?: string | null,"external_url"?: string | null,"id"?: string,"is_lead"?: boolean,"kicker"?: string | null,"match_id"?: string | null,"published_at"?: string | null,"slug"?: string,"source"?: string,"summary"?: string | null,"title"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {

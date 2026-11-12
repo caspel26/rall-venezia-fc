@@ -13,10 +13,10 @@ const page = computed(() => frontPage(data.value ?? []))
 
       <template v-else-if="page.lead">
         <div class="front">
-          <NewsStory class="leadcol" size="lead" :slug="page.lead.slug" :kicker="page.lead.kicker" :title="page.lead.title"
+          <NewsStory class="leadcol" size="lead" :slug="page.lead.slug" :cover="page.lead.cover_path" :kicker="page.lead.kicker" :title="page.lead.title"
             :summary="page.lead.summary" :at="page.lead.published_at" />
           <div v-if="page.secondary.length" class="side">
-            <NewsStory v-for="a in page.secondary" :key="a.id" size="mid" :slug="a.slug" :kicker="a.kicker" :title="a.title"
+            <NewsStory v-for="a in page.secondary" :key="a.id" size="mid" :slug="a.slug" :cover="a.cover_path" :kicker="a.kicker" :title="a.title"
               :summary="a.summary" :at="a.published_at" />
           </div>
         </div>

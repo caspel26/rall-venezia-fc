@@ -1,9 +1,10 @@
 <script setup lang="ts">
-defineProps<{ slug: string; kicker?: string | null; title: string; summary?: string | null; at?: string | null; size?: 'lead' | 'mid' | 'small' }>()
+defineProps<{ slug: string; cover?: string | null; kicker?: string | null; title: string; summary?: string | null; at?: string | null; size?: 'lead' | 'mid' | 'small' }>()
 </script>
 
 <template>
   <article class="story" :class="size ?? 'mid'">
+    <NuxtLink v-if="cover && size !== 'small'" :to="`/news/${slug}`" tabindex="-1" aria-hidden="true"><NewsCover :path="cover" /></NuxtLink>
     <p v-if="kicker" class="kicker">{{ kicker }}</p>
     <h3 class="hl display"><NuxtLink :to="`/news/${slug}`">{{ title }}</NuxtLink></h3>
     <p v-if="summary && size !== 'small'" class="sum">{{ summary }}</p>

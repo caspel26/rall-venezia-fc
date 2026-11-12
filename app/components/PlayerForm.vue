@@ -35,7 +35,7 @@ const { data: profiles } = useAsyncData('link-profiles', async () => {
   return (p.data ?? []).filter((x) => !used.has(x.id) || x.id === props.player?.profile_id)
 }, { lazy: true })
 
-const photoUrl = usePhotoUrl('player-photos', toRef(f, 'photoPath'))
+const photoUrl = usePhotoUrl('player-photos', computed(() => playerAsset(f.photoPath, 'portrait')))
 const busy = ref(false)
 const error = ref('')
 

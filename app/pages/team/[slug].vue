@@ -34,7 +34,7 @@ const pct = (n: number | null | undefined) => (n == null ? '–' : `${Math.round
 
     <template v-else-if="p">
       <header class="hero grain">
-        <PlayerPortrait class="ph" :first="p.first_name" :last="p.last_name" :number="p.shirt_number" :photo-path="p.photo_path" />
+        <PlayerPortrait class="ph" :first="p.first_name" :last="p.last_name" :number="p.shirt_number" :photo-path="p.photo_path" variant="hero" />
         <div class="id">
           <p class="eyebrow">{{ [p.position ? POSITION_LABELS[p.position] : null, p.is_captain ? 'Capitano' : null].filter(Boolean).join(' · ') }}</p>
           <h1 class="display">{{ fullName(p) }}</h1>
@@ -100,7 +100,7 @@ const pct = (n: number | null | undefined) => (n == null ? '–' : `${Math.round
 <style scoped>
 .back { display: inline-block; margin-bottom: var(--space-4); text-decoration: none; min-height: 44px; line-height: 44px; }
 .hero { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid var(--rv-line); border-radius: var(--r-s); overflow: hidden; background: var(--rv-surface); }
-.ph { max-height: 360px; aspect-ratio: auto; height: 280px; }
+.ph { height: 340px; aspect-ratio: auto; }
 .id { display: grid; gap: var(--space-2); padding: var(--space-5); align-content: end; justify-items: start; }
 .id h1 { font-size: var(--fs-display); line-height: .95; }
 .num { font-size: var(--fs-h1); color: var(--rv-orange); }
@@ -115,6 +115,6 @@ th { font-size: var(--fs-cap); color: var(--rv-muted); font-weight: var(--fw-ui)
 @media (min-width: 701px) {
   .stats { grid-template-columns: repeat(4, 1fr); }
   .hero { grid-template-columns: 320px minmax(0, 1fr); }
-  .ph { height: auto; max-height: none; min-height: 320px; }
+  .ph { height: auto; min-height: 420px; aspect-ratio: 3 / 4; }
 }
 </style>

@@ -1,7 +1,8 @@
+import { existsSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
 import { login } from './helpers'
 
-test('squad lists editorial cards, shirt numbers first, unknown numbers last', async ({ page }) => {
+test('squad lists editorial cards ordered by shirt number', async ({ page }) => {
   await login(page, 'player')
   await page.goto('/team')
   const cards = page.getByRole('list', { name: 'Giocatori' }).getByRole('link')
@@ -9,9 +10,15 @@ test('squad lists editorial cards, shirt numbers first, unknown numbers last', a
   await expect(cards.first()).toContainText('Daniele Nappo')
   await expect(cards.first()).toContainText('#1')
   await expect(cards.first()).toContainText('Portiere · Capitano')
-  await expect(cards.nth(1)).toContainText('Antonio Verrone')
-  // the three players without a known number are not given an invented one
-  await expect(cards.nth(6)).not.toContainText('#')
+  await expect(cards.nth(1)).toContainText('Sergio Batti')
+  await expect(cards.nth(1)).toContainText('#4')
+  await expect(cards.nth(1)).toContainText('Difensore')
+  await expect(cards.nth(3)).toContainText('Antonio Verrone')
+  await expect(cards.nth(3)).toContainText('Esterno') // an Esterno, not a midfielder
+  await expect(cards.nth(5)).toContainText('Raffaele Miranda')
+  await expect(cards.nth(5)).toContainText('Laterale / Jolly')
+  await expect(cards.nth(6)).toContainText('Alfonso Avino')
+  await expect(cards.nth(6)).toContainText('#33')
 })
 
 test('player profile shows derived stats, matches and ratings', async ({ page }) => {
@@ -20,14 +27,14 @@ test('player profile shows derived stats, matches and ratings', async ({ page })
   await expect(page.locator('h1')).toHaveText('Salvatore Marigliano')
   await page.waitForLoadState('networkidle') // wait for hydration before clicking tabs
   const stats = page.getByRole('region', { name: 'Statistiche in carriera' })
-  await expect(stats.locator('.stat', { hasText: 'Presenze' })).toContainText('3')
-  await expect(stats.locator('.stat', { hasText: 'Gol' }).first()).toContainText('7')
+  await expect(stats.locator('.stat', { hasText: 'Presenze' })).toContainText('8')
+  await expect(stats.locator('.stat', { hasText: 'Gol' }).first()).toContainText('3')
   await expect(stats.locator('.stat', { hasText: 'Voto medio' })).toContainText('9,0')
 
   await page.getByRole('tab', { name: 'Partite' }).click()
   await expect(page.getByText('Murano United')).toBeVisible()
   await page.getByRole('tab', { name: 'Pagelle' }).click()
-  await expect(page.getByText('Quattro gol')).toBeVisible()
+  await expect(page.getByText('Una serata da pivot vero')).toBeVisible()
 })
 
 test('tabs are keyboard operable', async ({ page }) => {
@@ -50,9 +57,22 @@ test('viewers do not get ratings; unknown players are a 404', async ({ page }) =
   await expect(page.getByRole('heading', { name: 'Fuori gioco' })).toBeVisible()
 })
 
-test('null number player has a profile without a shirt number', async ({ page }) => {
+test('player photos come from private storage and render on cards and profiles', async ({ page }) => {
+  test.skip(!existsSync('private-assets/players/daniele-nappo/portrait.webp'), 'player photos are not in this checkout (they are private)')
   await login(page, 'player')
-  await page.goto('/team/sergio-batti')
-  await expect(page.locator('h1')).toHaveText('Sergio Batti')
-  await expect(page.locator('.id .num')).toHaveCount(0)
+  await page.goto('/team')
+  const img = page.getByRole('img', { name: 'Daniele Nappo' }).first()
+  await expect(img).toBeVisible()
+  await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(300)
+  expect(await img.getAttribute('src')).toContain('/storage/v1/object/sign/player-photos/daniele-nappo/portrait.webp')
+
+  await page.goto('/team/francesco-ferrara')
+  const hero = page.getByRole('img', { name: 'Francesco Ferrara' })
+  await expect(hero).toBeVisible()
+  expect(await hero.getAttribute('src')).toContain('francesco-ferrara/hero.webp')
+})
+
+test('the bucket is private: unsigned URLs do not serve photos', async ({ request }) => {
+  const res = await request.get('http://127.0.0.1:54321/storage/v1/object/public/player-photos/daniele-nappo/portrait.webp')
+  expect(res.status()).toBeGreaterThanOrEqual(400)
 })

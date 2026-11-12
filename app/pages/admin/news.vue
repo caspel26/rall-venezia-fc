@@ -41,6 +41,11 @@ async function save() {
   Object.assign(f, blank())
   await refresh()
 }
+// Instagram posts are hidden, not deleted: the row stays so the next sync does not import it again.
+async function hide(id: string) {
+  await client.from('news_articles').update({ published_at: null, is_lead: false }).eq('id', id)
+  await refresh()
+}
 const confirming = ref('')
 async function remove(id: string) {
   await client.from('news_articles').delete().eq('id', id)
@@ -77,12 +82,18 @@ async function remove(id: string) {
     <SkeletonBlock v-if="status === 'pending' && !data" size="lg" />
     <ul v-else-if="data?.articles.length" class="list" aria-label="Articoli">
       <li v-for="a in data.articles" :key="a.id" class="row">
-        <div><p class="nm">{{ a.title }}</p><p class="muted sm">{{ a.published_at ? formatShortDay(a.published_at) : 'Bozza' }}<template v-if="a.is_lead"> · apertura</template></p></div>
+        <div><p class="nm">{{ a.title }}</p><p class="muted sm">{{ a.published_at ? formatShortDay(a.published_at) : 'Bozza' }}<template v-if="a.is_lead"> · apertura</template><template v-if="a.source === 'instagram'"> · Instagram</template></p></div>
         <div class="row-actions">
           <NuxtLink v-if="a.published_at" :to="`/news/${a.slug}`" class="btn btn-sm">Leggi</NuxtLink>
           <button class="btn btn-sm" type="button" @click="edit(a)">Modifica</button>
-          <button v-if="confirming !== a.id" class="btn btn-sm btn-danger" type="button" @click="confirming = a.id">Elimina</button>
-          <button v-else class="btn btn-sm btn-danger" type="button" @click="remove(a.id)">Conferma</button>
+          <template v-if="a.source === 'instagram'">
+            <button v-if="a.published_at" class="btn btn-sm btn-danger" type="button" @click="hide(a.id)">Nascondi</button>
+            <span v-else class="muted sm">nascosto (Instagram)</span>
+          </template>
+          <template v-else>
+            <button v-if="confirming !== a.id" class="btn btn-sm btn-danger" type="button" @click="confirming = a.id">Elimina</button>
+            <button v-else class="btn btn-sm btn-danger" type="button" @click="remove(a.id)">Conferma</button>
+          </template>
         </div>
       </li>
     </ul>

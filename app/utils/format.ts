@@ -27,4 +27,5 @@ export const POSITION_LABELS: Record<string, string> = {
   winger: 'Esterno',
   midfielder: 'Centrocampista',
   pivot: 'Pivot',
+  jolly: 'Laterale / Jolly',
 }

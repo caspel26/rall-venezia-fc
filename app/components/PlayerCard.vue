@@ -7,7 +7,7 @@ const position = computed(() => (props.player.position ? POSITION_LABELS[props.p
 <template>
   <NuxtLink :to="`/team/${player.slug}`" class="card">
     <PlayerPortrait :first="player.first_name" :last="player.last_name" :number="player.shirt_number"
-      :photo-path="player.avatar_path ?? player.photo_path" bucket="player-photos" />
+      :photo-path="player.photo_path" />
     <div class="info">
       <p class="no display tabular">{{ player.shirt_number != null ? `#${player.shirt_number}` : '' }}</p>
       <h3 class="display">{{ fullName(player) }}</h3>

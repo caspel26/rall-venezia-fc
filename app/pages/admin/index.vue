@@ -11,7 +11,7 @@ const cards = computed(() => [
   { to: '/admin/ratings', title: 'Pagelle', text: 'Pubblica o nascondi i voti.' },
   { to: '/admin/announcements', title: 'Annunci', text: 'Comunicazioni dello spogliatoio.' },
   { to: '/admin/news', title: 'Gazzetta', text: 'Scrivi le notizie.' },
-  ...(hasRole(role.value, ['admin']) ? [{ to: '/admin/users', title: 'Utenti', text: 'Inviti, ruoli, collegamenti ai giocatori.' }] : []),
+  ...(hasRole(role.value, ['admin']) ? [{ to: '/admin/instagram', title: 'Instagram', text: 'Collega il profilo: i nuovi post finiscono in Gazzetta.' }, { to: '/admin/users', title: 'Utenti', text: 'Inviti, ruoli, collegamenti ai giocatori.' }] : []),
 ])
 </script>
 

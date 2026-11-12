@@ -7,7 +7,7 @@ const a = computed(() => data.value?.[0])
   <WidgetFrame v-if="a || status === 'pending'" title="Dalla Gazzetta" to="/news" link-label="Prima pagina" bare :loading="status === 'pending' && !data">
     <div v-if="a" class="paper grain">
       <p class="mast display">La Gazzetta Rall</p>
-      <NewsStory size="mid" :slug="a.slug" :kicker="a.kicker" :title="a.title" :summary="a.summary" :at="a.published_at" />
+      <NewsStory size="mid" :slug="a.slug" :cover="a.cover_path" :kicker="a.kicker" :title="a.title" :summary="a.summary" :at="a.published_at" />
       <NuxtLink to="/news" class="all">Prima pagina →</NuxtLink>
     </div>
   </WidgetFrame>

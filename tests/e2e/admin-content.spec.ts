@@ -13,14 +13,14 @@ test('staff adds a player, sees the number rules enforced, and removes them', as
   await page.getByRole('button', { name: 'Aggiungi giocatore' }).click()
   await expect(page.getByRole('alert')).toContainText('già di un altro giocatore')
 
-  await page.getByLabel('Numero di maglia').fill('77')
+  await page.getByLabel('Numero di maglia').fill('') // numbers are never invented: none is fine
   await page.getByLabel('Ruolo').selectOption('pivot')
   await page.getByRole('button', { name: 'Aggiungi giocatore' }).click()
   await expect(page).toHaveURL(/\/admin\/players$/)
   await expect(page.getByText(`${first} Tester`)).toBeVisible()
 
   await page.goto('/team')
-  await expect(page.getByRole('link', { name: new RegExp(`${first} Tester`) })).toContainText('#77')
+  await expect(page.getByRole('link', { name: new RegExp(`${first} Tester`) })).not.toContainText('#')
 
   await page.goto('/admin/players')
   await page.locator('.row', { hasText: first }).getByRole('link', { name: 'Modifica' }).click()

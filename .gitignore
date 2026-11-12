@@ -18,3 +18,7 @@ supabase/.branches
 local-dumps/
 *.dump
 *.sql.gz
+
+# private player photos and generated derivatives: never commit (the repo is public)
+private-assets/
+*.pdf

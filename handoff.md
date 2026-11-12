@@ -22,6 +22,9 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q11a Player pack (PDF from the Codex brief): numbers/positions applied (Batti #4 defender, Miranda #10 jolly, Ferrara #7, Verrone winger), real photos via `scripts/build-player-assets.sh` + `upload-player-assets.mjs` into private storage (portrait/hero/thumb; originals gitignored in `private-assets/`). NOT done: transparent cutouts (needs a background-removal model) and replacing Verrone's blue bib with the white kit (needs generative editing / a new photo)~~
+- ~~Q11b Instagram -> Gazzetta sync: server route + token store + admin page + mock-API e2e + GitHub Actions/Vercel cron; needs the owner's Meta app/token (docs/INSTAGRAM.md)~~
+- ~~Q11c Seed stats on request: 8 matchdays, Verrone 31 goals, Nappo 16, others 3, 8 assists each~~
 - ~~Q10 Stage 10 — admin: matches + post-match flow (timed <60s in e2e), players (photo upload, account link admin-only), users (invite/role/remove, last-admin guard), ratings, announcements, Gazzetta; 96 e2e~~ (done)
 - ~~Q10b Branding: real roundel logo (public/brand), palette from the crest (orange #fd7f10, green #19522b), branded README + banner, stripes motif~~ (done; logo source is 150px: ask owner for hi-res/vector)
 - ~~Q9 Stage 9 — Spogliatoio hub, availability board (groups + staff timestamps), announcements; 76 e2e~~ (done)
