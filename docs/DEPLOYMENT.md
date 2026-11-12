@@ -1,6 +1,6 @@
 # Deployment
 
-> **Verify before configuring.** Vercel, Supabase and Cloudflare change their plans and UI. Before Stage 11 (and before relying on any capability marked *verify*), re-read the current official docs and record the date checked here. Nothing below has been verified against live docs yet.
+> **Verify before configuring.** Vercel and Supabase change their plans and UI. Before Stage 11 (and before relying on any capability marked *verify*), re-read the current official docs and record the date checked here. Nothing below has been verified against live docs yet.
 
 ## Environments
 
@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | local | `nuxt dev` | Supabase CLI (`supabase start`, Docker) | seed applied, signups disabled |
 | preprod | Vercel preview/branch deploy | second Supabase project (sanitized data) | never the production DB or keys |
-| production | Vercel production | production Supabase project | behind Cloudflare Access |
+| production | Vercel production | production Supabase project | free `*.vercel.app` URL (custom domain optional) |
 
 ## 1. Supabase project
 
@@ -36,21 +36,19 @@ The service-role key is never prefixed `NUXT_PUBLIC_`/`VITE_` and never set in p
 1. Import the repo; framework preset Nuxt; Node LTS.
 2. Set env vars per environment.
 3. Production branch = `main`. Preview deployments get the preprod Supabase project.
-4. Prevent bypassing Cloudflare Access: protect the `*.vercel.app` deployment URLs (Vercel deployment protection) and/or have the app reject requests lacking the Cloudflare-validated header (`Cf-Access-Jwt-Assertion`, verified against the Access JWKS in a server middleware). *verify which is available on the plan.*
 
-## 4. Domain, DNS, Cloudflare Access
+## 4. Domain (optional)
 
-1. Add the domain to Cloudflare; create the DNS record for the app subdomain (e.g. `clubhouse.<domain>`) pointing to Vercel, **proxied (orange cloud)** so Access applies. *verify the current Vercel guidance on running behind the Cloudflare proxy (SSL mode must be Full (strict)).*
-2. Zero Trust → Access → Applications → self-hosted application for the hostname; policy `Allow` for an email list (a group of member emails); login method one-time PIN; session duration long (e.g. 30 days) to avoid double-login friction.
-3. Adding a member means: add the email to the Access group **and** invite in the app. Document this in the admin guide.
-4. Test: an unlisted email cannot reach `/login`; direct `*.vercel.app` is blocked.
+The default `<project>.vercel.app` URL is enough. For a custom domain add it in Vercel and create the DNS record Vercel shows (CNAME/A) at your registrar; then add the URL to Supabase Auth redirect URLs. No proxy or extra service.
+
+Adding a member = invite from `/admin/users`. That is the only access control step.
 
 ## 5. Production checklist
 
 - Signups disabled; RLS enabled on every table (pgTAP passes); buckets private.
 - No service key in the client bundle (`grep -r SERVICE_ROLE .output/public` is empty).
 - Security headers set (CSP, `X-Frame-Options`/frame-ancestors, `Referrer-Policy`, `X-Robots-Tag: noindex`).
-- Access policy tested with a non-member.
+- Anonymous API probe: with only the anon key, every table returns nothing/denied.
 - Backups verified (below). First admin exists.
 
 ## Backups

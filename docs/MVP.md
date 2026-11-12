@@ -14,7 +14,7 @@ Goal: the squad can log in on their phones, see the next match, answer availabil
 - Basic statistics: team record, player stats, rankings.
 - Announcements (Spogliatoio).
 - Admin: players, matches, post-match flow, ratings, announcements, users/invites.
-- Seed data; docs; deployment behind Cloudflare Access.
+- Seed data; docs; deployment on Vercel + Supabase.
 
 ## Out (explicitly)
 
@@ -22,7 +22,7 @@ Media archive uploads/gallery, Hall of Fame, advanced stats, season comparison, 
 
 ## Definition of MVP done
 
-1. A non-allow-listed visitor cannot reach the site; a viewer cannot read ratings or availability (pgTAP).
+1. An anonymous visitor reads no data and cannot sign up; a viewer cannot read ratings or availability (pgTAP).
 2. A player answers availability in ≤ 2 taps at 390x844.
 3. A staff user completes the post-match flow in ≤ 60 seconds on seeded data.
 4. Lighthouse mobile performance ≥ 90 on Home and Match detail; no horizontal scroll 320–1440.

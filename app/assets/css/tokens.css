@@ -1,0 +1,75 @@
+/* Single tokens block. Components consume these; never hard-code a colour, size, radius or duration. */
+:root {
+  /* colour */
+  --rv-black: #0a0a0a;
+  --rv-surface: #141414;
+  --rv-surface-2: #1c1c1c;
+  --rv-line: #2a2a2a;
+  --rv-cream: #f3ead8;
+  --rv-muted: #a39c8c;
+  --rv-orange: #ff5a1f;
+  --rv-orange-ink: #0a0a0a;
+  --rv-green: #2f8f4e;
+  --rv-red: #d64545;
+  --rv-amber: #e0a526;
+  --rv-gold: #d4af37;
+
+  /* type */
+  --font-display: 'Anton', 'Bebas Neue', Impact, sans-serif;
+  --font-ui: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-cap: 12px;
+  --fs-sm: 14px;
+  --fs-body: 16px;
+  --fs-h3: 20px;
+  --fs-h2: 28px;
+  --fs-h1: 40px;
+  --fs-display: 72px;
+  --fs-score: clamp(72px, 22vw, 168px);
+  --fw-text: 400;
+  --fw-ui: 600;
+  --fw-head: 700;
+
+  /* space */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --section-space: var(--space-7);
+  --gutter: var(--space-4);
+  --content-width: 1280px;
+
+  /* shape */
+  --r-s: 6px;
+  --r-card: 10px;
+  --r-panel: 14px;
+  --r-pill: 999px;
+
+  /* motion */
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-slow: 400ms;
+  --dur-count: 900ms;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-in: cubic-bezier(.4, 0, 1, 1);
+  --ease-standard: cubic-bezier(.2, 0, 0, 1);
+}
+
+@media (min-width: 1051px) {
+  :root {
+    --section-space: var(--space-9);
+    --gutter: var(--space-7);
+  }
+}
+
+@media (max-width: 700px) {
+  :root { --fs-h1: 32px; --fs-display: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur: 0ms; --dur-slow: 0ms; --dur-count: 0ms; }
+}

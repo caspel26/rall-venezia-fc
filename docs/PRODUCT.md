@@ -51,7 +51,7 @@ Competitive, ironic, confident, football-first, slightly chaotic, visually profe
 
 ## Principles
 
-1. **Privacy first.** Two layers: Cloudflare Access at the perimeter, Supabase auth + RLS inside.
+1. **Privacy first.** Invite-only Supabase auth with RLS as the single, real enforcement layer (no perimeter proxy: this is a hobby site, kept simple to deploy).
 2. **Mobile first.** Almost-native feel on a phone; desktop is a recomposition, not a stretched phone.
 3. **Relational truth.** Stats are derived from records, never maintained as counters.
 4. **Simple admin.** Quick workflows, no enterprise CMS.

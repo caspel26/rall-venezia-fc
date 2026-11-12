@@ -2,7 +2,7 @@
 
 Follows [AGENT-WORKFLOW.md](AGENT-WORKFLOW.md): each stage is queued in `handoff.md`; non-trivial stages get an Opus design doc first; Sonnet builds; every stage is verified by the driver (not only by the building agent) and UI stages get Playwright screenshots at 390x844 and 1440x900. Scoped local commits, nothing pushed without approval.
 
-Standard verify set (`pnpm` or `npm`, chosen at Stage 1):
+Standard verify set (`npm`):
 `typecheck` (vue-tsc, strict) · `lint` · `test` (Vitest) · `supabase test db` · `build` · `test:e2e` (Playwright).
 
 ## Stage 1 — Bootstrap and tokens
@@ -66,8 +66,8 @@ Standard verify set (`pnpm` or `npm`, chosen at Stage 1):
 - **Tests:** RPC rejects inconsistent scores; last-admin protection; Playwright timed post-match flow (≤ 60s on seed). **Opus review.**
 
 ## Stage 11 — Deployment and security hardening
-- **Goal:** production live behind Cloudflare Access.
-- **Files:** `nuxt.config.ts` security headers/CSP, `server/middleware/access.ts` (if needed), docs updates.
+- **Goal:** production live on Vercel + Supabase.
+- **Files:** `nuxt.config.ts` security headers/CSP, docs updates.
 - **Tests:** full checklist in [DEPLOYMENT.md](DEPLOYMENT.md#5-production-checklist); non-member probe; Lighthouse; backup + restore drill.
 - **Done:** MVP definition of done met; owner signs off; `handoff.md` records deployed commit and migration.
 

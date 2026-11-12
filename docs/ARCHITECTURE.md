@@ -4,18 +4,14 @@
 
 ```mermaid
 flowchart LR
-  U[Player phone / desktop] --> CF[Cloudflare Access<br/>email allow-list]
-  CF --> V[Vercel<br/>Nuxt SSR app]
+  U[Player phone / desktop] --> V[Vercel<br/>Nuxt SSR app]
   V -->|user JWT, anon key| SB[(Supabase<br/>Postgres + RLS)]
   V -->|service role, server only| SBA[Supabase Auth admin<br/>invite / role changes]
   V --> ST[(Supabase Storage<br/>private buckets)]
   U -.signed URLs.-> ST
 ```
 
-Two protection layers:
-
-1. **Perimeter** — Cloudflare Access in front of the app domain. Only allow-listed emails get through. This keeps the site invisible to the internet, but it is *not* the authorization system.
-2. **Application** — Supabase Auth (who you are) + `user_roles` + Row Level Security (what you may read/write). RLS is the real enforcement; Nuxt route middleware is UX only.
+Single protection layer, deliberately simple (hobby site, no Cloudflare or other proxy): **Supabase Auth** (who you are, invite-only, signups disabled) + `user_roles` + **Row Level Security** (what you may read/write). RLS is the real enforcement; Nuxt route middleware is UX only. Anyone can load the login page, but no data is readable without an invited account.
 
 `robots.txt`, `noindex` and hidden URLs are not security. (We still send `X-Robots-Tag: noindex` as hygiene.)
 
@@ -32,7 +28,7 @@ Two protection layers:
 | Unit tests | Vitest (stats helpers, formatters) | |
 | DB tests | `supabase test db` (pgTAP) for RLS and views | Authorization is the highest-value test target |
 | E2E | Playwright, at 390x844 and 1440x900 | Same bar as Shiori |
-| Hosting | Vercel (app) + Supabase (db/auth/storage) + Cloudflare (Access, DNS) | Requested |
+| Hosting | Vercel (app) + Supabase (db/auth/storage) | Simplest possible: two providers, no proxy, no custom infra |
 
 Dependencies are added only when they replace real complexity.
 
@@ -50,11 +46,10 @@ Dependencies are added only when they replace real complexity.
 
 ## Authentication flow
 
-1. User passes Cloudflare Access (email OTP; set a long session, e.g. 30 days, to avoid double-login friction).
-2. `/login`: email + password via Supabase Auth. Signups are **disabled** in Supabase (`enable_signup = false`).
-3. Invite: admin → `POST /api/admin/invite` → `inviteUserByEmail` → email link → `/auth/set-password` → session.
-4. A trigger on `auth.users` insert creates a `profiles` row and a `user_roles` row with `viewer` (least privilege) — or the role requested in the invite metadata, applied by the server route, not by the trigger trusting metadata.
-5. Global route middleware (`app/middleware/auth.global.ts`) redirects anonymous users to `/login` and checks route `meta.roles` for UX (403 page). RLS still enforces.
+1. `/login`: email + password via Supabase Auth. Signups are **disabled** in Supabase (`enable_signup = false`).
+2. Invite: admin → `POST /api/admin/invite` → `inviteUserByEmail` → email link → `/auth/set-password` → session.
+3. A trigger on `auth.users` insert creates a `profiles` row and a `user_roles` row with `viewer` (least privilege) — or the role requested in the invite metadata, applied by the server route, not by the trigger trusting metadata.
+4. Global route middleware (`app/middleware/auth.global.ts`) redirects anonymous users to `/login` and checks route `meta.roles` for UX (403 page). RLS still enforces.
 
 ## Storage
 
@@ -66,8 +61,7 @@ SSR first paint, route-level code splitting (Nuxt default), `NuxtImg`-style resp
 
 ## Security assumptions
 
-- Cloudflare Access can be bypassed only by reaching the origin or Supabase directly. The Supabase API URL is public by design; it is protected by auth + RLS, not by Access. Hence RLS must be correct and is tested.
-- The Vercel origin is reachable at `*.vercel.app`; production deployment protection or an origin check (Cloudflare-injected header / Vercel password protection) must be configured so the Access layer cannot be skipped. See [DEPLOYMENT.md](DEPLOYMENT.md).
+- The Supabase API URL and the Vercel site are public by design; protection is auth + RLS only. Hence RLS must be correct and is tested (pgTAP) before any real data goes in. Login rate limits come from Supabase Auth settings.
 - Browsers are untrusted. Roles are never read from client-supplied data.
 - Content Security Policy: strict as practical (no remote scripts, self-hosted fonts). Nuxt injects inline hydration data; use a nonce-based CSP (`nuxt-security` or a server middleware) in Stage 11 rather than `unsafe-inline`.
 - Secrets live only in Vercel/Supabase env; `.env.example` has names only.

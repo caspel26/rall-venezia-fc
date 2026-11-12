@@ -1,6 +1,6 @@
 # Rall Venezia Clubhouse
 
-Private Nuxt + Supabase clubhouse for Rall Venezia FC (amateur futsal). Behind Cloudflare Access; invite-only; RLS-enforced roles (admin, staff, player, viewer).
+Private Nuxt + Supabase clubhouse for Rall Venezia FC (amateur futsal). Deployed on Vercel + Supabase only (no Cloudflare, simplest stack); invite-only; RLS-enforced roles (admin, staff, player, viewer).
 
 Start every session by reading `docs/AGENT-WORKFLOW.md`, then `handoff.md`. Product/architecture docs are in `docs/`. The design system borrows its structure and motion from the Shiori project (`~/Documents/shiori/docs/UI-GUIDELINES.md`) — consult it, do not copy its code (Go/HTMX there, Nuxt here).
 

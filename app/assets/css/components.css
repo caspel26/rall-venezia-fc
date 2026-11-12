@@ -1,0 +1,13 @@
+.panel { background: var(--rv-surface); border: 1px solid var(--rv-line); border-radius: var(--r-panel); padding: var(--space-5); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 44px; padding: 0 var(--space-5); border-radius: var(--r-s); border: 1px solid var(--rv-line);
+  background: var(--rv-surface-2); color: var(--rv-cream); font: var(--fw-ui) var(--fs-body)/1 var(--font-ui);
+  cursor: pointer; transition: background var(--dur) var(--ease-standard), transform var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--rv-orange); color: var(--rv-orange-ink); border-color: var(--rv-orange); }
+.pill { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: var(--r-pill); font: var(--fw-head) var(--fs-sm)/1 var(--font-ui); color: var(--rv-black); }
+.pill-w { background: var(--rv-green); } .pill-d { background: var(--rv-muted); } .pill-l { background: var(--rv-red); }
+@keyframes section-arrive { from { opacity: .35; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.arrive { animation: section-arrive var(--dur-slow) var(--ease-out) both; }
