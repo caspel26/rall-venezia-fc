@@ -4,7 +4,7 @@
 
 A private digital clubhouse for Rall Venezia FC, an amateur futsal/football team. The Instagram page is the public face; this app is the world behind it. A player opens it on their phone and thinks "this is our club", not "this is an amateur team website".
 
-It is a club site, a locker room, a stats platform, a match archive and a pagelle archive in one app. Visually premium and editorial; in copy ironic and football-first (Italian, matching the Instagram voice).
+It is a club site, a locker room, a stats platform, a match archive and the weekly availability poll in one app. Visually premium and editorial; in copy ironic and football-first (Italian, matching the Instagram voice).
 
 Not a generic admin dashboard, not a SaaS template, not a public site. Nothing is public. No signup.
 
@@ -14,8 +14,8 @@ Not a generic admin dashboard, not a SaaS template, not a public site. Nothing i
 | --- | --- | --- |
 | `admin` | Platform owner(s) | Everything, including inviting users and assigning roles |
 | `staff` | Coach, assistant, team manager | Run matches, lineups, availability, announcements |
-| `player` | Squad members | See the club, answer availability in two taps, read their pagelle |
-| `viewer` | Invited friends/family (optional) | Matches, results, media, basic stats; no locker room, no ratings |
+| `player` | Squad members | See the club, answer availability in two taps and vote the days of the week |
+| `viewer` | Invited friends/family (optional) | Matches, results, media, basic stats; no locker room |
 
 The full matrix is in [AUTHORIZATION.md](AUTHORIZATION.md).
 
@@ -23,7 +23,7 @@ The full matrix is in [AUTHORIZATION.md](AUTHORIZATION.md).
 
 1. **Invite** — admin enters an email and role → Supabase sends an invite → the person sets a password → admin links the account to a player (if they are one).
 2. **Availability** — a player opens Home, sees the next match, taps Available / Maybe / Unavailable. Two taps, timestamp stored, changeable until kickoff.
-3. **Post-match** (admin/staff, under a minute): open match → final score → scorers + assists → MVP → ratings → media → publish.
+3. **Post-match** (admin/staff, under a minute): open match → final score → scorers + assists → MVP → save.
 4. **Matchday** — Home leads with the next match and the player's own availability state.
 5. **Browse the archive** — matches, a match "programme" page, player profiles with derived stats, rankings, Hall of Fame.
 

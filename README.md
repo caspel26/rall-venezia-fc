@@ -17,14 +17,14 @@
 
 ## What is this
 
-The Instagram page is the public face of the club. This app is the world behind it: a football-club website, a private locker room, a statistics platform, a match archive and a pagelle archive, designed mobile first so it feels like a native sports app on a phone.
+The Instagram page is the public face of the club. This app is the world behind it: a football-club website, a private locker room, a statistics platform, a match archive, designed mobile first so it feels like a native sports app on a phone.
 
 Everything is **private and invite-only**. There is no signup, no public profile, no public archive. Access is controlled by Supabase Auth and Row Level Security.
 
 | | |
 | --- | --- |
 | **Home** | The squad on the club's stage, a live ticker, next match with countdown, availability, the weekly Mon-Fri poll, last result, form, scorers |
-| **Partite** | Full match archive and a match "programme" page: score, goals timeline, lineup, MVP, ratings |
+| **Partite** | Full match archive and a match "programme" page: score, goals timeline, lineup, MVP |
 | **Squadra** | Editorial player cards with real photos (private storage) and profiles with derived stats |
 | **Stats** | Team record and rankings: scorers, assists, MVPs, average rating |
 | **Spogliatoio** | Availability for the next match and internal announcements |

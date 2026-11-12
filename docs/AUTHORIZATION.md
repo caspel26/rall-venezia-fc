@@ -31,9 +31,9 @@ R = read, W = create/update/delete, own = only own row, — = none.
 | Internal documents | R W | R | R | — |
 | Meme room, mascot | R W | R W | R | R |
 | Users, roles, invites | R W | — | — | — |
-| Admin area (`/admin`) | all | matches, availability, announcements, ratings, media | — | — |
+| Admin area (`/admin`) | all | matches, availability, announcements, Gazzetta, media | — | — |
 
-Open decisions for the owner (defaults chosen): viewers do **not** see ratings; staff can edit players but not link accounts or touch roles; a player cannot edit their own player record in MVP (admin does it).
+Open decisions for the owner (defaults chosen): staff can edit players but not link accounts or touch roles; a player cannot edit their own player record in MVP (admin does it).
 
 ## RLS policies (conceptual)
 
