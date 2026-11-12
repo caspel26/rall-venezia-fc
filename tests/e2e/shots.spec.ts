@@ -15,6 +15,6 @@ test('screenshots', async ({ page }, info) => {
     await page.waitForLoadState('networkidle')
     await page.evaluate(() => document.fonts.ready)
     await page.waitForTimeout(600)
-    await page.screenshot({ path: `${dir}/${info.project.name}${p.replace(/\//g, '_') || '_'}.png`, fullPage: false })
+    await page.screenshot({ path: `${dir}/${info.project.name}${p.replace(/\//g, '_') || '_'}.png`, fullPage: true })
   }
 })

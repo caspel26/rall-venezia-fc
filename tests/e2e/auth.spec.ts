@@ -22,7 +22,7 @@ test('wrong password shows an inline error', async ({ page }) => {
 
 test('player logs in, sees their role, logs out', async ({ page }) => {
   await login(page, 'player')
-  await expect(page.getByText('Ruolo: player')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Ciao Daniele' })).toBeVisible()
   await logout(page)
 })
 
@@ -70,7 +70,7 @@ test('invite flow: admin invites, invitee sets a password, then can be removed',
   await invitee.getByLabel('Ripeti la password').fill(DEV_PASSWORD + '!')
   await invitee.getByRole('button', { name: 'Entra' }).click()
   await expect(invitee).toHaveURL(/\/$/)
-  await expect(invitee.getByText('Ruolo: player')).toBeVisible()
+  await expect(invitee.getByRole('heading', { name: 'Ciao Nuovo' })).toBeVisible()
   await ctx.close()
 
   // an used link is dead
