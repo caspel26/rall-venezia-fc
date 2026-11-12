@@ -176,7 +176,7 @@ insert into public.news_articles (slug, kicker, title, summary, body, author_id,
 -- staff, as given in the reference pack (v3)
 insert into public.staff_members (slug, first_name, last_name, role_title, sort_order) values
   ('pasquale-gallo', 'Pasquale', 'Gallo', 'Allenatore / Mister', 1),
-  ('giuseppe-caselli', 'Giuseppe', 'Caselli', 'Social media manager · Grafico · Videomaker', 2);
+  ('giuseppe-casillo', 'Giuseppe', 'Casillo', 'Social media manager · Grafico · Videomaker', 2);
 
 -- next week's poll (Mon-Fri), already open, with a few votes so the preview has something to show
 insert into public.polls (id, week_start, closes_at)

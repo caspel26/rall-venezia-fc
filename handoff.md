@@ -22,6 +22,7 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q17 Fixes: countdown digit bug (leaving digit no longer out of flow); home hero animation (players rise in turn, idle breathing, pointer spotlight); staff renamed Giuseppe CASILLO (owner correction; the PDF said Caselli); staff cards fill the card; staff widget on Home; cover photo upload for hand-written news (graphics bucket); Instagram stays private (admin-only, documented). Owner will supply: Verrone in the kit, the league table, and the Instagram connector~~
 - ~~Q16 Poll sharing: WhatsApp share link + copy + native share with a ready message, "nuovo sondaggio" hint; auto-posting to a WhatsApp group is not possible without the Business API~~
 - ~~Q15 Design v3 (Opus spec docs/DESIGN-V3.md): modern stage backdrop (no stripes), person cards with tilt/sheen for players AND staff, poster profile header, PlayerAvatar, icon set, redesigned widgets, modern Gazzetta (lead + cards + filters + icons, no paper/serif), home hero + ticker; Francesco Sepe #17; precise cutouts. Not done: Verrone jersey swap (needs a photo in the kit)~~
 - ~~Q14 Feedback round: Pagelle removed (UI + schema, migration 7); player cutouts on the club stage; home hero, ticker and distinct widgets; staff (coach + social media manager, migration 8); weekly Mon-Fri multi-day poll created the day after a match (migration 9, /api/polls/ensure + workflow); pgTAP 38, vitest 43, e2e 115~~

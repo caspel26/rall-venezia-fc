@@ -2,6 +2,10 @@
 
 Every new post on the club's Instagram becomes a published article in the Gazzetta: the **first image is the cover** (for a video, its thumbnail), the **first sentence of the caption is the headline**, the rest is the body. Trailing hashtag lines are dropped and the article links back to the original post. An admin can hide any imported article from `/admin/news`.
 
+## Private by design
+
+Nothing about the Instagram connection is public. `/admin/instagram` and its API routes are admin-only; the token lives only in a table no browser can read, and is never sent to a page. Imported posts are ordinary Gazzetta articles, readable only by signed-in members. Nothing is embedded from Instagram (no third-party scripts, no public widget): covers are copied into the private `graphics` bucket. Disconnecting removes the token. Hand-written news with photos (uploaded in `/admin/news`) work the same way if you prefer not to connect Instagram at all.
+
 ## How it works
 
 ```

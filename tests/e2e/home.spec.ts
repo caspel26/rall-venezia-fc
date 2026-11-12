@@ -41,3 +41,10 @@ test('staff sees the availability counts without a selector', async ({ page }) =
   await expect(page.getByText('Senza risposta')).toBeVisible()
   await expect(page.getByRole('group', { name: /disponibilità/i })).toHaveCount(0)
 })
+
+test('home shows the staff next to the squad', async ({ page }) => {
+  await login(page, 'player')
+  const staff = page.getByRole('region', { name: 'Lo staff' })
+  await expect(staff).toContainText('Pasquale')
+  await expect(staff).toContainText('Casillo')
+})

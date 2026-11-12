@@ -74,7 +74,7 @@ select.input { appearance: auto; }
 
 /* a number that changed: the old value drops out, the new one rises in */
 .tick-enter-active { transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); }
-.tick-leave-active { transition: opacity 140ms var(--ease-in), transform 140ms var(--ease-in); position: absolute; }
+.tick-leave-active { transition: opacity 120ms var(--ease-in), transform 120ms var(--ease-in); }
 .tick-enter-from { opacity: 0; transform: translateY(40%); }
 .tick-leave-to { opacity: 0; transform: translateY(-40%); }
 

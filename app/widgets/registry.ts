@@ -8,6 +8,7 @@ import TopPerformersWidget from '~/components/widgets/TopPerformersWidget.vue'
 import TopScorersWidget from '~/components/widgets/TopScorersWidget.vue'
 import NewsWidget from '~/components/widgets/NewsWidget.vue'
 import PollWidget from '~/components/widgets/PollWidget.vue'
+import StaffWidget from '~/components/widgets/StaffWidget.vue'
 import AnnouncementWidget from '~/components/widgets/AnnouncementWidget.vue'
 import { ALL_ROLES, TEAM_ROLES, type Role } from '~/types/domain'
 
@@ -34,5 +35,6 @@ export const HOME_WIDGETS: WidgetDef[] = [
   { id: 'record', component: RecordWidget, slot: 'side', roles: ALL_ROLES },
   { id: 'top-performers', component: TopPerformersWidget, slot: 'side', roles: ALL_ROLES },
   { id: 'top-scorers', component: TopScorersWidget, slot: 'side', roles: ALL_ROLES },
+  { id: 'staff', component: StaffWidget, slot: 'side', roles: ALL_ROLES },
   { id: 'announcement', component: AnnouncementWidget, slot: 'side', roles: TEAM_ROLES },
 ]

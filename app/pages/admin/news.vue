@@ -14,15 +14,44 @@ const { data, refresh, status } = useAsyncData('admin-news', async () => {
   return { articles: articles.data ?? [], matches: matches.data ?? [] }
 }, { lazy: true })
 
-const blank = () => ({ id: '', kicker: '', title: '', summary: '', body: '', match: '', lead: false, publish: true })
+const blank = () => ({ id: '', cover: '', kicker: '', title: '', summary: '', body: '', match: '', lead: false, publish: true })
 const f = reactive(blank())
 const error = ref('')
 const busy = ref(false)
 
 function edit(a: NonNullable<typeof data.value>['articles'][number]) {
-  Object.assign(f, { id: a.id, kicker: a.kicker ?? '', title: a.title, summary: a.summary ?? '', body: a.body, match: a.match_id ?? '', lead: a.is_lead, publish: !!a.published_at })
+  Object.assign(f, { id: a.id, cover: a.cover_path ?? '', kicker: a.kicker ?? '', title: a.title, summary: a.summary ?? '', body: a.body, match: a.match_id ?? '', lead: a.is_lead, publish: !!a.published_at })
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+// Photos are shrunk in the browser (max 1600px, JPEG) before they go to the private `graphics` bucket.
+const photoBusy = ref(false)
+const photoError = ref('')
+async function shrink(file: File): Promise<Blob> {
+  const bmp = await createImageBitmap(file)
+  const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height))
+  const c = document.createElement('canvas')
+  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k)
+  c.getContext('2d')!.drawImage(bmp, 0, 0, c.width, c.height)
+  return await new Promise<Blob>((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error('encode'))), 'image/jpeg', 0.86))
+}
+async function pickPhoto(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  photoError.value = ''
+  if (!file.type.startsWith('image/') || file.size > 25 * 1024 * 1024) { photoError.value = 'Scegli un’immagine (JPG, PNG o WebP) fino a 25 MB.'; return }
+  photoBusy.value = true
+  try {
+    const blob = await shrink(file)
+    const path = `news/${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.jpg`
+    const { error: e2 } = await client.storage.from('graphics').upload(path, blob, { contentType: 'image/jpeg' })
+    if (e2) throw e2
+    f.cover = path
+  } catch { photoError.value = 'Caricamento della foto non riuscito. Riprova.' }
+  photoBusy.value = false
+  input.value = ''
+}
+
 async function save() {
   error.value = ''
   if (!f.title.trim() || !f.body.trim()) { error.value = 'Titolo e testo sono obbligatori.'; return }
@@ -30,7 +59,7 @@ async function save() {
   const existing = data.value?.articles.find((a) => a.id === f.id)
   if (f.lead) await client.from('news_articles').update({ is_lead: false }).eq('is_lead', true).neq('id', f.id || '00000000-0000-0000-0000-000000000000')
   const row = {
-    kicker: f.kicker.trim() || null, title: f.title.trim(), summary: f.summary.trim() || null, body: f.body.trim(),
+    cover_path: f.cover || null, kicker: f.kicker.trim() || null, title: f.title.trim(), summary: f.summary.trim() || null, body: f.body.trim(),
     match_id: f.match || null, is_lead: f.lead, published_at: f.publish ? (existing?.published_at ?? new Date().toISOString()) : null,
   }
   const { error: e } = f.id
@@ -61,6 +90,16 @@ async function remove(id: string) {
     <form class="form-grid panel" novalidate @submit.prevent="save">
       <h2 class="eyebrow">{{ f.id ? 'Modifica articolo' : 'Nuovo articolo' }}</h2>
       <FormField id="nk" label="Occhiello" hint="La riga piccola sopra il titolo." v-slot="{ describedBy }"><input id="nk" v-model="f.kicker" class="input" :aria-describedby="describedBy"></FormField>
+      <div class="photo">
+        <FormField id="np" label="Foto di copertina" hint="Facoltativa. JPG, PNG o WebP: viene ridimensionata da sola." v-slot="{ describedBy }">
+          <input id="np" class="input" type="file" accept="image/*" :disabled="photoBusy" :aria-describedby="describedBy" @change="pickPhoto">
+        </FormField>
+        <p v-if="photoError" class="notice bad" role="alert">{{ photoError }}</p>
+        <div v-if="f.cover" class="preview">
+          <NewsCover :path="f.cover" alt="Anteprima della copertina" />
+          <button type="button" class="btn btn-sm btn-danger" @click="f.cover = ''">Rimuovi foto</button>
+        </div>
+      </div>
       <FormField id="nt" label="Titolo" v-slot="{ describedBy }"><input id="nt" v-model="f.title" class="input" :aria-describedby="describedBy"></FormField>
       <FormField id="ns" label="Sommario" v-slot="{ describedBy }"><textarea id="ns" v-model="f.summary" class="input" rows="2" :aria-describedby="describedBy" /></FormField>
       <FormField id="nb" label="Testo" v-slot="{ describedBy }"><textarea id="nb" v-model="f.body" class="input tall" :aria-describedby="describedBy" /></FormField>
@@ -102,6 +141,9 @@ async function remove(id: string) {
 
 <style scoped>
 .tall { min-height: 220px; }
+.photo { display: grid; gap: var(--space-3); }
+.preview { display: grid; gap: var(--space-2); justify-items: start; max-width: 420px; }
+.preview :deep(.cover) { width: 100%; border-radius: var(--r-card); }
 .list { position: relative; list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; }
 .row { display: grid; gap: var(--space-2); padding: var(--space-3) 0; border-bottom: 1px solid var(--rv-line); }
 .nm { font-weight: var(--fw-ui); }

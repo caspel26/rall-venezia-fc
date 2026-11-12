@@ -56,7 +56,8 @@ const pad = (n: number) => String(n).padStart(2, '0')
 .venue { display: flex; align-items: center; gap: 6px; font-size: var(--fs-sm); color: var(--rv-muted); }
 .cd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0; }
 .cd > div { display: grid; justify-items: center; padding: 10px 6px; background: var(--rv-glass); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px var(--rv-line); border-radius: 12px; }
-.cd dd { margin: 0; font-size: 32px; line-height: 1; position: relative; }
+.cd dd { margin: 0; font-size: 32px; line-height: 1; min-height: 1em; }
+.cd dd > span { display: inline-block; }
 .cd dt { font-size: var(--fs-cap); letter-spacing: .1em; text-transform: uppercase; color: var(--rv-muted); }
 .sec { color: var(--rv-orange); }
 .shine { position: absolute; inset: 0; z-index: 4; pointer-events: none; background: linear-gradient(100deg, transparent 40%, rgb(255 255 255 / .07) 50%, transparent 60%); transform: translateX(-120%); }

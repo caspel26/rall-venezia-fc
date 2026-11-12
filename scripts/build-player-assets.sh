@@ -51,10 +51,15 @@ for dir in private-assets/players/*/ private-assets/staff/*/; do
   # width that keeps the head in the middle and the whole body in frame, plus margin
   left=$(( hcx - bx )); right=$(( bx + bw - hcx )); half_w=$(( (left > right ? left : right) + 28 ))
 
+  cardw=$(jq -r ".\"$slug\".cardw // empty" "$faces")
   for variant in portrait:$bust half:$half; do
     name=${variant%%:*}; k=${variant##*:}
-    ph=$(awk -v b="$bh" -v k="$k" 'BEGIN{printf "%d", b*k}'); pw=$(( half_w * 2 ))
-    crop "$pw" "$ph" $(( hcx - half_w )) $(( by - 14 )) "$dir/$name.png"
+    ph=$(awk -v b="$bh" -v k="$k" 'BEGIN{printf "%d", b*k}'); pw=$(( half_w * 2 )); cx=$(( hcx - half_w )); cy=$(( by - 14 ))
+    # staff: a 4:5 box sized by the head, so the person fills the card instead of floating in it
+    if [ -n "$cardw" ] && [ "$name" = portrait ]; then
+      pw=$(awk -v h="$hw" -v m="$cardw" 'BEGIN{printf "%d", h*m}'); ph=$(( pw * 5 / 4 )); cx=$(( hcx - pw / 2 )); cy=$(( by_head - hw * 55 / 100 ))
+    fi
+    crop "$pw" "$ph" "$cx" "$cy" "$dir/$name.png"
     fade "$dir/$name.png" 28
     rm -f "$dir/$name.png"
   done
