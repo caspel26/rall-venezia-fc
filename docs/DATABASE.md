@@ -52,7 +52,7 @@ Constraints: partial unique index on `shirt_number` where `is_active and shirt_n
 `id`, `name text nn`, `short_name text`, `logo_path text`. (Named `opponents` rather than `teams`: Rall Venezia is the single "us" club, so there is no `teams` ambiguity.)
 
 ### `matches`
-`id`, `season_id fk nn`, `competition_id fk`, `opponent_id fk nn`, `is_home bool nn`, `kickoff_at timestamptz nn`, `venue text`, `status text nn default 'scheduled' check in ('scheduled','live','completed','postponed','cancelled')`, `rv_score smallint check >= 0`, `opp_score smallint check >= 0`, `notes text`, `graphic_path text`, `published bool default false`.
+`id`, `season_id fk nn`, `competition_id fk`, `opponent_id fk nn`, `is_home bool nn`, `kickoff_at timestamptz nn`, `venue text`, `status text nn default 'scheduled' check in ('scheduled','live','completed','postponed','cancelled')`, `rv_score smallint check >= 0`, `opp_score smallint check >= 0`, `notes text`, `graphic_path text`, `published bool default true` (false = staff-only draft).
 Check: `status <> 'completed' or (rv_score is not null and opp_score is not null)`. Indexes: `(season_id, kickoff_at desc)`, `(status, kickoff_at)`.
 `rv_score`/`opp_score` are the *official result* and are stored, because amateur matches often have unrecorded goals and own goals; recorded `goals` rows are the detail. A view flags matches where recorded Rall goals exceed `rv_score`; the post-match RPC rejects that.
 
@@ -68,7 +68,7 @@ Checks: `assist_id is null or assist_id <> scorer_id`. Index: `(match_id)`, `(sc
 `match_id fk on delete cascade`, `player_id fk`, `pk (match_id, player_id)` (allows a shared MVP; admin UI defaults to one). Trigger/RPC requires the player to be in `match_players` for that match.
 
 ### `ratings`
-`id`, `match_id fk on delete cascade`, `player_id fk`, `author_id fk profiles on delete set null`, `score numeric(3,1) nn check between 0 and 10`, `review text`, `attributes text[] default '{}' check (cardinality <= 4)`, `published bool default false`, `uq (match_id, player_id)`. Index `(player_id)`.
+`id`, `match_id fk on delete cascade`, `player_id fk`, `author_id fk profiles on delete set null`, `score numeric(3,1) nn check between 0 and 10`, `review text`, `attributes text[] default '{}' check (cardinality <= 4)`, `published bool default true` (false = staff-only draft). `uq (match_id, player_id)`. Index `(player_id)`.
 
 ### `availability`
 `match_id fk on delete cascade`, `player_id fk`, `status text nn check in ('available','unavailable','maybe')`, `responded_at timestamptz nn default now()`, `pk (match_id, player_id)`. "No response" = no row (derived). Upsert by the player for their own row, only while `kickoff_at > now()`.
@@ -89,7 +89,7 @@ Single-row table (`id`, `name`, `photo_path`, `bio`). Phase 2.
 | `player_season_stats` | per `(player_id, season_id)`: appearances, goals, assists, mvps, wins, avg_rating, goals_per_game, attendance (appearances / completed matches) |
 | `player_career_stats` | same across seasons |
 | `player_rating_summary` | avg score, count, best score, last score |
-| `team_season_stats` | played, W/D/L, GF, GA, GD, points-less (no league table), form (last 5) |
+| `team_season_stats` | played, W/D/L, GF, GA, GD; form is computed in the app from the last completed matches |
 | `assists` | alias over `goals` |
 | `match_result_issues` | matches whose recorded goals exceed the official score |
 
@@ -121,4 +121,4 @@ All private. Write: staff/admin (admin only for `internal-documents`). Storage R
 
 ## Seed data
 
-`supabase/seed/seed.sql`: one season, one competition, a few opponents, the seven named players (Daniele Nappo #1 captain GK, Antonio Verrone #8, Alfonso Avino #33, Salvatore Marigliano #9, Raffaele Miranda, Sergio Batti, Francesco Ferrara — numbers `null` where not stated, positions only where known, else `null`), and sample matches/goals/ratings clearly marked as fake. No personal details.
+`supabase/seed.sql`: one season, one competition, a few opponents, the seven named players (Daniele Nappo #1 captain GK, Antonio Verrone #8, Alfonso Avino #33, Salvatore Marigliano #9, Raffaele Miranda, Sergio Batti, Francesco Ferrara — numbers `null` where not stated, positions only where known, else `null`), and sample matches/goals/ratings clearly marked as fake. No personal details.

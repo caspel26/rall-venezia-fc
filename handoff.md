@@ -8,7 +8,7 @@ Updated: 12 November 2026.
 
 - Phase: **Stage 1 (Q1) built**: Nuxt 4.6.4 bootstrap, tokens, self-hosted fonts, grain, Playwright smoke (390x844 + 1440x900) passing. Next: Q2 (Supabase schema/RLS, Opus design first). No Cloudflare; deploy = Vercel + Supabase only.
 - Docs written: PRODUCT, ARCHITECTURE, DATABASE, AUTHORIZATION, ROUTES, DESIGN_SYSTEM, DEPLOYMENT, MVP, IMPLEMENTATION_PLAN, AGENT-WORKFLOW.
-- Migrations used: none.
+- Migrations used: `20261112000001_schema.sql`, `20261112000002_rls.sql` (+ dev-only `supabase/seed.sql`).
 
 ## Owner decisions needed (defaults in brackets; build proceeds on the defaults)
 
@@ -22,8 +22,8 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q2 Stage 2 — schema, RLS, seed, pgTAP (27 tests)~~ (done; local Supabase via `npx supabase start`)
 - ~~Q1 Stage 1 — Bootstrap and tokens~~ (done; font choice Anton vs Bebas Neue and lion artwork pending owner)
-- Q2 Stage 2 — Supabase schema, RLS, seed (Opus design + review)
 - Q3 Stage 3 — Authentication (Opus review)
 - Q4 Stage 4 — Shell and navigation
 - Q5 Stage 5 — Dashboard
