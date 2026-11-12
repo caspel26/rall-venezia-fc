@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(27);
+select plan(30);
 
 -- seed ids
 \set admin '''a0000000-0000-4000-8000-000000000001'''
@@ -41,10 +41,13 @@ select is((select count(*)::int from public.availability), 0, 'viewer sees no av
 select is((select count(*)::int from public.announcements), 0, 'viewer sees no announcements');
 select throws_ok($$insert into public.seasons (name, starts_on) values ('X', now())$$, '42501', null, 'viewer cannot write');
 select is((select count(*)::int from public.user_roles), 1, 'viewer sees only their own role row');
+select cmp_ok((select count(*)::int from public.news_articles), '>', 0, 'viewer reads published news');
+select throws_ok($$insert into public.news_articles (slug, title, body) values ('x', 'x', 'x')$$, '42501', null, 'viewer cannot write news');
 reset role;
 
 -- player
 select pg_temp.as_user(:player);
+select throws_ok($$insert into public.news_articles (slug, title, body) values ('x', 'x', 'x')$$, '42501', null, 'player cannot write news');
 select is((select count(*)::int from public.ratings where not published), 0, 'player sees no draft ratings');
 select cmp_ok((select count(*)::int from public.ratings), '>', 0, 'player reads published ratings');
 select is((select count(*)::int from public.announcements), 2, 'player reads published announcements');

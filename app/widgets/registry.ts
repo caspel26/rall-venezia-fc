@@ -7,6 +7,7 @@ import RecordWidget from '~/components/widgets/RecordWidget.vue'
 import TopPerformersWidget from '~/components/widgets/TopPerformersWidget.vue'
 import TopScorersWidget from '~/components/widgets/TopScorersWidget.vue'
 import RatingWidget from '~/components/widgets/RatingWidget.vue'
+import NewsWidget from '~/components/widgets/NewsWidget.vue'
 import AnnouncementWidget from '~/components/widgets/AnnouncementWidget.vue'
 import { ALL_ROLES, TEAM_ROLES, type Role } from '~/types/domain'
 
@@ -28,6 +29,7 @@ export const HOME_WIDGETS: WidgetDef[] = [
   { id: 'availability', component: AvailabilityWidget, slot: 'main', roles: TEAM_ROLES },
   { id: 'last-result', component: LastResultWidget, slot: 'main', roles: ALL_ROLES },
   { id: 'recent-matches', component: RecentMatchesWidget, slot: 'main', roles: ALL_ROLES },
+  { id: 'news', component: NewsWidget, slot: 'main', roles: ALL_ROLES },
   { id: 'record', component: RecordWidget, slot: 'side', roles: ALL_ROLES },
   { id: 'top-performers', component: TopPerformersWidget, slot: 'side', roles: ALL_ROLES },
   { id: 'top-scorers', component: TopScorersWidget, slot: 'side', roles: ALL_ROLES },

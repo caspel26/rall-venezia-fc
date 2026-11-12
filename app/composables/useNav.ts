@@ -18,6 +18,7 @@ export const PRIMARY_NAV: NavItem[] = [
 ]
 
 export const SECONDARY_NAV: Omit<NavItem, 'icon'>[] = [
+  { to: '/news', label: 'Gazzetta' },
   { to: '/ratings', label: 'Pagelle', roles: TEAM_ROLES },
   { to: '/admin', label: 'Admin', roles: STAFF_ROLES },
 ]

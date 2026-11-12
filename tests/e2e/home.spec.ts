@@ -32,7 +32,7 @@ test('viewer sees results but no availability, pagelle or announcements', async 
   await login(page, 'viewer')
   await expect(page.getByText('Ultimo risultato')).toBeVisible()
   await expect(page.getByRole('group', { name: /disponibilità/i })).toHaveCount(0)
-  await expect(page.getByText('Dallo spogliatoio')).toHaveCount(0)
+  await expect(page.getByText('In evidenza')).toHaveCount(0)
   await expect(page.getByText('Disponibilità', { exact: true })).toHaveCount(0)
 })
 

@@ -281,6 +281,38 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"news_articles": {
+                  Row: {
+                    "author_id": string | null,"author_name": string | null,"body": string,"cover_path": string | null,"created_at": string,"id": string,"is_lead": boolean,"kicker": string | null,"match_id": string | null,"published_at": string | null,"slug": string,"summary": string | null,"title": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_id"?: string | null,"author_name"?: string | null,"body": string,"cover_path"?: string | null,"created_at"?: string,"id"?: string,"is_lead"?: boolean,"kicker"?: string | null,"match_id"?: string | null,"published_at"?: string | null,"slug": string,"summary"?: string | null,"title": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "author_id"?: string | null,"author_name"?: string | null,"body"?: string,"cover_path"?: string | null,"created_at"?: string,"id"?: string,"is_lead"?: boolean,"kicker"?: string | null,"match_id"?: string | null,"published_at"?: string | null,"slug"?: string,"summary"?: string | null,"title"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "news_articles_author_id_fkey"
+      columns: ["author_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "news_articles_match_id_fkey"
+      columns: ["match_id"]
+isOneToOne: false
+      referencedRelation: "match_result_issues"
+      referencedColumns: ["match_id"]
+    },{
+      foreignKeyName: "news_articles_match_id_fkey"
+      columns: ["match_id"]
+isOneToOne: false
+      referencedRelation: "matches"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"opponents": {
                   Row: {
                     "created_at": string,"id": string,"logo_path": string | null,"name": string,"short_name": string | null,"updated_at": string

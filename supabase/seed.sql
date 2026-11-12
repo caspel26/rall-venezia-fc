@@ -113,3 +113,22 @@ insert into public.availability (match_id, player_id, status) values
 insert into public.announcements (author_id, title, body, pinned, published_at) values
   ('a0000000-0000-4000-8000-000000000002', 'Ritrovo prima della partita', 'Ci vediamo alle 19:30 al palazzetto per il riscaldamento. Maglie nere, borsa pronta. Chi è in ritardo paga il caffè.', true, now() - interval '1 day'),
   ('a0000000-0000-4000-8000-000000000002', 'Tre punti portati a casa', 'Grande vittoria contro il Monza. Foto e pagelle già nella sezione dedicata.', false, now() - interval '27 days');
+
+-- Gazzetta sample articles (fake sample copy about the fake sample matches)
+insert into public.news_articles (slug, kicker, title, summary, body, author_id, match_id, is_lead, published_at) values
+  ('marigliano-show-monza-travolto', 'IL PIVOT DELLA SERATA', 'Marigliano show: Monza travolto 10-5',
+   'Quattro gol, una montagna di sponde e il palazzetto in piedi. Il Rall Venezia non lascia scampo agli ospiti.',
+   E'Serata da incorniciare al Palazzetto Venezia. Il Rall parte forte, trova il vantaggio dopo tre minuti e non si ferma più: alla fine sono dieci i gol, cinque quelli subiti.\n\nProtagonista assoluto Salvatore Marigliano, quattro reti e il titolo di MVP. Alle sue spalle Alfonso Avino, tripletta e due assist, e un Antonio Verrone in versione regista.\n\nIl capitano Daniele Nappo incassa cinque gol ma tiene in piedi la difesa nei momenti caldi. Tre punti portati a casa e morale alle stelle.',
+   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000001', true, now() - interval '27 days'),
+  ('lido-sconfitta-di-misura', 'TRASFERTA AMARA', 'Al Lido finisce 4-3: poteva andare diversamente',
+   'Tre gol non bastano. Decide un episodio nel finale, rimpianti e una parata da copertina.',
+   E'Una partita che il Rall poteva portare a casa. Avanti e indietro per tutta la sera, poi il guizzo dei padroni di casa nel finale.\n\nNappo, MVP nonostante la sconfitta, firma una serata di interventi miracolosi. Avino ancora a segno, Marigliano a referto.\n\nSi riparte dalla prossima: la classifica non si ferma, il morale nemmeno.',
+   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002', false, now() - interval '13 days'),
+  ('murano-pareggio-pazzo', 'SPETTACOLO AL PALAZZETTO', 'Murano, pareggio pazzo: finisce 4-4',
+   'Otto gol e nessun vincitore. Verrone sceglie la serata giusta per prendersi la scena.',
+   E'Otto gol, ribaltamenti e un finale al cardiopalma: Rall Venezia e Murano United si dividono la posta.\n\nIl migliore è Antonio Verrone, MVP con gol e assist. Marigliano chiude con una doppietta, Miranda trova la rete del momentaneo pareggio.\n\nUn punto che sa di occasione persa, ma lo spettacolo non è mancato.',
+   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000003', false, now() - interval '6 days'),
+  ('ritrovo-prima-di-mestre', 'DALLO SPOGLIATOIO', 'Verso il Real Mestre: ritrovo alle 19:30',
+   'Riscaldamento, maglie nere e nessuna scusa. La prossima è in casa.',
+   E'Si torna in campo contro il Real Mestre. Appuntamento al palazzetto alle 19:30 per il riscaldamento.\n\nMister e capitano chiedono concentrazione: contro una squadra che gioca a ritmi alti servirà una partenza decisa.',
+   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000004', false, now() - interval '1 day');

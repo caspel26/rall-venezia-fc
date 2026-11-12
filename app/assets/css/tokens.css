@@ -14,8 +14,16 @@
   --rv-amber: #e0a526;
   --rv-gold: #d4af37;
 
+  /* newspaper (Gazzetta) */
+  --paper: #f3ead8;
+  --paper-ink: #141210;
+  --paper-muted: #5f574a;
+  --paper-rule: #141210;
+  --paper-accent: #b83a0c; /* orange darkened for contrast on paper (>= 4.5:1) */
+
   /* type */
   --font-display: 'Anton', 'Bebas Neue', Impact, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --font-ui: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fs-cap: 12px;
   --fs-sm: 14px;

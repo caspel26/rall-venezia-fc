@@ -8,7 +8,7 @@ Updated: 12 November 2026.
 
 - Phase: **Stage 1 (Q1) built**: Nuxt 4.6.4 bootstrap, tokens, self-hosted fonts, grain, Playwright smoke (390x844 + 1440x900) passing. Next: Q2 (Supabase schema/RLS, Opus design first). No Cloudflare; deploy = Vercel + Supabase only.
 - Docs written: PRODUCT, ARCHITECTURE, DATABASE, AUTHORIZATION, ROUTES, DESIGN_SYSTEM, DEPLOYMENT, MVP, IMPLEMENTATION_PLAN, AGENT-WORKFLOW.
-- Migrations used: `20261112000001_schema.sql`, `20261112000002_rls.sql` (+ dev-only `supabase/seed.sql`).
+- Migrations used: `20261112000001_schema.sql`, `20261112000002_rls.sql`, `20261112000003_news.sql` (+ dev-only `supabase/seed.sql`).
 
 ## Owner decisions needed (defaults in brackets; build proceeds on the defaults)
 
@@ -22,7 +22,7 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
-- Q7c Gazzetta (newspaper-style news section): migration, /news front page, article page, home widget, admin CRUD in Stage 10 (in progress)
+- ~~Q7c Gazzetta: `news_articles` table + RLS (migration 3), /news front page, /news/[slug], home widget; admin CRUD comes in Stage 10~~ (done)
 - Future widgets (owner idea): more home widgets; league standings need opponent results data we do not store (player rankings exist).
 
 - ~~Q7b Home widget system: `app/widgets/registry.ts` + `components/widgets/*` (next match, availability, last result, last 5, record, top performers, scorers ranking, rating, announcement); app switched to SPA mode (`ssr:false`)~~ (done)
