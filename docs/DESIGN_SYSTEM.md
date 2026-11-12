@@ -7,19 +7,20 @@ Direction: a matchday programme, not a dashboard. Near-black, strong oversized t
 ### Colour
 | Token | Value (starting point) | Job |
 | --- | --- | --- |
-| `--rv-black` | `#0a0a0a` | page |
+| `--rv-black` | `#0b0b09` | page (from the crest) |
 | `--rv-surface` | `#141414` | panels |
 | `--rv-surface-2` | `#1c1c1c` | raised / inputs |
 | `--rv-line` | `#2a2a2a` | hairlines |
 | `--rv-cream` | `#f3ead8` | primary text, light panels |
 | `--rv-muted` | `#9a9384` | secondary text (≥ 4.5:1 on surface; checked) |
-| `--rv-orange` | `#ff5a1f` | **accent**: primary action (max one per view), current location, live/next match, focus ring |
-| `--rv-green` | `#2f8f4e` | secondary: win, available, success |
+| `--rv-orange` | `#fd7f10` | **accent**: primary action (max one per view), current location, live/next match, focus ring |
+| `--rv-green` | `#3a9d5d` | secondary: win, available, success (lighter than the crest green so it reads on black) |
+| `--rv-green-deep` | `#19522b` | the crest's stripe green: decorative accents |
 | `--rv-red` | `#d64545` | loss, unavailable, danger (separate from brand) |
 | `--rv-amber` | `#e0a526` | maybe, warning |
 | `--rv-gold` | `#d4af37` | MVP, awards, Hall of Fame **only** |
 
-Final hex values are fixed at Stage 1 from the real logo (lion artwork to be supplied by the owner) and contrast-checked. Dark only in MVP (the identity is dark); light theme is not planned. Result colours are one fixed map (W green, D muted, L red) applied through one `ResultPill` component. **Shape first, colour second**: pills carry the letter (V / N / P in Italian UI), never colour alone.
+Hex values come from the supplied roundel (winged lion on green and orange stripes). The supplied artwork is 150px, so it is used at ≤ 112px; a higher-resolution or vector original would allow larger placements. The vertical green/orange stripe motif is used as a subtle background pattern (`.stripes`) on the login and error screens. Dark only in MVP (the identity is dark); light theme is not planned. Result colours are one fixed map (W green, D muted, L red) applied through one `ResultPill` component. **Shape first, colour second**: pills carry the letter (V / N / P in Italian UI), never colour alone.
 
 ### Type
 - Display: condensed grotesque (Anton or Bebas Neue — specimen at Stage 1), uppercase: scores, player names, match titles, MVP, section titles. Self-hosted.

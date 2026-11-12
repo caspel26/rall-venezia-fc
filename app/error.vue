@@ -16,7 +16,7 @@ useHead({ title: () => `${copy.value.title} · Rall Venezia` })
 </script>
 
 <template>
-  <main class="err grain">
+  <main class="err grain stripes">
     <ClubLogo :size="88" />
     <p class="code display tabular">{{ code }}</p>
     <h1 class="display">{{ copy.title }}</h1>

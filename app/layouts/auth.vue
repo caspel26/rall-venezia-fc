@@ -1,5 +1,5 @@
 <template>
-  <main class="auth grain">
+  <main class="auth grain stripes">
     <div class="auth-card"><slot /></div>
   </main>
 </template>

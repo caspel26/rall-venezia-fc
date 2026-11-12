@@ -7,9 +7,10 @@
   --rv-line: #2a2a2a;
   --rv-cream: #f3ead8;
   --rv-muted: #a39c8c;
-  --rv-orange: #ff5a1f;
+  --rv-orange: #fd7f10; /* from the roundel */
   --rv-orange-ink: #0a0a0a;
-  --rv-green: #2f8f4e;
+  --rv-green: #3a9d5d; /* UI success (win, available): lighter than the crest green so it reads on black */
+  --rv-green-deep: #19522b; /* the crest's stripe green */
   --rv-red: #d64545;
   --rv-amber: #e0a526;
   --rv-gold: #d4af37;
@@ -19,7 +20,7 @@
   --paper-ink: #141210;
   --paper-muted: #5f574a;
   --paper-rule: #141210;
-  --paper-accent: #b83a0c; /* orange darkened for contrast on paper (>= 4.5:1) */
+  --paper-accent: #a24f00; /* orange darkened for contrast on paper (4.8:1) */
 
   /* type */
   --font-display: 'Anton', 'Bebas Neue', Impact, sans-serif;

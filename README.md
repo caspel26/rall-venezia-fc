@@ -1,16 +1,17 @@
-<div align="center">
+<p align="center">
+  <img src="docs/brand/banner.png" alt="Rall Venezia Clubhouse" width="100%">
+</p>
 
-# RALL VENEZIA CLUBHOUSE
+<p align="center">
+  <b>Accesso allo spogliatoio.</b><br>
+  The private digital clubhouse of Rall Venezia FC: matches, squad, stats, pagelle, the Gazzetta and the locker room, all in one place.
+</p>
 
-**Accesso allo spogliatoio.**
+<p align="center">
+  <code>Nuxt 4</code> · <code>Supabase</code> · <code>TypeScript</code> · <code>Vercel</code>
+</p>
 
-The private digital clubhouse of Rall Venezia FC — matches, squad, stats, pagelle and the locker room, all in one place.
-
-`Nuxt 4` · `Supabase` · `TypeScript` · `Vercel`
-
-*Quello che succede nello spogliatoio resta nello spogliatoio.*
-
-</div>
+<p align="center"><i>Quello che succede nello spogliatoio resta nello spogliatoio.</i></p>
 
 ---
 
@@ -28,9 +29,29 @@ Everything is **private and invite-only**. There is no signup, no public profile
 | **Stats** | Team record and rankings: scorers, assists, MVPs, average rating |
 | **Pagelle** | Ratings archive rendered natively (score, review, attributes) |
 | **Spogliatoio** | Availability for the next match and internal announcements |
-| **Admin** | Quick post-match flow, players, matches, ratings, announcements, invites |
+| **Gazzetta** | Newspaper-style club news with a front page and articles |
+| **Admin** | Quick post-match flow, players, matches, ratings, announcements, Gazzetta, invites |
 
 Roles: `admin`, `staff`, `player`, `viewer` (details in [docs/AUTHORIZATION.md](docs/AUTHORIZATION.md)).
+
+## Identity
+
+The club crest is the **winged lion roundel** on green and orange stripes. The whole product is built around its colours: a near-black base, orange as the only action colour, green for wins, cream for type, gold reserved for MVPs and records.
+
+| | Token | Hex | Use |
+| --- | --- | --- | --- |
+| <img src="docs/brand/swatch-black.png" alt="" width="48"> | `--rv-black` | `#0B0B09` | page background |
+| <img src="docs/brand/swatch-orange.png" alt="" width="48"> | `--rv-orange` | `#FD7F10` | the one action colour, current location, next match |
+| <img src="docs/brand/swatch-green.png" alt="" width="48"> | `--rv-green-deep` | `#19522B` | crest stripes, accents |
+| <img src="docs/brand/swatch-win.png" alt="" width="48"> | `--rv-green` | `#3A9D5D` | wins, "available" (lighter so it reads on black) |
+| <img src="docs/brand/swatch-white.png" alt="" width="48"> | `--rv-cream` | `#EAEBE9` | type, light panels |
+| <img src="docs/brand/swatch-gold.png" alt="" width="48"> | `--rv-gold` | `#D4AF37` | MVP, awards, Hall of Fame only |
+
+**Type:** Anton for scores, names and headlines; Geist for the interface; Source Serif 4 for the Gazzetta articles. All self-hosted.
+**Voice:** competitive, ironic, football-first. *"Tre punti portati a casa."* Italian UI, English code.
+**Gazzetta:** the news section is a newspaper front page, cream paper with a big masthead, kickers and a lead story.
+
+Full rules in [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md). Crest artwork lives in `public/brand/`.
 
 ## Stack
 
