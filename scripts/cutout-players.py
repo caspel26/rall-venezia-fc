@@ -78,6 +78,8 @@ def keep_main_person(rgba: Image.Image, fx: float, fy: float) -> Image.Image:
 
 
 for d in sorted(p for r in roots if r.exists() for p in r.iterdir() if p.is_dir()):
+    if os.environ.get('ONLY') and d.name not in os.environ['ONLY'].split(','):
+        continue
     src = d / 'source.jpg'
     if not src.exists():
         continue

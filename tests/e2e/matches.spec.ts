@@ -27,11 +27,21 @@ test('match programme: score, goals timeline, lineup and MVP', async ({ page }) 
   await page.goto(`/matches/${M1}`)
   await expect(page.getByLabel('7 a 1')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Gol' })).toBeVisible()
-  await expect(page.locator('.timeline li')).toHaveCount(7)
-  await expect(page.locator('.timeline li').first()).toContainText("5'")
+  // scorers of the earlier matches were not recorded: the page says so instead of inventing them
+  await expect(page.getByText('Marcatori non disponibili')).toBeVisible()
+  await expect(page.locator('.timeline li')).toHaveCount(0)
   await expect(page.locator('.hero').getByText('MVP')).toBeVisible()
   await expect(page.getByText('Titolari')).toBeVisible()
   await expect(page.locator('.lineup li')).toHaveCount(7)
+})
+
+test('the Monza match lists its ten goals, own goal included', async ({ page }) => {
+  await login(page, 'player')
+  await page.goto('/matches/d0000000-0000-4000-8000-000000000003')
+  await expect(page.getByLabel('10 a 5')).toBeVisible()
+  await expect(page.locator('.timeline li')).toHaveCount(10)
+  await expect(page.locator('.timeline li', { hasText: 'Autogol avversario' })).toHaveCount(1)
+  await expect(page.getByText('Califano (3)')).toBeVisible()
 })
 
 test('viewer can read the match programme', async ({ page }) => {

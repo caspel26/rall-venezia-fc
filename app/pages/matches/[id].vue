@@ -60,6 +60,11 @@ const name = (pid: string | null) => (pid && data.value?.players.get(pid) ? full
         </p>
       </section>
 
+      <section v-else-if="done" v-reveal class="block">
+        <SectionHeader title="Gol" />
+        <p class="muted">Marcatori non disponibili: li censiamo a partire dalle prossime partite.</p>
+      </section>
+
       <section v-if="data.starters.length || data.bench.length" v-reveal class="block">
         <SectionHeader title="Formazione" />
         <div class="lineup">

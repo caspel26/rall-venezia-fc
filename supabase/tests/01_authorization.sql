@@ -2,6 +2,12 @@ begin;
 create extension if not exists pgtap with schema extensions;
 select plan(39);
 
+-- the seed has no upcoming match (still to be designated): add one for these checks
+insert into public.matches (id, season_id, competition_id, opponent_id, kickoff_at, status)
+values ('d0000000-0000-4000-8000-000000000004', 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001',
+        'b2000000-0000-4000-8000-000000000001', now() + interval '4 days', 'scheduled')
+on conflict (id) do nothing;
+
 -- seed ids
 \set admin '''a0000000-0000-4000-8000-000000000001'''
 \set staff '''a0000000-0000-4000-8000-000000000002'''

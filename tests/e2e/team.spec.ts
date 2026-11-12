@@ -28,7 +28,7 @@ test('player profile shows derived stats and matches', async ({ page }) => {
   await page.waitForLoadState('networkidle') // wait for hydration before clicking tabs
   const stats = page.getByLabel('Statistiche in carriera')
   await expect(stats.locator('.stat', { hasText: 'Presenze' })).toContainText('8')
-  await expect(stats.locator('.stat', { hasText: 'Gol' }).first()).toContainText('3')
+  await expect(stats.locator('.stat', { hasText: 'Gol' }).first()).toContainText('1')
 
   await page.getByRole('tab', { name: 'Partite' }).click()
   await expect(page.locator('#main').getByText('Lazio')).toBeVisible()

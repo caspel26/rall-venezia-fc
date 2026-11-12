@@ -49,14 +49,11 @@ create function pg_temp.pid(s text) returns uuid language sql as
   $$ select id from public.players where slug = s $$;
 
 -- The eight matchdays already played, as reported on the club's Instagram (scores, dates, MVPs). Times and venues
--- the posts do not state stay null. Two upcoming fixtures are PLACEHOLDERS (Real Mestre, Burano Boys) until the
--- real calendar is supplied; the table is relative to now so the preview always has a next match.
+-- the posts do not state stay null.
 insert into public.opponents (id, name, short_name) values
   ('b2000000-0000-4000-8000-000000000001', 'Cagliari', 'CAG'),
   ('b2000000-0000-4000-8000-000000000002', 'Roma', 'ROM'),
   ('b2000000-0000-4000-8000-000000000003', 'Lazio', 'LAZ'),
-  ('b2000000-0000-4000-8000-000000000004', 'Real Mestre', 'MES'),
-  ('b2000000-0000-4000-8000-000000000005', 'Burano Boys', 'BUR'),
   ('b2000000-0000-4000-8000-000000000006', 'Frosinone', 'FRO'),
   ('b2000000-0000-4000-8000-000000000007', 'Napoli', 'NAP'),
   ('b2000000-0000-4000-8000-000000000008', 'Torino', 'TOR'),
@@ -75,13 +72,12 @@ insert into seed_matches values
   (7, 'd0000000-0000-4000-8000-00000000000a', 'b2000000-0000-4000-8000-000000000009', true,   5, 2, '2026-11-02 21:30 Europe/Rome', null),
   (8, 'd0000000-0000-4000-8000-000000000003', 'b2000000-0000-4000-8000-00000000000a', true,  10, 5, '2026-11-11 20:30 Europe/Rome', null);
 
-insert into public.matches (id, season_id, competition_id, opponent_id, is_home, kickoff_at, venue, status, rv_score, opp_score)
-select id, 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', opp, home, kickoff, venue, 'completed', rv, opp_sc
+insert into public.matches (id, season_id, competition_id, opponent_id, is_home, kickoff_at, venue, status, rv_score, opp_score, notes)
+select id, 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', opp, home, kickoff, venue, 'completed', rv, opp_sc,
+       case when n = 8 then 'Per il Monza a segno Califano (3), Aquino e Allegrezza.' end
 from seed_matches;
 
-insert into public.matches (id, season_id, competition_id, opponent_id, is_home, kickoff_at, venue, status) values
-  ('d0000000-0000-4000-8000-000000000004', 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000004', true,  date_trunc('day', now()) + interval '4 days 19 hours', null, 'scheduled'),
-  ('d0000000-0000-4000-8000-000000000005', 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000005', false, date_trunc('day', now()) + interval '11 days 19 hours', null, 'scheduled');
+-- No upcoming match: the next fixture is still to be designated (the e2e suite adds its own, see tests/e2e/fixtures.sql).
 
 -- Lineups: everyone played every match except the absences below. Frosinone (4) is reported: Nappo and Miranda
 -- were out. Miranda's second missed match is NOT reported; the owner asked for "two fewer appearances", so
@@ -97,51 +93,13 @@ cross join public.players p
 where p.slug <> 'francesco-sepe'
   and not exists (select 1 from seed_absent a where a.n = sm.n and a.slug = p.slug);
 
--- Goals. Verrone's per-match goals are known for four matches (4, 3, 5, 5 = 17 of his 31); the rest are spread.
--- Totals: Verrone 31, Nappo 16, the other five 3 each = 62 of our 64 goals; two goals (matches 6 and 8) stay
--- unassigned until the scorers are known.
-create temp table seed_goals as
-with plan(n, slug, cnt) as (values
-  (1, 'antonio-verrone', 4), (1, 'daniele-nappo', 2), (1, 'raffaele-miranda', 1),
-  (2, 'antonio-verrone', 4), (2, 'daniele-nappo', 4), (2, 'raffaele-miranda', 1),
-  (3, 'antonio-verrone', 3),
-  (4, 'antonio-verrone', 5), (4, 'alfonso-avino', 2), (4, 'francesco-ferrara', 2), (4, 'sergio-batti', 1), (4, 'salvatore-marigliano', 1),
-  (5, 'antonio-verrone', 4), (5, 'daniele-nappo', 3), (5, 'salvatore-marigliano', 1), (5, 'raffaele-miranda', 1),
-  (6, 'antonio-verrone', 5), (6, 'daniele-nappo', 2), (6, 'alfonso-avino', 1), (6, 'salvatore-marigliano', 1),
-  (7, 'antonio-verrone', 2), (7, 'daniele-nappo', 2), (7, 'sergio-batti', 1),
-  (8, 'antonio-verrone', 4), (8, 'daniele-nappo', 3), (8, 'francesco-ferrara', 1), (8, 'sergio-batti', 1)),
-expanded as (
-  select n, slug, row_number() over (partition by n order by slug) as nth
-  from plan, generate_series(1, cnt)
-)
-select m.id as match_id, e.n, e.slug as scorer, e.nth,
-       (e.nth * 40 / (m.rv + 1))::int as minute,
-       row_number() over (order by e.n, e.nth) as k
-from expanded e join seed_matches m on m.n = e.n;
-
-alter table seed_goals add column assist text;
-
--- every goal gets an assist where the quota allows (about 8 each: "tanti"); the assister must have played
-do $$
-declare
-  r record;
-  quota jsonb := '{"antonio-verrone":8,"daniele-nappo":8,"alfonso-avino":8,"salvatore-marigliano":8,"sergio-batti":8,"raffaele-miranda":8,"francesco-ferrara":8}';
-  pick text;
-begin
-  for r in select * from seed_goals order by k loop
-    select key into pick from jsonb_each_text(quota)
-      where key <> r.scorer and value::int > 0
-        and not exists (select 1 from seed_absent a where a.n = r.n and a.slug = key)
-      order by value::int desc, md5(key || r.k::text) limit 1;
-    if pick is not null then
-      update seed_goals set assist = pick where k = r.k;
-      quota := jsonb_set(quota, array[pick], to_jsonb((quota ->> pick)::int - 1));
-    end if;
-  end loop;
-end $$;
-
-insert into public.goals (match_id, scorer_id, assist_id, minute)
-select match_id, pg_temp.pid(scorer), pg_temp.pid(assist), minute from seed_goals;
+-- Goals: only the Monza match (8) has a reported scorer list, from the club's result graphic. Events of the earlier
+-- matches (scorers, assists, minutes) are NOT available and stay empty: we start recording from the next ones.
+-- Monza scorers: Nappo 2, Batti, Ferrara, Marigliano, Verrone 4 and one opponent own goal (10).
+insert into public.goals (match_id, scorer_id, assist_id, minute, is_own_goal)
+select 'd0000000-0000-4000-8000-000000000003', pg_temp.pid(v.slug), null, null, v.slug is null
+from (values ('daniele-nappo'), ('daniele-nappo'), ('sergio-batti'), ('francesco-ferrara'), ('salvatore-marigliano'),
+  ('antonio-verrone'), ('antonio-verrone'), ('antonio-verrone'), ('antonio-verrone'), (null)) as v(slug);
 
 -- MVPs as announced on Instagram (Frosinone had two)
 insert into public.mvp_awards (match_id, player_id)
@@ -150,14 +108,6 @@ from (values
   (1, 'antonio-verrone'), (2, 'daniele-nappo'), (3, 'antonio-verrone'), (4, 'alfonso-avino'), (4, 'francesco-ferrara'),
   (5, 'antonio-verrone'), (6, 'francesco-ferrara'), (7, 'sergio-batti'), (8, 'daniele-nappo')) as v(n, slug)
 join seed_matches m on m.n = v.n;
-
--- availability for the next match
-insert into public.availability (match_id, player_id, status) values
-  ('d0000000-0000-4000-8000-000000000004', pg_temp.pid('antonio-verrone'), 'available'),
-  ('d0000000-0000-4000-8000-000000000004', pg_temp.pid('alfonso-avino'), 'available'),
-  ('d0000000-0000-4000-8000-000000000004', pg_temp.pid('salvatore-marigliano'), 'available'),
-  ('d0000000-0000-4000-8000-000000000004', pg_temp.pid('sergio-batti'), 'maybe'),
-  ('d0000000-0000-4000-8000-000000000004', pg_temp.pid('raffaele-miranda'), 'unavailable');
 
 insert into public.announcements (author_id, title, body, pinned, published_at) values
   ('a0000000-0000-4000-8000-000000000002', 'Ritrovo prima della partita', 'Ci vediamo alle 19:30 al palazzetto per il riscaldamento. Maglie nere, borsa pronta. Chi è in ritardo paga il caffè.', true, now() - interval '1 day'),
@@ -196,11 +146,12 @@ values ('e0000000-0000-4000-8000-000000000001',
 insert into public.poll_votes (poll_id, player_id, day)
 select 'e0000000-0000-4000-8000-000000000001', pg_temp.pid(v.slug), (date_trunc('week', now() + interval '7 days'))::date + v.d
 from (values
-  -- the weekly poll as it stands in the group (Mon=0 .. Fri=4); "Totor" and "Cry More" are not mapped to a
-  -- squad member yet, so their votes are left out
+  -- the weekly poll as it stands in the group (Mon=0 .. Fri=4); "Totor" is Marigliano, "Cry More" is Batti
   ('francesco-ferrara', 0), ('francesco-ferrara', 1), ('francesco-ferrara', 2), ('francesco-ferrara', 3),
   ('alfonso-avino', 0), ('alfonso-avino', 1), ('alfonso-avino', 2), ('alfonso-avino', 3), ('alfonso-avino', 4),
-  ('daniele-nappo', 1), ('daniele-nappo', 2), ('daniele-nappo', 3)
+  ('daniele-nappo', 1), ('daniele-nappo', 2), ('daniele-nappo', 3),
+  ('salvatore-marigliano', 0), ('salvatore-marigliano', 1), ('salvatore-marigliano', 4),
+  ('sergio-batti', 0), ('sergio-batti', 1), ('sergio-batti', 2), ('sergio-batti', 3), ('sergio-batti', 4)
 ) as v(slug, d);
 
 -- league table as supplied by the owner (the league's teams carry Serie A names; Rall Venezia is "Venezia")

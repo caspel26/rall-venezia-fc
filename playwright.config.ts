@@ -7,6 +7,7 @@ const desktop = { browserName: 'chromium' as const, viewport: { width: 1440, hei
 export default defineConfig({
   testDir: 'tests/e2e',
   reporter: 'list',
+  globalSetup: './tests/e2e/global-setup.ts',
   workers: 2, // keeps memory in check next to Docker and the dev server
   use: { baseURL: `http://127.0.0.1:${port}` },
   webServer: [
