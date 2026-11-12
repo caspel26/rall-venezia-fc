@@ -14,7 +14,7 @@ All routes require a session except `/login` and `/auth/*`. `roles` is the UX gu
 | `/stats` | Team + player stats, rankings (tabs) | all | 1 |
 | `/clubhouse` | Spogliatoio home: latest announcements, next-match availability summary | player+ | 1 |
 | `/clubhouse/availability` | Answer for next match; staff see counts and who | player+ | 1 |
-| `/clubhouse/poll` | Weekly Mon-Fri availability poll: pick several days, see who comes each day | player+ | 1 |
+| `/clubhouse/poll` | Weekly Mon-Fri availability poll: pick several days, see who comes each day, share it to the WhatsApp group (ready-made message, link, copy) | player+ | 1 |
 | `/clubhouse/announcements` | Announcement list | player+ | 1 |
 | `/news` | La Gazzetta Rall: newspaper front page (lead, secondary stories, archive) | all | 1 |
 | `/news/[slug]` | Article (cover, headline, body, link to the match or the Instagram post) | all | 1 |

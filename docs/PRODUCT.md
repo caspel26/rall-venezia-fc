@@ -61,3 +61,7 @@ Competitive, ironic, confident, football-first, slightly chaotic, visually profe
 ## Non-goals
 
 Public pages, social features, chat, payments, complex analytics, real-time anything in MVP.
+
+## Weekly poll and WhatsApp
+
+The poll for the next Monday-to-Friday week opens by itself the day after a match (`/api/polls/ensure`, scheduled daily). It carries a one-tap **Condividi su WhatsApp** button (and Copia messaggio / the phone's share sheet) that builds a ready message with the week, the link and the deadline, to paste or send into the group chat. Posting into a WhatsApp group automatically would need the WhatsApp Business API and a verified number, which this project does not use: the share is deliberately one tap.

@@ -18,6 +18,7 @@ const bestText = computed(() => {
       <p class="when display"><span class="dash" aria-hidden="true" />{{ range }}</p>
       <PollVote :poll-id="data.poll.id" :days="data.days" :mine="data.mine" :best="data.best" :top="data.top" :can-vote="!!data.myPlayerId" @saved="refresh()" />
       <p class="best"><AppIcon name="users" :size="16" />{{ data.respondents }} {{ data.respondents === 1 ? 'risposta' : 'risposte' }} · {{ bestText }}</p>
+      <PollShare :poll="data.poll" />
     </template>
   </WidgetFrame>
 </template>

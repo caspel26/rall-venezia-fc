@@ -22,6 +22,7 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q16 Poll sharing: WhatsApp share link + copy + native share with a ready message, "nuovo sondaggio" hint; auto-posting to a WhatsApp group is not possible without the Business API~~
 - ~~Q15 Design v3 (Opus spec docs/DESIGN-V3.md): modern stage backdrop (no stripes), person cards with tilt/sheen for players AND staff, poster profile header, PlayerAvatar, icon set, redesigned widgets, modern Gazzetta (lead + cards + filters + icons, no paper/serif), home hero + ticker; Francesco Sepe #17; precise cutouts. Not done: Verrone jersey swap (needs a photo in the kit)~~
 - ~~Q14 Feedback round: Pagelle removed (UI + schema, migration 7); player cutouts on the club stage; home hero, ticker and distinct widgets; staff (coach + social media manager, migration 8); weekly Mon-Fri multi-day poll created the day after a match (migration 9, /api/polls/ensure + workflow); pgTAP 38, vitest 43, e2e 115~~
 - ~~Q13 Independent Opus security review: no critical/high; 3 fixes + redirect hardening in migration 6 (see AUTHORIZATION.md); pgTAP 33, vitest 39, e2e 113~~

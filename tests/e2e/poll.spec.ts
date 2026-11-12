@@ -58,3 +58,18 @@ test('the scheduler endpoint is closed to strangers', async ({ request }) => {
   expect(ok.status()).toBe(200)
   expect((await ok.json()).created).toBe(false)
 })
+
+test('the poll can be shared to the WhatsApp group with a ready message', async ({ page }) => {
+  await login(page, 'staff')
+  await page.goto('/clubhouse/poll')
+  const wa = page.getByRole('link', { name: 'Condividi su WhatsApp' })
+  await expect(wa).toBeVisible()
+  const href = await wa.getAttribute('href')
+  expect(href).toMatch(/^https:\/\/wa\.me\/\?text=/)
+  const msg = decodeURIComponent(href!.replace('https://wa.me/?text=', ''))
+  expect(msg).toContain('Sondaggio Rall Venezia')
+  expect(msg).toContain('/clubhouse/poll')
+  expect(msg).toContain('Si chiude venerdì alle 20:00')
+  await expect(wa).toHaveAttribute('target', '_blank')
+  await expect(page.getByRole('button', { name: 'Copia messaggio' })).toBeVisible()
+})

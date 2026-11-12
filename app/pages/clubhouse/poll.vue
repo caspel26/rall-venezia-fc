@@ -30,6 +30,7 @@ async function openNext() {
     <SkeletonBlock v-if="status === 'pending' && data === undefined" size="hero" />
     <template v-else-if="data">
       <p class="eyebrow range">Settimana dal {{ pollDay(data.days[0]!.date).full }} al {{ pollDay(data.days[4]!.date).full }}</p>
+      <section class="panel share-card"><h2 class="eyebrow">Condividi nel gruppo</h2><PollShare :poll="data.poll" /></section>
       <section class="panel"><PollVote :poll-id="data.poll.id" :days="data.days" :mine="data.mine" :best="data.best" :top="data.top" :can-vote="!!data.myPlayerId" @saved="refresh()" /></section>
 
       <ul class="cols" aria-label="Chi viene, giorno per giorno">
@@ -49,7 +50,8 @@ async function openNext() {
 
 <style scoped>
 .back { display: inline-block; margin-bottom: var(--space-4); text-decoration: none; min-height: 44px; line-height: 44px; }
-.range { margin-bottom: var(--space-3); text-transform: capitalize; }
+.range { margin: var(--space-5) 0 var(--space-3); text-transform: capitalize; }
+.share-card { display: grid; gap: var(--space-3); }
 .cols { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-3); }
 .cols .best { border-color: var(--rv-gold); }
 .names { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: grid; gap: var(--space-1); }

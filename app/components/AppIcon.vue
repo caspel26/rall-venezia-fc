@@ -3,7 +3,7 @@ export type IconName =
   | 'home' | 'matches' | 'calendar' | 'calendar-check' | 'team' | 'users' | 'users-check' | 'stats' | 'chart' | 'locker'
   | 'menu' | 'close' | 'x' | 'news' | 'instagram' | 'whistle' | 'megaphone' | 'pin' | 'clock' | 'map-pin' | 'plane'
   | 'ball' | 'assist' | 'star' | 'trophy' | 'armband' | 'shield' | 'list' | 'form' | 'check' | 'question'
-  | 'arrow-right' | 'arrow-left' | 'chevron-right' | 'external'
+  | 'share' | 'copy' | 'whatsapp' | 'arrow-right' | 'arrow-left' | 'chevron-right' | 'external'
 
 withDefaults(defineProps<{ name: IconName; size?: number }>(), { size: 24 })
 
@@ -40,6 +40,9 @@ const paths: Record<IconName, string> = {
   form: 'M3 16l5-5 4 3 9-8M16 6h5v5',
   check: 'M5 12.5l5 5L19 7',
   question: 'M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7M12 17h.01',
+  share: 'M4 12v7h16v-7M12 3v12M8 7l4-4 4 4',
+  copy: 'M9 9h11v11H9zM5 15V5h10',
+  whatsapp: 'M12 3a9 9 0 0 0-7.8 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3ZM9 8.5c0 3.5 3 6.5 6.5 6.5l1.2-1.6-2-1-.9.8c-1-.4-1.900-1.300-2.300-2.300l.8-.9-1-2Z',
   'arrow-right': 'M5 12h14M13 6l6 6-6 6',
   'arrow-left': 'M19 12H5M11 6l-6 6 6 6',
   'chevron-right': 'm9 6 6 6-6 6',

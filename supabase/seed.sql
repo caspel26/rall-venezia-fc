@@ -182,7 +182,7 @@ insert into public.staff_members (slug, first_name, last_name, role_title, sort_
 insert into public.polls (id, week_start, closes_at)
 values ('e0000000-0000-4000-8000-000000000001',
         (date_trunc('week', now() + interval '7 days'))::date,
-        (date_trunc('week', now() + interval '7 days'))::date + interval '4 days 20 hours');
+        ((date_trunc('week', now() + interval '7 days'))::date + interval '4 days 20 hours') at time zone 'Europe/Rome');
 insert into public.poll_votes (poll_id, player_id, day)
 select 'e0000000-0000-4000-8000-000000000001', pg_temp.pid(v.slug), (date_trunc('week', now() + interval '7 days'))::date + v.d
 from (values
