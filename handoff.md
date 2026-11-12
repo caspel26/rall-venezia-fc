@@ -22,12 +22,12 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q6 Stage 6 — squad + player profile (derived stats, tabs); 42 e2e~~ (done)
 - ~~Q5 Stage 5 — dashboard (hero, availability, last result, form, top, pagella, announcement); 7 unit + 32 e2e~~ (done)
 - ~~Q4 Stage 4 — shell: bottom nav, rail, error pages, skeleton/empty components, route stubs; 24 e2e~~ (done)
 - ~~Q3 Stage 3 — auth: login, invite via server route, set-password, role guard, 14 e2e~~ (done; Opus review of auth+RLS queued for end)
 - ~~Q2 Stage 2 — schema, RLS, seed, pgTAP (27 tests)~~ (done; local Supabase via `npx supabase start`)
 - ~~Q1 Stage 1 — Bootstrap and tokens~~ (done; font choice Anton vs Bebas Neue and lion artwork pending owner)
-- Q6 Stage 6 — Players
 - Q7 Stage 7 — Matches
 - Q8 Stage 8 — Ratings and statistics
 - Q9 Stage 9 — Availability and Spogliatoio (Opus review)
