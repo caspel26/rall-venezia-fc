@@ -47,11 +47,11 @@ test('connect, import posts as Gazzetta articles, no duplicates, hide one', asyn
   await expect(lead).toBeVisible() // newest post leads the front page
   const heading = page.getByRole('heading', { name: 'Tre punti pesantissimi!' })
   await expect(heading).toBeVisible()
-  await heading.getByRole('link').click()
+  await heading.click()
   await expect(page.getByText('Vittoria 10-5 contro il Monza.')).toBeVisible()
   await expect(page.getByText('#rallvenezia')).toHaveCount(0)
-  await expect(page.getByRole('link', { name: /Vedi il post su Instagram/ })).toHaveAttribute('href', 'https://www.instagram.com/p/MOCK1/')
-  await expect(page.locator('.cover img')).toBeVisible()
+  await expect(page.getByRole('link', { name: /Guarda il post/ })).toHaveAttribute('href', 'https://www.instagram.com/p/MOCK1/')
+  await expect(page.locator('article.art .hero .cover img')).toBeVisible()
 
   // hide both so the seed Gazzetta is back to normal; they stay hidden after the next sync
   await page.goto('/admin/news')

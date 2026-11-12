@@ -18,7 +18,7 @@ const name = computed(() => user.value?.user_metadata?.display_name ?? user.valu
     </button>
     <div v-show="open" id="top-menu" class="menu panel">
       <p class="who">{{ name }} <span class="eyebrow">· {{ role }}</span></p>
-      <NuxtLink v-for="item in secondary" :key="item.to" :to="item.to" class="m-link">{{ item.label }}</NuxtLink>
+      <NuxtLink v-for="item in secondary" :key="item.to" :to="item.to" class="m-link"><AppIcon :name="item.icon" :size="20" />{{ item.label }}</NuxtLink>
       <button class="m-link out" type="button" @click="signOut">Esci</button>
     </div>
   </header>
@@ -33,7 +33,7 @@ const name = computed(() => user.value?.user_metadata?.display_name ?? user.valu
 .menu-btn { width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; color: var(--rv-cream); cursor: pointer; }
 .menu { position: absolute; top: 56px; right: var(--gutter); min-width: 220px; display: grid; gap: var(--space-1); padding: var(--space-3); }
 .who { padding: var(--space-2) var(--space-3); font-weight: var(--fw-ui); overflow-wrap: anywhere; }
-.m-link { display: flex; align-items: center; min-height: 44px; padding: 0 var(--space-3); border-radius: var(--r-s); text-decoration: none; background: none; border: 0; color: var(--rv-cream); font: inherit; cursor: pointer; text-align: left; }
+.m-link { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; padding: 0 var(--space-3); border-radius: var(--r-s); text-decoration: none; background: none; border: 0; color: var(--rv-cream); font: inherit; cursor: pointer; text-align: left; }
 .m-link:hover { background: var(--rv-surface-2); }
 .out { color: var(--rv-muted); }
 @media (min-width: 1051px) { .top { display: none; } }

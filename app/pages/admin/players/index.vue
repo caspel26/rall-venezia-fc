@@ -17,7 +17,7 @@ const { data, status } = useAsyncData('admin-players', async () =>
     <div v-if="status === 'pending' && !data" class="list"><SkeletonBlock v-for="n in 5" :key="n" size="sm" /></div>
     <ul v-else-if="data?.length" class="list" aria-label="Giocatori">
       <li v-for="p in data" :key="p.id" class="row">
-        <PlayerPortrait class="th" :first="p.first_name" :last="p.last_name" :number="p.shirt_number" :photo-path="p.photo_path" variant="thumb" />
+        <PlayerAvatar :first="p.first_name" :last="p.last_name" :photo-path="p.photo_path" :size="40" />
         <span class="n display tabular">{{ p.shirt_number ?? '·' }}</span>
         <span class="nm">{{ fullName(p) }}<span v-if="!p.is_active" class="eyebrow"> · non attivo</span></span>
         <NuxtLink :to="`/admin/players/${p.id}`" class="btn btn-sm">Modifica</NuxtLink>

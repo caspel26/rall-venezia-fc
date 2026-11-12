@@ -4,7 +4,7 @@ export function useNews(limit = 20) {
   const client = useSupabaseClient<Database>()
   return useAsyncData(`news-${limit}`, async () => {
     const { data } = await client.from('news_articles')
-      .select('id, slug, kicker, title, summary, is_lead, published_at, cover_path')
+      .select('id, slug, kicker, title, summary, body, is_lead, published_at, cover_path, source, match_id')
       .not('published_at', 'is', null).lte('published_at', new Date().toISOString())
       .order('published_at', { ascending: false }).limit(limit)
     return data ?? []

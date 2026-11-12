@@ -8,8 +8,9 @@ const initials = computed(() => (props.short || props.name).slice(0, 3).toUpperC
 </template>
 
 <style scoped>
-.badge { display: inline-grid; place-items: center; border-radius: var(--r-pill); border: 2px solid var(--rv-line); background: var(--rv-surface-2); color: var(--rv-cream); }
-.sm { width: 32px; height: 32px; font-size: var(--fs-cap); }
-.md { width: 56px; height: 56px; font-size: var(--fs-h3); }
+.badge { display: inline-grid; place-items: center; border-radius: var(--r-pill); background: radial-gradient(70% 70% at 50% 30%, rgb(255 255 255 / .1), transparent 70%), var(--rv-surface-3); box-shadow: inset 0 0 0 1px var(--rv-line-strong); color: var(--rv-cream); flex: none; }
+.sm { width: 40px; height: 40px; font-size: var(--fs-sm); }
+.md { width: 72px; height: 72px; font-size: var(--fs-h3); }
 .lg { width: 96px; height: 96px; font-size: var(--fs-h2); }
+@media (max-width: 700px) { .md { width: 56px; height: 56px; } .lg { width: 72px; height: 72px; } }
 </style>

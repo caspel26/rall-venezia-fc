@@ -12,15 +12,21 @@ const names = computed(() => (scorers.value ?? []).slice(0, 4).map((s) => {
 </script>
 
 <template>
-  <WidgetFrame v-if="last || status === 'pending'" title="Ultimo risultato" bare :loading="status === 'pending' && !data">
-    <NuxtLink v-if="last" :to="`/matches/${last.id}`" class="res grain" :class="result ? `r-${result.toLowerCase()}` : ''">
+  <WidgetFrame v-if="last || status === 'pending'" title="Ultimo risultato" icon="whistle" bare :loading="status === 'pending' && !data">
+    <NuxtLink v-if="last" :to="`/matches/${last.id}`" class="res lift" :class="result ? `r-${result.toLowerCase()}` : ''">
       <div class="head">
-        <p class="eyebrow">Ultimo risultato · {{ formatShortDay(last.kickoff_at) }}</p>
-        <span v-if="result" class="tag display">{{ RESULT_LABEL[result].word }}</span>
+        <span class="chip-i"><AppIcon name="calendar" :size="14" />{{ formatShortDay(last.kickoff_at) }}</span>
+        <span v-if="result" class="pill-r display">{{ RESULT_LABEL[result].letter }} · {{ RESULT_LABEL[result].word }}</span>
       </div>
-      <ScoreBoard :rv="last.rv_score" :opp="last.opp_score" :is-home="last.is_home" :opponent="last.opponent?.name ?? ''" />
+      <div class="board">
+        <div class="team"><ClubLogo :size="48" /><p class="nm display">Rall Venezia</p></div>
+        <p class="score display tabular" :aria-label="`${last.rv_score} a ${last.opp_score}`"><span class="d d1">{{ formatScore(last.rv_score) }}</span><span class="bar" aria-hidden="true" /><span class="d d2">{{ formatScore(last.opp_score) }}</span></p>
+        <div class="team"><OpponentBadge :name="last.opponent?.name ?? ''" :short="last.opponent?.short_name" size="sm" /><p class="nm display">{{ last.opponent?.name }}</p></div>
+      </div>
       <div class="foot">
-        <p v-if="names.length" class="sc"><span class="muted">Gol:</span> <span v-for="(s, i) in names" :key="s.name">{{ s.name }}<template v-if="s.n > 1"> ×{{ s.n }}</template><template v-if="i < names.length - 1">, </template></span></p>
+        <ul v-if="names.length" class="scorers" aria-label="Marcatori">
+          <li v-for="s in names" :key="s.name" class="chip-i"><AppIcon name="ball" :size="14" />{{ s.name }}<template v-if="s.n > 1"> ×{{ s.n }}</template></li>
+        </ul>
         <MVPBadge v-if="mvp" :name="fullName(mvp)" />
       </div>
     </NuxtLink>
@@ -29,12 +35,22 @@ const names = computed(() => (scorers.value ?? []).slice(0, 4).map((s) => {
 </template>
 
 <style scoped>
-.res { --glow: var(--rv-muted); display: grid; gap: var(--space-4); padding: var(--space-5); border-radius: var(--r-s); border: 1px solid var(--rv-line); text-decoration: none; color: inherit; background: radial-gradient(80% 90% at 100% 0%, color-mix(in srgb, var(--glow) 32%, transparent), transparent 70%), var(--rv-surface); transition: border-color var(--dur) var(--ease-standard); }
-.r-w { --glow: var(--rv-green); border-color: color-mix(in srgb, var(--rv-green) 45%, var(--rv-line)); }
-.r-l { --glow: var(--rv-red); border-color: color-mix(in srgb, var(--rv-red) 45%, var(--rv-line)); }
-.head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
-.tag { color: var(--glow); font-size: var(--fs-h2); letter-spacing: .04em; }
-.foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); justify-content: space-between; }
-.sc { font-size: var(--fs-sm); }
-@media (hover: hover) { .res:hover { border-color: var(--glow); } }
+.res { --glow: var(--rv-muted); display: grid; gap: 20px; padding: 24px; border-radius: var(--r-panel); text-decoration: none; color: inherit;
+  background: var(--noise), radial-gradient(70% 80% at 85% 0%, color-mix(in srgb, var(--glow) 30%, transparent), transparent 70%), var(--panel-bg);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--glow) 45%, var(--rv-line)); }
+.r-w { --glow: var(--rv-green); } .r-l { --glow: var(--rv-red); }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.pill-r { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: var(--r-pill); background: var(--glow); color: var(--rv-black); font-size: var(--fs-sm); letter-spacing: .06em; text-transform: uppercase; }
+.board { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+.team { display: grid; justify-items: center; gap: 8px; text-align: center; min-width: 0; }
+.nm { font-size: 18px; line-height: 1; overflow-wrap: anywhere; }
+.score { display: flex; align-items: center; gap: .12em; font-size: clamp(64px, 14vw, 132px); line-height: .9; }
+.bar { width: 24px; height: 6px; border-radius: 3px; background: var(--rv-muted); }
+.d { display: inline-block; animation: score-reveal var(--dur-slow) var(--ease-out) both; }
+.d2 { animation-delay: 120ms; }
+@keyframes score-reveal { from { opacity: 0; transform: translateY(.35em); } to { opacity: 1; transform: none; } }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.scorers { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 701px) { .nm { font-size: 20px; } }
+@media (prefers-reduced-motion: reduce) { .d { animation: none; } }
 </style>

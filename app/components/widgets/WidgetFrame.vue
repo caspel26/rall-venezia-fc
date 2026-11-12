@@ -1,13 +1,14 @@
 <script setup lang="ts">
-// Common chrome for a widget: titled region, optional "see all" link, skeleton while loading.
-defineProps<{ title: string; to?: string; linkLabel?: string; loading?: boolean; bare?: boolean }>()
+import type { IconName } from '~/components/AppIcon.vue'
+// Common chrome for a widget: icon + title, optional "see all" chip, vanish swap from the skeleton.
+defineProps<{ title: string; icon: IconName; to?: string; linkLabel?: string; loading?: boolean; bare?: boolean }>()
 </script>
 
 <template>
   <section v-reveal class="w" :class="{ panel: !bare }" :aria-label="title">
-    <header v-if="!bare" class="wh">
-      <h2 class="eyebrow">{{ title }}</h2>
-      <NuxtLink v-if="to" :to="to" class="muted more">{{ linkLabel ?? 'Vedi tutto' }}</NuxtLink>
+    <header class="wh">
+      <h2 class="t"><AppIcon :name="icon" :size="18" />{{ title }}</h2>
+      <NuxtLink v-if="to" :to="to" class="link-chip">{{ linkLabel ?? 'Vedi tutto' }}<AppIcon name="arrow-right" :size="14" /></NuxtLink>
     </header>
     <Transition name="vanish" mode="out-in">
       <SkeletonBlock v-if="loading" key="skeleton" size="md" />
@@ -17,8 +18,9 @@ defineProps<{ title: string; to?: string; linkLabel?: string; loading?: boolean;
 </template>
 
 <style scoped>
-.w { display: grid; gap: var(--space-4); min-width: 0; }
-.wc { display: grid; gap: var(--space-4); min-width: 0; }
-.wh { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
-.more { font-size: var(--fs-sm); }
+.w { display: grid; gap: 16px; min-width: 0; }
+.wh { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 32px; }
+.t { display: flex; align-items: center; gap: 8px; margin: 0; font: 700 13px/1 var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--rv-cream); }
+.t svg { color: var(--rv-orange); }
+.wc { display: grid; gap: 16px; min-width: 0; }
 </style>

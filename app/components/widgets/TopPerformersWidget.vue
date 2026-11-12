@@ -1,23 +1,24 @@
 <script setup lang="ts">
+import type { IconName } from '~/components/AppIcon.vue'
 const goals = useRanking('goals', 1)
 const assists = useRanking('assists', 1)
 const mvps = useRanking('mvps', 1)
-const tops = computed(() => [
-  { label: 'Capocannoniere', row: goals.rows.value[0], unit: 'gol', gold: false },
-  { label: 'Re degli assist', row: assists.rows.value[0], unit: 'assist', gold: false },
-  { label: 'MVP', row: mvps.rows.value[0], unit: 'volte', gold: true },
-].filter((t) => t.row))
+const tops = computed(() => ([
+  { label: 'Capocannoniere', icon: 'ball' as IconName, row: goals.rows.value[0], unit: 'gol', gold: false },
+  { label: 'Re degli assist', icon: 'assist' as IconName, row: assists.rows.value[0], unit: 'assist', gold: false },
+  { label: 'MVP', icon: 'star' as IconName, row: mvps.rows.value[0], unit: 'volte', gold: true },
+]).filter((t) => t.row))
 </script>
 
 <template>
-  <WidgetFrame title="Migliori" :loading="goals.status.value === 'pending' && !tops.length">
+  <WidgetFrame title="Migliori" icon="star" :loading="goals.status.value === 'pending' && !tops.length">
     <div v-if="tops.length" class="tops">
-      <NuxtLink v-for="t in tops" :key="t.label" :to="`/team/${t.row!.player.slug}`" class="top" :class="{ gold: t.gold }">
-        <PlayerPortrait class="av" :first="t.row!.player.first_name" :last="t.row!.player.last_name" :number="t.row!.player.shirt_number" :photo-path="t.row!.player.photo_path" variant="thumb" />
+      <NuxtLink v-for="t in tops" :key="t.label" :to="`/team/${t.row!.player.slug}`" class="top lift" :class="{ gold: t.gold }">
+        <span class="mini stage"><PlayerAvatar :first="t.row!.player.first_name" :last="t.row!.player.last_name" :photo-path="t.row!.player.photo_path" :size="64" :ring="t.gold ? 'gold' : 'orange'" /></span>
         <div class="txt">
-          <p class="eyebrow">{{ t.label }}</p>
+          <span class="chip-i"><AppIcon :name="t.icon" :size="14" />{{ t.label }}</span>
           <StatCard class="sc" label="" :value="t.row!.value" />
-          <p class="who">{{ fullName(t.row!.player) }} <span class="muted">· {{ t.unit }}</span></p>
+          <p class="who">{{ fullName(t.row!.player) }}</p>
         </div>
       </NuxtLink>
     </div>
@@ -26,14 +27,14 @@ const tops = computed(() => [
 </template>
 
 <style scoped>
-.tops { display: grid; gap: var(--space-3); }
-.top { display: grid; grid-template-columns: 76px 1fr; gap: var(--space-4); align-items: center; padding: var(--space-3); border: 1px solid var(--rv-line); border-radius: var(--r-card); background: var(--rv-surface-2); text-decoration: none; color: inherit; transition: border-color var(--dur) var(--ease-standard), transform 300ms var(--ease-out); }
-.av { width: 76px; border: 2px solid var(--rv-orange); }
-.gold .av { border-color: var(--rv-gold); box-shadow: 0 0 22px rgb(212 175 55 / .35); }
-.gold .eyebrow { color: var(--rv-gold); }
-.txt { display: grid; gap: 2px; min-width: 0; }
+.tops { display: grid; gap: 10px; }
+.top { display: grid; grid-template-columns: 96px 1fr; align-items: center; min-height: 96px; border-radius: 14px; overflow: hidden; background: var(--rv-surface-2); box-shadow: inset 0 0 0 1px var(--rv-line); text-decoration: none; color: inherit; }
+.mini { --ring-size: 0; --spot-y: 40%; --stage-fade: transparent; align-self: stretch; display: grid; place-items: center; }
+.mini::before, .mini::after { display: none; }
+.gold { background: linear-gradient(90deg, var(--rv-gold-soft), var(--rv-surface-2) 70%); }
+.gold .chip-i svg { color: var(--rv-gold); }
+.txt { display: grid; gap: 2px; justify-items: start; padding: 10px 14px 10px 4px; min-width: 0; }
 .sc :deep(.eyebrow) { display: none; }
-.sc :deep(.v) { font-size: 44px; line-height: .9; }
-.who { font-weight: var(--fw-ui); font-size: var(--fs-sm); overflow-wrap: anywhere; }
-@media (hover: hover) { .top:hover { border-color: var(--rv-orange); transform: translateX(3px); } }
+.sc :deep(.v) { font-size: 40px; line-height: 1; }
+.who { font: 600 14px/1.2 var(--font-ui); overflow-wrap: anywhere; }
 </style>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { resultOf } from '~/utils/results'
-
 const props = defineProps<{
   to?: string
   opponent: string
@@ -20,43 +18,32 @@ const result = computed(() => (props.status === 'completed' ? resultOf({ rv_scor
 </script>
 
 <template>
-  <component :is="to ? NuxtLink : 'div'" :to="to" class="mc" :class="[variant ?? 'row', { link: !!to }]">
-    <template v-if="variant === 'hero'">
-      <ClubLogo class="mark" :size="320" aria-hidden="true" />
-      <p class="eyebrow">Prossima partita<template v-if="competition"> · {{ competition }}</template></p>
-      <p class="vs display">Rall Venezia <span class="x">vs</span> {{ opponent }}</p>
-      <p class="when">{{ formatDay(kickoffAt) }} · <strong>{{ formatTime(kickoffAt) }}</strong></p>
-      <p v-if="venue" class="muted">{{ venue }} · {{ isHome ? 'in casa' : 'in trasferta' }}</p>
-    </template>
-    <template v-else>
-      <OpponentBadge :name="opponent" :short="short" size="md" />
-      <div class="info">
-        <p class="t">{{ isHome ? 'Rall Venezia' : opponent }} <span class="muted">vs</span> {{ isHome ? opponent : 'Rall Venezia' }}</p>
-        <p class="muted sm">{{ formatShortDay(kickoffAt) }} · {{ formatTime(kickoffAt) }}<template v-if="competition"> · {{ competition }}</template></p>
-      </div>
-      <div class="end">
-        <template v-if="status === 'completed'">
-          <span class="sc display tabular">{{ formatScore(rv) }}–{{ formatScore(opp) }}</span>
-          <ResultPill v-if="result" :result="result" />
-        </template>
-        <span v-else class="eyebrow">{{ status === 'scheduled' ? 'In programma' : status }}</span>
-      </div>
-    </template>
+  <component :is="to ? NuxtLink : 'div'" :to="to" class="mc row" :class="{ link: !!to }">
+    <OpponentBadge :name="opponent" :short="short" size="sm" class="badge" />
+    <div class="info">
+      <p class="t">{{ opponent }}</p>
+      <p class="meta"><AppIcon :name="isHome ? 'home' : 'plane'" :size="14" />{{ formatShortDay(kickoffAt) }} · {{ formatTime(kickoffAt) }} · {{ isHome ? 'Casa' : 'Trasferta' }}</p>
+    </div>
+    <div class="end">
+      <template v-if="status === 'completed'">
+        <span class="sc display tabular">{{ formatScore(rv) }}–{{ formatScore(opp) }}</span>
+        <ResultPill v-if="result" :result="result" />
+      </template>
+      <span v-else class="eyebrow">{{ status === 'scheduled' ? 'In programma' : status }}</span>
+    </div>
   </component>
 </template>
 
 <style scoped>
 .mc { text-decoration: none; color: inherit; }
-.hero { position: relative; overflow: hidden; display: grid; gap: var(--space-2); padding: var(--space-6) var(--space-5); background: var(--rv-surface); border: 1px solid var(--rv-line); border-left: 4px solid var(--rv-orange); border-radius: var(--r-s); isolation: isolate; }
-.hero .mark { position: absolute; right: -60px; bottom: -70px; opacity: .07; z-index: -1; }
-.vs { font-size: var(--fs-display); line-height: .95; }
-.x { color: var(--rv-orange); font-size: .5em; vertical-align: middle; }
-.when { font-size: var(--fs-h3); }
-.row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border: 1px solid var(--rv-line); border-radius: var(--r-card); background: var(--rv-surface); transition: border-color var(--dur) var(--ease-standard); }
-.row.link:hover { border-color: var(--rv-muted); }
+.row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-3); min-height: 64px; padding: 12px 16px; border-radius: 14px; background: var(--rv-surface-2); box-shadow: inset 0 0 0 1px var(--rv-line); transition: background var(--dur) var(--ease-standard), transform var(--dur) var(--ease-out); }
+.badge { width: 40px; height: 40px; }
 .info { min-width: 0; }
-.t { font-weight: var(--fw-ui); }
-.sm { font-size: var(--fs-sm); }
+.t { font: 600 16px/1.2 var(--font-ui); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--rv-muted); }
 .end { display: flex; align-items: center; gap: var(--space-3); }
-.sc { font-size: var(--fs-h2); }
+.sc { font-size: 28px; line-height: 1; }
+@media (hover: hover) { .row.link:hover { background: var(--rv-surface-3); transform: translateX(2px); } }
+.row.link:active { transform: scale(.99); }
+.row.link:focus-visible { outline: 2px solid var(--rv-orange); outline-offset: 2px; }
 </style>

@@ -1,4 +1,5 @@
-.panel { background: var(--rv-surface); border: 1px solid var(--rv-line); border-radius: var(--r-panel); padding: var(--space-5); }
+.panel { background: var(--panel-bg); border: 1px solid var(--rv-line); border-radius: var(--r-panel); padding: var(--space-5); box-shadow: var(--shadow-panel); }
+@media (max-width: 700px) { .panel { padding: 20px; } }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
   min-height: 44px; padding: 0 var(--space-5); border-radius: var(--r-s); border: 1px solid var(--rv-line);
@@ -91,20 +92,80 @@ select.input { appearance: auto; }
 .stagger > .reveal:nth-child(4) { transition-delay: 210ms; } .stagger > .reveal:nth-child(5) { transition-delay: 280ms; }
 .stagger > .reveal:nth-child(n+6) { transition-delay: 350ms; }
 
-/* ---------------------------------------------------------------- stage: the club's backdrop for players
-   Crest stripes (green/orange), a warm spotlight behind the head, fading into the surface. */
+/* ---------------------------------------------------------------- stage: the club's backdrop for people
+   Soft crest-colour light, a thin double ring (the roundel) and grain. No stripes. */
 .stage {
   position: relative; isolation: isolate; overflow: hidden;
+  --ring-size: 92%; --ring-top: 4%; --spot-y: 30%;
   background:
-    radial-gradient(62% 48% at 50% 30%, rgb(253 127 16 / .26), transparent 72%),
-    repeating-linear-gradient(90deg, transparent 0 20px, rgb(25 82 43 / .34) 20px 42px, transparent 42px 62px, rgb(253 127 16 / .12) 62px 82px),
-    linear-gradient(180deg, #131611 0%, #0b0b09 100%);
+    var(--noise),
+    radial-gradient(46% 38% at 50% var(--spot-y), rgb(253 127 16 / .32) 0%, rgb(253 127 16 / .10) 48%, transparent 76%),
+    radial-gradient(90% 70% at 0% 100%, var(--rv-green-glow) 0%, transparent 62%),
+    radial-gradient(70% 55% at 100% 0%, rgb(25 82 43 / .42) 0%, transparent 60%),
+    linear-gradient(180deg, #121510 0%, #0b0b09 100%);
 }
-.stage::after { content: ''; position: absolute; inset: auto 0 0 0; height: 34%; z-index: 1; pointer-events: none; background: linear-gradient(180deg, transparent, var(--stage-fade, var(--rv-surface))); }
-.outline-text { font-family: var(--font-display); text-transform: uppercase; color: transparent; -webkit-text-stroke: 2px rgb(253 127 16 / .5); line-height: .8; user-select: none; pointer-events: none; }
+.stage::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none;
+  left: 50%; top: var(--ring-top); width: var(--ring-size); aspect-ratio: 1; translate: -50% 0; border-radius: 50%;
+  border: 1px solid rgb(253 127 16 / .30);
+  box-shadow: inset 0 0 0 10px rgb(253 127 16 / .035), inset 0 0 0 11px rgb(79 184 116 / .22);
+  -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 80%); mask-image: linear-gradient(180deg, #000 35%, transparent 80%);
+  transition: scale var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-standard);
+}
+.stage::after { content: ''; position: absolute; inset: auto 0 0 0; height: 38%; z-index: 1; pointer-events: none; background: linear-gradient(180deg, transparent, var(--stage-fade, var(--rv-surface))); }
+.stage--staff {
+  background:
+    var(--noise),
+    radial-gradient(46% 38% at 50% var(--spot-y), rgb(79 184 116 / .26) 0%, rgb(79 184 116 / .08) 48%, transparent 76%),
+    radial-gradient(90% 70% at 100% 100%, rgb(253 127 16 / .16) 0%, transparent 60%),
+    radial-gradient(80% 60% at 0% 0%, var(--rv-green-glow) 0%, transparent 62%),
+    linear-gradient(180deg, #0f1611 0%, #0b0b09 100%);
+}
+.stage--staff::before { border-color: rgb(79 184 116 / .34); }
+/* a slow aurora drift behind big heroes (transform only) */
+.stage-aurora { position: absolute; inset: -25%; z-index: -1; pointer-events: none;
+  background: radial-gradient(30% 30% at 30% 40%, rgb(253 127 16 / .14), transparent 70%), radial-gradient(35% 35% at 70% 60%, rgb(25 82 43 / .5), transparent 70%);
+  animation: aurora 18s var(--ease-standard) infinite alternate; }
+@keyframes aurora { from { transform: translate3d(-4%, 2%, 0) scale(1); } to { transform: translate3d(5%, -3%, 0) scale(1.1); } }
+@media (prefers-reduced-motion: reduce) { .stage-aurora { animation: none; } }
+.outline-text { font-family: var(--font-display); text-transform: uppercase; color: transparent; -webkit-text-stroke: 1.5px rgb(253 127 16 / .38); line-height: .8; user-select: none; pointer-events: none; }
+.outline-text--fill { color: rgb(253 127 16 / .06); }
+
+/* ---------------------------------------------------------------- person cards (players and staff) */
+.person-card { position: relative; display: block; border-radius: var(--r-card); overflow: hidden; background: var(--rv-surface);
+  box-shadow: inset 0 0 0 1px var(--rv-line); text-decoration: none; color: inherit; --accent: var(--rv-orange); --lift-shadow: var(--shadow-lift);
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
+  transition: transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out); }
+.person-card .shine { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0;
+  background: radial-gradient(40% 30% at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / .12), transparent 70%);
+  transition: opacity var(--dur-hover) var(--ease-standard); }
+.person-card .accent-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; z-index: 5; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 500ms var(--ease-out); }
+@media (hover: hover) {
+  .person-card:hover { --lift: -6px; box-shadow: var(--lift-shadow); }
+  .person-card:hover .shine { opacity: 1; }
+  .person-card:hover .accent-bar { transform: scaleX(1); }
+  .person-card:hover .stage::before { scale: 1.06; border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+  .person-card:hover .shot.in { transform: translateY(-2%) scale(1.05); }
+}
+.person-card:active { transform: scale(.98); transition-duration: var(--dur-fast); }
+.person-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.person-card--staff { --accent: var(--rv-green-ui); --lift-shadow: var(--shadow-lift-green); }
 
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 @keyframes pulse-dot { 0% { box-shadow: 0 0 0 0 rgb(253 127 16 / .7); } 100% { box-shadow: 0 0 0 10px rgb(253 127 16 / 0); } }
 @keyframes sweep { from { transform: translateX(-120%); } to { transform: translateX(220%); } }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--rv-orange); animation: pulse-dot 1.6s ease-out infinite; }
+
+/* chips: small labelled pills with an icon (categories, positions, states) */
+.chip-i { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: var(--r-pill); background: var(--rv-surface-3); font: 700 var(--fs-cap)/1 var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--rv-cream); white-space: nowrap; }
+.chip-i svg { color: var(--rv-orange); }
+.chip-i.glass { background: var(--rv-glass); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.link-chip { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: var(--r-pill); background: var(--rv-surface-3); color: var(--rv-cream); font: 600 13px/1 var(--font-ui); text-decoration: none; transition: background var(--dur) var(--ease-standard), color var(--dur) var(--ease-standard); }
+.link-chip svg { transition: translate var(--dur) var(--ease-out); }
+.link-chip:hover { background: var(--rv-orange-soft); color: var(--rv-orange); }
+.link-chip:hover svg { translate: 3px 0; }
+.link-chip:focus-visible { outline: 2px solid var(--rv-orange); outline-offset: 2px; }
+.lift { transition: transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-standard); }
+@media (hover: hover) { .lift:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); } }
+.start { justify-self: start; }

@@ -19,7 +19,7 @@ const name = computed(() => user.value?.user_metadata?.display_name ?? user.valu
     </nav>
     <nav aria-label="Altre sezioni" class="links more">
       <NuxtLink v-for="item in secondary" :key="item.to" :to="item.to" class="link small"
-        :aria-current="isActive(route.path, item.to) ? 'page' : undefined">{{ item.label }}</NuxtLink>
+        :aria-current="isActive(route.path, item.to) ? 'page' : undefined"><AppIcon :name="item.icon" :size="20" /><span>{{ item.label }}</span></NuxtLink>
     </nav>
     <div class="me">
       <p class="who">{{ name }}</p>
@@ -44,7 +44,7 @@ const name = computed(() => user.value?.user_metadata?.display_name ?? user.valu
 }
 .link:hover { color: var(--rv-cream); background: var(--rv-surface-2); }
 .link[aria-current='page'] { color: var(--rv-orange); background: var(--rv-surface-2); }
-.link.small { font-size: var(--fs-sm); padding-left: calc(var(--space-3) + 36px); }
+.link.small { font-size: var(--fs-sm); }
 .more { margin-top: var(--space-2); }
 .me { margin-top: auto; display: grid; gap: var(--space-1); }
 .who { font-weight: var(--fw-ui); overflow-wrap: anywhere; }

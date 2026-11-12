@@ -1,11 +1,15 @@
 /* Single tokens block. Components consume these; never hard-code a colour, size, radius or duration. */
 :root {
   /* colour */
-  --rv-black: #0a0a0a;
-  --rv-surface: #141414;
-  --rv-surface-2: #1c1c1c;
-  --rv-line: #2a2a2a;
+  --rv-black: #0b0b09;
+  --rv-surface: #131312;
+  --rv-surface-2: #1a1a18;
+  --rv-surface-3: #23231f;
+  --rv-glass: rgb(19 19 18 / .72);
+  --rv-line: rgb(255 255 255 / .07);
+  --rv-line-strong: rgb(255 255 255 / .14);
   --rv-cream: #f3ead8;
+  --rv-cream-2: rgb(243 234 216 / .86); /* body copy on dark */
   --rv-muted: #a39c8c;
   --rv-orange: #fd7f10; /* from the roundel */
   --rv-orange-ink: #0a0a0a;
@@ -15,16 +19,15 @@
   --rv-amber: #e0a526;
   --rv-gold: #d4af37;
 
-  /* newspaper (Gazzetta) */
-  --paper: #f3ead8;
-  --paper-ink: #141210;
-  --paper-muted: #5f574a;
-  --paper-rule: #141210;
-  --paper-accent: #a24f00; /* orange darkened for contrast on paper (4.8:1) */
+  /* accent tints */
+  --rv-orange-soft: rgb(253 127 16 / .14);
+  --rv-orange-line: rgb(253 127 16 / .45);
+  --rv-green-glow: rgb(25 82 43 / .70);
+  --rv-green-ui: #4fb874; /* staff accent text/lines */
+  --rv-gold-soft: rgb(212 175 55 / .16);
 
   /* type */
   --font-display: 'Anton', 'Bebas Neue', Impact, sans-serif;
-  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --font-ui: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --fs-cap: 12px;
   --fs-sm: 14px;
@@ -54,12 +57,28 @@
   --nav-h: 64px;
 
   /* shape */
-  --r-s: 6px;
-  --r-card: 10px;
-  --r-panel: 14px;
+  --r-s: 8px;
+  --r-card: 16px;
+  --r-panel: 20px;
   --r-pill: 999px;
 
+  /* depth */
+  --shadow-lift: 0 24px 48px -16px rgb(0 0 0 / .7), 0 0 0 1px var(--rv-orange-line);
+  --shadow-lift-green: 0 24px 48px -16px rgb(0 0 0 / .7), 0 0 0 1px rgb(79 184 116 / .45);
+  --shadow-panel: 0 1px 0 rgb(255 255 255 / .04) inset, 0 12px 32px -20px rgb(0 0 0 / .8);
+  --panel-bg: linear-gradient(180deg, #181816 0%, #121211 100%);
+
+  /* texture: white noise baked at low alpha, used inside background stacks */
+  --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.12'/></svg>");
+
+  /* type additions */
+  --fs-lead: 20px;
+  --fs-article: 18px;
+  --fs-mega: clamp(72px, 11vw, 168px);
+
   /* motion */
+  --dur-hover: 320ms;
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
   --dur-fast: 120ms;
   --dur: 200ms;
   --dur-slow: 400ms;
@@ -82,5 +101,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root { --dur-fast: 0ms; --dur: 0ms; --dur-slow: 0ms; --dur-count: 0ms; --dur-reveal: 0ms; }
+  :root { --dur-fast: 0ms; --dur: 0ms; --dur-slow: 0ms; --dur-count: 0ms; --dur-reveal: 0ms; --dur-hover: 0ms; }
 }

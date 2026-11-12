@@ -17,9 +17,9 @@ export const PRIMARY_NAV: NavItem[] = [
   { to: '/clubhouse', label: 'Spogliatoio', icon: 'locker', roles: TEAM_ROLES },
 ]
 
-export const SECONDARY_NAV: Omit<NavItem, 'icon'>[] = [
-  { to: '/news', label: 'Gazzetta' },
-  { to: '/admin', label: 'Admin', roles: STAFF_ROLES },
+export const SECONDARY_NAV: NavItem[] = [
+  { to: '/news', label: 'Gazzetta', icon: 'news' },
+  { to: '/admin', label: 'Admin', icon: 'shield', roles: STAFF_ROLES },
 ]
 
 /** Nav entries the current role may see (UX only; RLS decides what data exists). */

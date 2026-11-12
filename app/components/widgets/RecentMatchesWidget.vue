@@ -5,7 +5,7 @@ const form = computed(() => formOf([...(data.value ?? [])].reverse()))
 </script>
 
 <template>
-  <WidgetFrame v-if="data?.length || status === 'pending'" title="Ultime 5 partite" to="/matches" :loading="status === 'pending' && !data">
+  <WidgetFrame v-if="data?.length || status === 'pending'" title="Ultime 5 partite" icon="list" to="/matches" :loading="status === 'pending' && !data">
     <FormStrip :form="form" />
     <ul class="rows" aria-label="Ultime partite">
       <li v-for="m in data" :key="m.id">

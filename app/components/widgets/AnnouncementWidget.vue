@@ -3,21 +3,29 @@ const { data } = useLatestAnnouncement()
 </script>
 
 <template>
-  <WidgetFrame v-if="data" title="Bacheca" bare>
-    <NuxtLink to="/clubhouse/announcements" class="note">
-      <span class="tape" aria-hidden="true" />
-      <p class="eyebrow">{{ data.pinned ? 'In evidenza' : 'Dallo spogliatoio' }} · {{ formatShortDay(data.published_at!) }}</p>
+  <WidgetFrame v-if="data" title="Bacheca" icon="megaphone" bare>
+    <NuxtLink to="/clubhouse/announcements" class="note lift">
+      <div class="top">
+        <span class="tile"><AppIcon name="megaphone" :size="22" /></span>
+        <span class="chip-i" :class="{ muted: !data.pinned }"><AppIcon :name="data.pinned ? 'pin' : 'megaphone'" :size="14" />{{ data.pinned ? 'In evidenza' : 'Dallo spogliatoio' }}</span>
+        <span class="date">{{ formatShortDay(data.published_at!) }}</span>
+      </div>
       <h3 class="display">{{ data.title }}</h3>
       <p class="body">{{ data.body }}</p>
+      <span class="link-chip">Apri la bacheca<AppIcon name="arrow-right" :size="14" /></span>
     </NuxtLink>
   </WidgetFrame>
 </template>
 
 <style scoped>
-.note { position: relative; display: grid; gap: var(--space-2); padding: var(--space-6) var(--space-5) var(--space-5); background: #f3e6c6; color: #1a160f; text-decoration: none; transform: rotate(-.9deg); box-shadow: 0 14px 30px rgb(0 0 0 / .45); transition: transform 350ms var(--ease-out); }
-.note .eyebrow { color: #6b5a2e; }
-.tape { position: absolute; top: -12px; left: 50%; width: 110px; height: 26px; transform: translateX(-50%) rotate(2deg); background: rgb(253 127 16 / .75); box-shadow: 0 2px 6px rgb(0 0 0 / .3); }
-h3 { font-size: var(--fs-h2); line-height: .95; }
-.body { font: 400 var(--fs-body)/1.5 var(--font-serif); white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-@media (hover: hover) { .note:hover { transform: rotate(0deg) translateY(-4px); } }
+.note { position: relative; display: grid; gap: 14px; justify-items: start; padding: 24px; border-radius: var(--r-panel); text-decoration: none; color: inherit; overflow: hidden;
+  background: radial-gradient(60% 70% at 100% 0%, var(--rv-orange-soft), transparent 70%), var(--panel-bg); box-shadow: inset 0 0 0 1px var(--rv-line); }
+.note::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--rv-orange), transparent 70%); }
+.top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tile { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--rv-orange-soft); color: var(--rv-orange); }
+.chip-i.muted svg { color: var(--rv-muted); }
+.date { font-size: 13px; color: var(--rv-muted); }
+h3 { font-size: 28px; line-height: 1; }
+.body { font: 400 16px/1.55 var(--font-ui); color: var(--rv-cream-2); white-space: pre-line; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+@media (max-width: 700px) { h3 { font-size: 24px; } }
 </style>

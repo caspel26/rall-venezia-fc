@@ -1,20 +1,18 @@
 <script setup lang="ts">
-const { data, status } = useNews(1)
-const a = computed(() => data.value?.[0])
+const { data, status } = useNews(3)
 </script>
 
 <template>
-  <WidgetFrame v-if="a || status === 'pending'" title="Dalla Gazzetta" to="/news" link-label="Prima pagina" bare :loading="status === 'pending' && !data">
-    <div v-if="a" class="paper grain">
-      <p class="mast display">La Gazzetta Rall</p>
-      <NewsStory size="mid" :slug="a.slug" :cover="a.cover_path" :kicker="a.kicker" :title="a.title" :summary="a.summary" :at="a.published_at" />
-      <NuxtLink to="/news" class="all">Prima pagina →</NuxtLink>
+  <WidgetFrame v-if="data?.length || status === 'pending'" title="Gazzetta" icon="news" to="/news" link-label="Tutte le notizie" :loading="status === 'pending' && !data">
+    <div v-if="data?.length" class="stack">
+      <NewsCard v-if="data[0]!.cover_path" :slug="data[0]!.slug" :cover="data[0]!.cover_path" :category="newsCategory(data[0]!)" :kicker="data[0]!.kicker" :title="data[0]!.title"
+        :summary="data[0]!.summary" :at="data[0]!.published_at" :minutes="readingMinutes(data[0]!.body)" />
+      <NewsCard v-for="a in (data[0]!.cover_path ? data.slice(1) : data)" :key="a.id" variant="row" :slug="a.slug" :cover="a.cover_path" :category="newsCategory(a)" :title="a.title"
+        :at="a.published_at" :minutes="readingMinutes(a.body)" />
     </div>
   </WidgetFrame>
 </template>
 
 <style scoped>
-.paper { display: grid; gap: var(--space-3); padding: var(--space-5); background: var(--paper); color: var(--paper-ink); border-radius: var(--r-s); }
-.all { font: 600 var(--fs-sm)/1 var(--font-ui); color: var(--paper-accent); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
-.mast { font-size: var(--fs-h3); border-bottom: 2px solid var(--paper-rule); padding-bottom: var(--space-2); }
+.stack { display: grid; gap: 12px; }
 </style>

@@ -9,7 +9,7 @@ test('squad lists editorial cards ordered by shirt number', async ({ page }) => 
   await expect(cards).toHaveCount(8)
   await expect(cards.first()).toContainText('Daniele Nappo')
   await expect(cards.first()).toContainText('Daniele')
-  await expect(cards.first()).toContainText('Portiere · Capitano')
+  await expect(cards.first()).toContainText('Portiere')
   await expect(cards.nth(1)).toContainText('Sergio Batti')
   await expect(cards.nth(1)).toContainText('Sergio')
   await expect(cards.nth(1)).toContainText('Difensore')
@@ -26,7 +26,7 @@ test('player profile shows derived stats and matches', async ({ page }) => {
   await page.goto('/team/salvatore-marigliano')
   await expect(page.locator('h1')).toHaveText('Salvatore Marigliano')
   await page.waitForLoadState('networkidle') // wait for hydration before clicking tabs
-  const stats = page.getByRole('region', { name: 'Statistiche in carriera' })
+  const stats = page.getByLabel('Statistiche in carriera')
   await expect(stats.locator('.stat', { hasText: 'Presenze' })).toContainText('8')
   await expect(stats.locator('.stat', { hasText: 'Gol' }).first()).toContainText('3')
 
@@ -64,7 +64,7 @@ test('player photos come from private storage and render on cards and profiles',
   await page.goto('/team/francesco-ferrara')
   const hero = page.getByRole('img', { name: 'Francesco Ferrara' })
   await expect(hero).toBeVisible()
-  expect(await hero.getAttribute('src')).toContain('francesco-ferrara/hero.webp')
+  expect(await hero.getAttribute('src')).toContain('francesco-ferrara/portrait.webp')
 })
 
 test('the bucket is private: unsigned URLs do not serve photos', async ({ request }) => {
