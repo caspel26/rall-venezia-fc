@@ -46,6 +46,19 @@ def blue_bib_to_white(rgba: Image.Image) -> Image.Image:
     return Image.fromarray(a.astype(np.uint8), 'RGBA')
 
 
+def clean_edges(rgba: Image.Image) -> Image.Image:
+    """Remove the dark/light fringe left by matting: drop near-transparent pixels, pull the edge in by one pixel and
+    soften it a touch so the cutout sits cleanly on any backdrop."""
+    from PIL import ImageFilter
+    alpha = rgba.getchannel('A')
+    a = np.array(alpha)
+    a[a < 12] = 0
+    alpha = Image.fromarray(a).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
+    out = rgba.copy()
+    out.putalpha(alpha)
+    return out
+
+
 def keep_main_person(rgba: Image.Image, fx: float, fy: float) -> Image.Image:
     """Drop bystanders: keep only the region connected (after a small dilation) to the player's face."""
     arr = np.array(rgba)
@@ -77,7 +90,8 @@ for d in sorted(p for r in roots if r.exists() for p in r.iterdir() if p.is_dir(
     img = ImageEnhance.Contrast(img).enhance(1.08)
     img = ImageEnhance.Color(img).enhance(1.05)
     f = faces.get(d.name, {'x': 0.5, 'y': 0.3})
-    out = remove(img, session=session_for(f.get('model', 'u2net_human_seg')), post_process_mask=True)
+    out = remove(img, session=session_for(f.get('model', 'u2net_human_seg')), alpha_matting=True,
+                 alpha_matting_foreground_threshold=235, alpha_matting_background_threshold=15, alpha_matting_erode_size=12)
     if faces.get(d.name, {}).get('bib_to_white'):
         out = blue_bib_to_white(out)
     out = keep_main_person(out, f['x'], f['y'])
@@ -93,5 +107,6 @@ for d in sorted(p for r in roots if r.exists() for p in r.iterdir() if p.is_dir(
         for poly in f['erase_poly']:
             draw.polygon([tuple(pt) for pt in poly], fill=0)
         out.putalpha(alpha)
+    out = clean_edges(out)
     out.save(d / 'cutout.png')
     print('cutout', d.name)

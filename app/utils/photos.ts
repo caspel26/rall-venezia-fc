@@ -1,4 +1,4 @@
-export type PhotoVariant = 'portrait' | 'hero' | 'thumb'
+export type PhotoVariant = 'portrait' | 'half' | 'hero' | 'thumb'
 
 /**
  * Player images follow `<slug>/portrait.webp`, `<slug>/hero.webp`, `<slug>/thumb.webp` in the private

@@ -13,7 +13,7 @@ const admin = createClient(url, key, { auth: { persistSession: false } })
 for (const [root, table] of [['private-assets/players', 'players'], ['private-assets/staff', 'staff_members']]) {
 const slugs = await readdir(root).catch(() => [])
 for (const slug of slugs) {
-  const files = { portrait: 'portrait.webp', hero: 'hero.webp', thumb: 'thumb.webp' }
+  const files = { portrait: 'portrait.webp', half: 'half.webp', hero: 'hero.webp', thumb: 'thumb.webp' }
   for (const f of Object.values(files)) {
     const body = await readFile(`${root}/${slug}/${f}`).catch(() => null)
     if (!body) { console.log(`skip ${slug}/${f} (missing, run scripts/build-player-assets.sh)`); continue }

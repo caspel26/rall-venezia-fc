@@ -48,7 +48,9 @@ insert into public.players (id, profile_id, slug, first_name, last_name, shirt_n
   ('c0000000-0000-4000-8000-000000000004', null, 'alfonso-avino', 'Alfonso', 'Avino', 33, 'winger', false),
   ('c0000000-0000-4000-8000-000000000005', null, 'salvatore-marigliano', 'Salvatore', 'Marigliano', 9, 'pivot', false),
   ('c0000000-0000-4000-8000-000000000006', null, 'sergio-batti', 'Sergio', 'Batti', 4, 'defender', false),
-  ('c0000000-0000-4000-8000-000000000007', null, 'francesco-ferrara', 'Francesco', 'Ferrara', 7, 'winger', false);
+  ('c0000000-0000-4000-8000-000000000007', null, 'francesco-ferrara', 'Francesco', 'Ferrara', 7, 'winger', false),
+  -- new in the squad (no position given, no matches played yet)
+  ('c0000000-0000-4000-8000-000000000008', null, 'francesco-sepe', 'Francesco', 'Sepe', 17, null, false);
 
 create function pg_temp.pid(s text) returns uuid language sql as
   $$ select id from public.players where slug = s $$;
@@ -86,7 +88,7 @@ insert into public.matches (id, season_id, competition_id, opponent_id, is_home,
 insert into public.match_players (match_id, player_id, is_starter, minutes)
 select m.id, p.id, p.slug in ('daniele-nappo', 'antonio-verrone', 'alfonso-avino', 'salvatore-marigliano', 'sergio-batti'), null
 from public.matches m cross join public.players p
-where m.status = 'completed';
+where m.status = 'completed' and p.slug <> 'francesco-sepe';
 
 -- Goals. Totals after eight matchdays: Antonio Verrone 31, Daniele Nappo 16, everyone else 3 (= 62 = the sum of
 -- our scores). Scorers are shuffled deterministically across the matches; every goal gets an assist where the

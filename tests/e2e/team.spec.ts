@@ -6,7 +6,7 @@ test('squad lists editorial cards ordered by shirt number', async ({ page }) => 
   await login(page, 'player')
   await page.goto('/team')
   const cards = page.getByRole('list', { name: 'Giocatori' }).getByRole('link')
-  await expect(cards).toHaveCount(7)
+  await expect(cards).toHaveCount(8)
   await expect(cards.first()).toContainText('Daniele Nappo')
   await expect(cards.first()).toContainText('Daniele')
   await expect(cards.first()).toContainText('Portiere · Capitano')
@@ -17,8 +17,8 @@ test('squad lists editorial cards ordered by shirt number', async ({ page }) => 
   await expect(cards.nth(3)).toContainText('Esterno') // an Esterno, not a midfielder
   await expect(cards.nth(5)).toContainText('Raffaele Miranda')
   await expect(cards.nth(5)).toContainText('Laterale / Jolly')
-  await expect(cards.nth(6)).toContainText('Alfonso Avino')
-  await expect(cards.nth(6)).toContainText('Alfonso')
+  await expect(cards.nth(6)).toContainText('Sepe')
+  await expect(cards.nth(7)).toContainText('Alfonso')
 })
 
 test('player profile shows derived stats and matches', async ({ page }) => {

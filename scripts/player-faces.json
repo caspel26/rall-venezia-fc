@@ -13,7 +13,12 @@
   },
   "sergio-batti": {
     "x": 0.48,
-    "y": 0.28
+    "y": 0.28,
+    "head": {
+      "cx": 0.485,
+      "top": 0.2,
+      "w": 190
+    }
   },
   "raffaele-miranda": {
     "x": 0.52,
@@ -189,5 +194,10 @@
     "y": 0.2,
     "model": "u2net_human_seg",
     "bust": 0.46
+  },
+  "francesco-sepe": {
+    "x": 0.52,
+    "y": 0.23,
+    "model": "u2net_human_seg"
   }
 }
