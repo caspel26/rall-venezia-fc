@@ -6,12 +6,12 @@ test('stats: team record, rankings with tie-break, players table', async ({ page
   await page.goto('/stats')
   await page.waitForLoadState('networkidle')
   await page.getByRole('tab', { name: 'Squadra' }).click()
-  // seeded record: 8 played (5W 1D 2L), goals 62-37
+  // seeded record: 8 played (7W 0D 1L), goals 64-25
   const t = (label: string) => page.locator('.panel', { hasText: label }).first()
   await expect(t('Giocate')).toContainText('8')
-  await expect(t('Gol fatti')).toContainText('62')
-  await expect(t('Gol subiti')).toContainText('37')
-  await expect(t('Differenza reti')).toContainText('+25')
+  await expect(t('Gol fatti')).toContainText('64')
+  await expect(t('Gol subiti')).toContainText('25')
+  await expect(t('Differenza reti')).toContainText('+39')
 
   await page.getByRole('tab', { name: 'Classifiche' }).click()
   const scorers = page.locator('.panel', { has: page.getByRole('heading', { name: 'Marcatori' }) })
@@ -19,9 +19,9 @@ test('stats: team record, rankings with tie-break, players table', async ({ page
   await expect(scorers.locator('li').first()).toContainText('31')
   await expect(scorers.locator('li').nth(1)).toContainText('Daniele Nappo')
   await expect(scorers.locator('li').nth(1)).toContainText('16')
-  // the other five are level on 3 goals and 8 games: they share third place
+  // five players on 3 goals: Miranda played fewer games so she is third alone, the other four share fourth
   await expect(scorers.locator('li').nth(2).locator('.pos')).toHaveText('3')
-  await expect(scorers.locator('li').nth(4).locator('.pos')).toHaveText('3')
+  await expect(scorers.locator('li').nth(4).locator('.pos')).toHaveText('4')
 
   await page.getByRole('tab', { name: 'Giocatori' }).click()
   await expect(page.locator('tbody tr').first()).toContainText('Antonio Verrone')

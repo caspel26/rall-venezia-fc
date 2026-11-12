@@ -31,7 +31,7 @@ test('player profile shows derived stats and matches', async ({ page }) => {
   await expect(stats.locator('.stat', { hasText: 'Gol' }).first()).toContainText('3')
 
   await page.getByRole('tab', { name: 'Partite' }).click()
-  await expect(page.locator('#main').getByText('Murano United')).toBeVisible()
+  await expect(page.locator('#main').getByText('Lazio')).toBeVisible()
 })
 
 test('tabs are keyboard operable', async ({ page }) => {

@@ -54,10 +54,10 @@ const shown = (d: Day) => d.n + (selected.value.has(d.date) && !props.mine.inclu
 
 <style scoped>
 .days { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-2); }
-.day { position: relative; display: grid; justify-items: center; gap: 2px; padding: var(--space-3) var(--space-1) var(--space-2); min-height: 140px; border: 1px solid var(--rv-line); border-radius: 14px; background: var(--rv-surface-2); color: var(--rv-cream); font: inherit; cursor: pointer; transition: border-color var(--dur) var(--ease-standard), background var(--dur) var(--ease-standard), transform 200ms var(--ease-out); }
+.day { position: relative; display: grid; justify-items: center; gap: 2px; padding: 26px var(--space-1) var(--space-2); min-height: 150px; border: 1px solid var(--rv-line); border-radius: 14px; background: var(--rv-surface-2); color: var(--rv-cream); font: inherit; cursor: pointer; transition: border-color var(--dur) var(--ease-standard), background var(--dur) var(--ease-standard), transform 200ms var(--ease-out); }
 .day:disabled { cursor: default; }
 .day:active { transform: scale(.96); }
-.mark { position: absolute; top: 6px; left: 8px; color: var(--rv-orange); }
+.mark { position: absolute; top: 7px; left: 8px; color: var(--rv-orange); }
 .num { font-size: var(--fs-h1); line-height: 1; }
 .bar { position: relative; width: 10px; height: 56px; background: var(--rv-line); border-radius: 7px; overflow: hidden; display: flex; align-items: flex-end; margin: var(--space-1) 0; }
 .bar i { display: block; width: 100%; background: var(--rv-orange); border-radius: 7px; transition: height 600ms var(--ease-out); }

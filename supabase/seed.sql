@@ -1,5 +1,5 @@
 -- DEVELOPMENT SEED ONLY. Never applied to production (`db push` does not run seeds).
--- Sample data: opponents, scores, ratings and announcements are fake. Players use only the names,
+-- Sample data: announcements and the placeholder fixtures are fake; results come from Instagram. Players use only the names,
 -- numbers and positions the owner supplied in the player reference pack; anything else stays null.
 -- Dev logins (password `rall-dev-password`): admin@ / staff@ / player@ / viewer@ example.invalid
 
@@ -34,13 +34,6 @@ values ('b0000000-0000-4000-8000-000000000001', '2026/27', '2026-09-01', true);
 insert into public.competitions (id, name, short_name)
 values ('b1000000-0000-4000-8000-000000000001', 'Campionato Amatori', 'Campionato');
 
-insert into public.opponents (id, name, short_name) values
-  ('b2000000-0000-4000-8000-000000000001', 'Monza', 'MON'),
-  ('b2000000-0000-4000-8000-000000000002', 'Lido FC', 'LID'),
-  ('b2000000-0000-4000-8000-000000000003', 'Murano United', 'MUR'),
-  ('b2000000-0000-4000-8000-000000000004', 'Real Mestre', 'MES'),
-  ('b2000000-0000-4000-8000-000000000005', 'Burano Boys', 'BUR');
-
 insert into public.players (id, profile_id, slug, first_name, last_name, shirt_number, position, is_captain) values
   ('c0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000003', 'daniele-nappo', 'Daniele', 'Nappo', 1, 'goalkeeper', true),
   ('c0000000-0000-4000-8000-000000000002', null, 'antonio-verrone', 'Antonio', 'Verrone', 8, 'winger', false),
@@ -55,66 +48,80 @@ insert into public.players (id, profile_id, slug, first_name, last_name, shirt_n
 create function pg_temp.pid(s text) returns uuid language sql as
   $$ select id from public.players where slug = s $$;
 
--- Eight matchdays already played (weekly, oldest first) + two upcoming. Dates are relative to now so
--- the preview always has a next match. Ids: completed 001-003 and 006-00a, upcoming 004 and 005.
+-- The eight matchdays already played, as reported on the club's Instagram (scores, dates, MVPs). Times and venues
+-- the posts do not state stay null. Two upcoming fixtures are PLACEHOLDERS (Real Mestre, Burano Boys) until the
+-- real calendar is supplied; the table is relative to now so the preview always has a next match.
 insert into public.opponents (id, name, short_name) values
-  ('b2000000-0000-4000-8000-000000000006', 'Jesolo Beach', 'JES'),
-  ('b2000000-0000-4000-8000-000000000007', 'Spinea Calcio', 'SPI'),
-  ('b2000000-0000-4000-8000-000000000008', 'Marghera 5', 'MAR'),
-  ('b2000000-0000-4000-8000-000000000009', 'Mira Futsal', 'MIR');
+  ('b2000000-0000-4000-8000-000000000001', 'Cagliari', 'CAG'),
+  ('b2000000-0000-4000-8000-000000000002', 'Roma', 'ROM'),
+  ('b2000000-0000-4000-8000-000000000003', 'Lazio', 'LAZ'),
+  ('b2000000-0000-4000-8000-000000000004', 'Real Mestre', 'MES'),
+  ('b2000000-0000-4000-8000-000000000005', 'Burano Boys', 'BUR'),
+  ('b2000000-0000-4000-8000-000000000006', 'Frosinone', 'FRO'),
+  ('b2000000-0000-4000-8000-000000000007', 'Napoli', 'NAP'),
+  ('b2000000-0000-4000-8000-000000000008', 'Torino', 'TOR'),
+  ('b2000000-0000-4000-8000-000000000009', 'Genoa', 'GEN'),
+  ('b2000000-0000-4000-8000-00000000000a', 'Monza', 'MON');
 
-create temp table seed_matches (n int, id uuid, opp uuid, home boolean, rv int, opp_sc int, venue text, notes text);
+create temp table seed_matches (n int, id uuid, opp uuid, home boolean, rv int, opp_sc int, kickoff timestamptz, venue text);
 insert into seed_matches values
-  (1, 'd0000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000001', true,  10, 5, 'Palazzetto Venezia', 'Partita a senso unico: il Rall non si è mai fermato.'),
-  (2, 'd0000000-0000-4000-8000-000000000002', 'b2000000-0000-4000-8000-000000000002', false,  3, 4, 'Campo del Lido', 'Sconfitta di misura, poteva andare diversamente.'),
-  (3, 'd0000000-0000-4000-8000-000000000006', 'b2000000-0000-4000-8000-000000000005', false,  9, 6, 'Campo di Burano', null),
-  (4, 'd0000000-0000-4000-8000-000000000007', 'b2000000-0000-4000-8000-000000000007', true,   8, 3, 'Palazzetto Venezia', null),
-  (5, 'd0000000-0000-4000-8000-000000000008', 'b2000000-0000-4000-8000-000000000006', false,  7, 8, 'Jesolo Arena', 'Otto gol subiti: serata da dimenticare.'),
-  (6, 'd0000000-0000-4000-8000-000000000009', 'b2000000-0000-4000-8000-000000000008', true,  12, 5, 'Palazzetto Venezia', null),
-  (7, 'd0000000-0000-4000-8000-00000000000a', 'b2000000-0000-4000-8000-000000000009', false,  9, 2, 'Palestra di Mira', null),
-  (8, 'd0000000-0000-4000-8000-000000000003', 'b2000000-0000-4000-8000-000000000003', true,   4, 4, 'Palazzetto Venezia', null);
+  (1, 'd0000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000001', true,   7, 1, '2026-09-22 22:30 Europe/Rome', 'Parco dei Principi'),
+  (2, 'd0000000-0000-4000-8000-000000000002', 'b2000000-0000-4000-8000-000000000002', false,  9, 6, '2026-09-28 22:30 Europe/Rome', 'Parco dei Principi'),
+  (3, 'd0000000-0000-4000-8000-000000000006', 'b2000000-0000-4000-8000-000000000003', false,  3, 5, '2026-10-07 21:30 Europe/Rome', null),
+  (4, 'd0000000-0000-4000-8000-000000000007', 'b2000000-0000-4000-8000-000000000006', true,  11, 2, '2026-10-16 20:30 Europe/Rome', 'Parco dei Principi Fornillo'),
+  -- Napoli: the post is dated 21 October and gives no kick-off time; 21:30 is a stand-in until confirmed
+  (5, 'd0000000-0000-4000-8000-000000000008', 'b2000000-0000-4000-8000-000000000007', false,  9, 2, '2026-10-21 21:30 Europe/Rome', null),
+  (6, 'd0000000-0000-4000-8000-000000000009', 'b2000000-0000-4000-8000-000000000008', true,  10, 2, '2026-10-27 21:30 Europe/Rome', null),
+  (7, 'd0000000-0000-4000-8000-00000000000a', 'b2000000-0000-4000-8000-000000000009', true,   5, 2, '2026-11-02 21:30 Europe/Rome', null),
+  (8, 'd0000000-0000-4000-8000-000000000003', 'b2000000-0000-4000-8000-00000000000a', true,  10, 5, '2026-11-11 20:30 Europe/Rome', null);
 
-insert into public.matches (id, season_id, competition_id, opponent_id, is_home, kickoff_at, venue, status, rv_score, opp_score, notes)
-select id, 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', opp, home,
-       date_trunc('hour', now()) - ((9 - n) * interval '7 days') + interval '19 hours' - extract(hour from date_trunc('hour', now())) * interval '1 hour',
-       venue, 'completed', rv, opp_sc, notes
+insert into public.matches (id, season_id, competition_id, opponent_id, is_home, kickoff_at, venue, status, rv_score, opp_score)
+select id, 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', opp, home, kickoff, venue, 'completed', rv, opp_sc
 from seed_matches;
 
 insert into public.matches (id, season_id, competition_id, opponent_id, is_home, kickoff_at, venue, status) values
-  ('d0000000-0000-4000-8000-000000000004', 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000004', true,  date_trunc('day', now()) + interval '4 days 19 hours', 'Palazzetto Venezia', 'scheduled'),
-  ('d0000000-0000-4000-8000-000000000005', 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000005', false, date_trunc('day', now()) + interval '11 days 19 hours', 'Campo di Burano', 'scheduled');
+  ('d0000000-0000-4000-8000-000000000004', 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000004', true,  date_trunc('day', now()) + interval '4 days 19 hours', null, 'scheduled'),
+  ('d0000000-0000-4000-8000-000000000005', 'b0000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001', 'b2000000-0000-4000-8000-000000000005', false, date_trunc('day', now()) + interval '11 days 19 hours', null, 'scheduled');
 
--- lineups: five starters + two on the bench
+-- Lineups: everyone played every match except the absences below. Frosinone (4) is reported: Nappo and Miranda
+-- were out. Miranda's second missed match is NOT reported; the owner asked for "two fewer appearances", so
+-- Torino (6) stands in until it is corrected.
+create temp table seed_absent (n int, slug text);
+insert into seed_absent values (4, 'daniele-nappo'), (4, 'raffaele-miranda'), (6, 'raffaele-miranda');
+
 insert into public.match_players (match_id, player_id, is_starter, minutes)
 select m.id, p.id, p.slug in ('daniele-nappo', 'antonio-verrone', 'alfonso-avino', 'salvatore-marigliano', 'sergio-batti'), null
-from public.matches m cross join public.players p
-where m.status = 'completed' and p.slug <> 'francesco-sepe';
+from seed_matches sm
+join public.matches m on m.id = sm.id
+cross join public.players p
+where p.slug <> 'francesco-sepe'
+  and not exists (select 1 from seed_absent a where a.n = sm.n and a.slug = p.slug);
 
--- Goals. Totals after eight matchdays: Antonio Verrone 31, Daniele Nappo 16, everyone else 3 (= 62 = the sum of
--- our scores). Scorers are shuffled deterministically across the matches; every goal gets an assist where the
--- quota allows (about 8 per player: "tanti").
+-- Goals. Verrone's per-match goals are known for four matches (4, 3, 5, 5 = 17 of his 31); the rest are spread.
+-- Totals: Verrone 31, Nappo 16, the other five 3 each = 62 of our 64 goals; two goals (matches 6 and 8) stay
+-- unassigned until the scorers are known.
 create temp table seed_goals as
-with quotas(slug, goals) as (values
-  ('antonio-verrone', 31), ('daniele-nappo', 16), ('alfonso-avino', 3), ('salvatore-marigliano', 3),
-  ('sergio-batti', 3), ('raffaele-miranda', 3), ('francesco-ferrara', 3)),
-pool as (
-  select q.slug, g from quotas q, generate_series(1, q.goals) g
-),
-shuffled as (
-  select slug, row_number() over (order by md5(slug || g::text)) as k from pool
-),
-slots as (
-  select m.n, m.id as match_id,
-         row_number() over (order by m.n, gs) as k,
-         gs as nth, m.rv
-  from seed_matches m, generate_series(1, m.rv) gs
+with plan(n, slug, cnt) as (values
+  (1, 'antonio-verrone', 4), (1, 'daniele-nappo', 2), (1, 'raffaele-miranda', 1),
+  (2, 'antonio-verrone', 4), (2, 'daniele-nappo', 4), (2, 'raffaele-miranda', 1),
+  (3, 'antonio-verrone', 3),
+  (4, 'antonio-verrone', 5), (4, 'alfonso-avino', 2), (4, 'francesco-ferrara', 2), (4, 'sergio-batti', 1), (4, 'salvatore-marigliano', 1),
+  (5, 'antonio-verrone', 4), (5, 'daniele-nappo', 3), (5, 'salvatore-marigliano', 1), (5, 'raffaele-miranda', 1),
+  (6, 'antonio-verrone', 5), (6, 'daniele-nappo', 2), (6, 'alfonso-avino', 1), (6, 'salvatore-marigliano', 1),
+  (7, 'antonio-verrone', 2), (7, 'daniele-nappo', 2), (7, 'sergio-batti', 1),
+  (8, 'antonio-verrone', 4), (8, 'daniele-nappo', 3), (8, 'francesco-ferrara', 1), (8, 'sergio-batti', 1)),
+expanded as (
+  select n, slug, row_number() over (partition by n order by slug) as nth
+  from plan, generate_series(1, cnt)
 )
-select s.match_id, sh.slug as scorer, s.nth,
-       (s.nth * 40 / (s.rv + 1))::int as minute, s.k
-from slots s join shuffled sh using (k);
+select m.id as match_id, e.n, e.slug as scorer, e.nth,
+       (e.nth * 40 / (m.rv + 1))::int as minute,
+       row_number() over (order by e.n, e.nth) as k
+from expanded e join seed_matches m on m.n = e.n;
 
 alter table seed_goals add column assist text;
 
+-- every goal gets an assist where the quota allows (about 8 each: "tanti"); the assister must have played
 do $$
 declare
   r record;
@@ -124,6 +131,7 @@ begin
   for r in select * from seed_goals order by k loop
     select key into pick from jsonb_each_text(quota)
       where key <> r.scorer and value::int > 0
+        and not exists (select 1 from seed_absent a where a.n = r.n and a.slug = key)
       order by value::int desc, md5(key || r.k::text) limit 1;
     if pick is not null then
       update seed_goals set assist = pick where k = r.k;
@@ -135,12 +143,13 @@ end $$;
 insert into public.goals (match_id, scorer_id, assist_id, minute)
 select match_id, pg_temp.pid(scorer), pg_temp.pid(assist), minute from seed_goals;
 
--- MVP: whoever scored most in the match (ties go to the first by name)
+-- MVPs as announced on Instagram (Frosinone had two)
 insert into public.mvp_awards (match_id, player_id)
-select distinct on (g.match_id) g.match_id, g.scorer_id
-from (select match_id, scorer_id, count(*) c from public.goals group by 1, 2) g
-join public.players p on p.id = g.scorer_id
-order by g.match_id, g.c desc, p.last_name;
+select m.id, pg_temp.pid(v.slug)
+from (values
+  (1, 'antonio-verrone'), (2, 'daniele-nappo'), (3, 'antonio-verrone'), (4, 'alfonso-avino'), (4, 'francesco-ferrara'),
+  (5, 'antonio-verrone'), (6, 'francesco-ferrara'), (7, 'sergio-batti'), (8, 'daniele-nappo')) as v(n, slug)
+join seed_matches m on m.n = v.n;
 
 -- availability for the next match
 insert into public.availability (match_id, player_id, status) values
@@ -154,24 +163,24 @@ insert into public.announcements (author_id, title, body, pinned, published_at) 
   ('a0000000-0000-4000-8000-000000000002', 'Ritrovo prima della partita', 'Ci vediamo alle 19:30 al palazzetto per il riscaldamento. Maglie nere, borsa pronta. Chi è in ritardo paga il caffè.', true, now() - interval '1 day'),
   ('a0000000-0000-4000-8000-000000000002', 'Tre punti portati a casa', 'Grande vittoria contro il Monza. Foto e pagelle già nella sezione dedicata.', false, now() - interval '27 days');
 
--- Gazzetta sample articles (fake sample copy about the fake sample matches)
+-- Gazzetta: match reports written from the club's Instagram posts (facts only)
 insert into public.news_articles (slug, kicker, title, summary, body, author_id, match_id, is_lead, published_at) values
-  ('monza-travolto-10-5', 'GIORNATA D''APERTURA', 'Monza travolto: al Palazzetto finisce 10-5',
-   'Dieci gol, il palazzetto in piedi e tre punti portati a casa. Il Rall Venezia non lascia scampo agli ospiti.',
-   E'Serata da incorniciare al Palazzetto Venezia. Il Rall parte forte, trova il vantaggio dopo pochi minuti e non si ferma più: alla fine sono dieci i gol, cinque quelli subiti.\n\nLa squadra gira a meraviglia, con la fascia in grande spolvero e il pivot che fa a sportellate con tutti.\n\nIl capitano Daniele Nappo incassa cinque gol ma tiene in piedi la difesa nei momenti caldi. Tre punti portati a casa e morale alle stelle.',
-   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000001', true, now() - interval '27 days'),
-  ('lido-sconfitta-di-misura', 'TRASFERTA AMARA', 'Al Lido finisce 4-3: poteva andare diversamente',
-   'Tre gol non bastano. Decide un episodio nel finale, rimpianti e una parata da copertina.',
-   E'Una partita che il Rall poteva portare a casa. Avanti e indietro per tutta la sera, poi il guizzo dei padroni di casa nel finale.\n\nNappo firma una serata di interventi miracolosi.\n\nSi riparte dalla prossima: la classifica non si ferma, il morale nemmeno.',
-   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002', false, now() - interval '13 days'),
-  ('murano-pareggio-pazzo', 'SPETTACOLO AL PALAZZETTO', 'Murano, pareggio pazzo: finisce 4-4',
-   'Otto gol e nessun vincitore. L''ultima giornata lascia tutto aperto.',
-   E'Otto gol, ribaltamenti e un finale al cardiopalma: Rall Venezia e Murano United si dividono la posta.\n\nOtto reti in totale e un pareggio che sa di occasione persa.\n\nUn punto che sa di occasione persa, ma lo spettacolo non è mancato.',
-   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000003', false, now() - interval '6 days'),
-  ('ritrovo-prima-di-mestre', 'DALLO SPOGLIATOIO', 'Verso il Real Mestre: ritrovo alle 19:30',
-   'Riscaldamento, maglie nere e nessuna scusa. La prossima è in casa.',
-   E'Si torna in campo contro il Real Mestre. Appuntamento al palazzetto alle 19:30 per il riscaldamento.\n\nMister e capitano chiedono concentrazione: contro una squadra che gioca a ritmi alti servirà una partenza decisa.',
-   'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000004', false, now() - interval '1 day');
+  ('cagliari-7-1-buona-la-prima', 'BUONA LA PRIMA', 'Rall Venezia 7-1 Cagliari: Verrone firma quattro gol', 'Il campionato si apre con tre punti e un MVP da copertina.',
+   E'La Rall Venezia FC apre il campionato con un 7-1 al Cagliari e porta a casa i primi tre punti della stagione.\n\nA prendersi la scena è Antonio Verrone: quattro gol e il premio di MVP della partita.\n\nIl 7-1 fa piacere, ma non deve cambiare nulla: è una vittoria, sono tre punti e il percorso è appena iniziato.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000001', false, '2026-09-22 23:59 Europe/Rome'),
+  ('roma-6-9-rall-venezia', 'MAN OF THE MATCH', 'Roma 6-9 Rall Venezia: vittoria sofferta, Nappo uomo partita', 'Una gara intensa e nervosa, decisa nel finale. Il capitano guida i suoi.',
+   E'Due partite, due vittorie. A Roma finisce 6-9 al termine di una gara intensa, giocata con tanta tensione.\n\nDaniele Nappo, con la fascia al braccio, è l''uomo della partita: personalità e presenza nei momenti che contano.\n\nTesta bassa, niente voli: il campionato è appena iniziato.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000002', false, '2026-09-28 23:59 Europe/Rome'),
+  ('lazio-5-3-prima-sconfitta', 'FULL TIME', 'Lazio 5-3 Rall Venezia: arriva la prima sconfitta', 'Verrone firma tutti e tre i gol. Nota di merito per Miranda, menzione per Nappo.',
+   E'Arriva la prima sconfitta stagionale: Lazio 5, Rall Venezia 3.\n\nNon basta un Antonio Verrone trascinatore, MVP della serata: al rientro dall''infortunio firma tutti e tre i gol.\n\nNota di merito per Raffaele Miranda, trascinatore morale della squadra. Menzione speciale per Daniele Nappo, che dopo una lussazione alla spalla nei primi minuti sceglie di restare al fianco dei compagni fino alla fine.\n\nSi perde insieme, si riparte insieme.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000003', false, '2026-10-07 23:59 Europe/Rome'),
+  ('frosinone-11-2-la-risposta', 'LA RISPOSTA CHE SERVIVA', 'Rall Venezia 11-2 Frosinone: tre punti a casa dopo la Lazio', 'Senza Nappo e Miranda il Mister fa ruotare tutti. MVP Avino e Ferrara.',
+   E'Dopo il 5-3 subito contro la Lazio, il Rall Venezia rialza la testa nel modo più convincente possibile: 11-2 al Frosinone.\n\nLe assenze del capitano Daniele Nappo e di Raffaele Miranda permettono al Mister di gestire le rotazioni e dare spazio a tutta la squadra.\n\nMVP: Alfonso Avino e Francesco Ferrara. Menzione d''onore per Antonio Verrone: cinque gol, otto nelle ultime due partite.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000006', false, '2026-10-16 23:59 Europe/Rome'),
+  ('napoli-2-9-portata-a-casa', 'PORTATA A CASA, ANCORA', 'Napoli 2-9 Rall Venezia: Verrone MVP, ma vince tutta la squadra', 'Campo bagnato, pallone veloce e cinquanta minuti di sacrificio.',
+   E'Partita tutt''altro che semplice per le condizioni del campo: terreno bagnato, pallone veloce e tanti episodi difficili da gestire.\n\nMa il Rall Venezia non si scompone. Napoli 2, Rall Venezia 9.\n\nMVP Antonio Verrone, ma oggi il premio è quasi riduttivo: dal primo all''ultimo minuto ognuno ha dato qualcosa.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000007', false, '2026-10-21 23:59 Europe/Rome'),
+  ('torino-10-2-serata-perfetta', 'SERATA PRATICAMENTE PERFETTA', 'Rall Venezia 10-2 Torino: Ferrara MVP', 'Dieci gol, ancora cinque per Verrone. In panchina manca il Mister Gallo.',
+   E'Il Rall Venezia domina, segna tanto e porta a casa un''altra vittoria pesantissima: 10-2 al Torino.\n\nMVP Francesco Ferrara: prestazione enorme, tanta qualità e presenza continua nella manovra.\n\nMenzione d''onore per Antonio Verrone, che continua il suo momento clamoroso e mette a referto altri cinque gol. Da sottolineare l''assenza del Mister Gallo: la squadra si gestisce in autonomia per tutta la gara.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000008', false, '2026-10-27 23:59 Europe/Rome'),
+  ('genoa-5-2-batti-mvp', 'MVP SERGIO BATTI', 'Rall Venezia 5-2 Genoa: Batti decisivo', 'Battaglia navale vinta. La redazione corregge il tiro sull''MVP.',
+   E'Rall Venezia FC batte il Genoa 5-2.\n\nMVP della partita è Sergio Batti: prestazione solida, presente quando serviva e decisivo nel contribuire alla vittoria.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000009', false, '2026-11-02 23:59 Europe/Rome'),
+  ('monza-10-5-quest-completata', 'QUEST COMPLETATA', 'Rall Venezia 10-5 Monza: Nappo uomo partita', 'Missione riuscita: altri tre punti nel bottino.',
+   E'La missione era chiara: entrare, lottare e portare a casa i tre punti. Missione riuscita: Rall Venezia 10, Monza 5.\n\nPartita intensa, tanti gol e un''altra vittoria da mettere in archivio.\n\nMVP Daniele Nappo: il capitano risponde presente ancora una volta, con sicurezza tra i pali e quella personalità che nei momenti importanti si sente sempre.', 'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-00000000000a', true, '2026-11-12 09:00 Europe/Rome');
 
 -- staff, as given in the reference pack (v3)
 insert into public.staff_members (slug, first_name, last_name, role_title, sort_order) values
@@ -187,11 +196,11 @@ values ('e0000000-0000-4000-8000-000000000001',
 insert into public.poll_votes (poll_id, player_id, day)
 select 'e0000000-0000-4000-8000-000000000001', pg_temp.pid(v.slug), (date_trunc('week', now() + interval '7 days'))::date + v.d
 from (values
-  ('antonio-verrone', 0), ('antonio-verrone', 2), ('antonio-verrone', 3),
-  ('alfonso-avino', 1), ('alfonso-avino', 2),
-  ('salvatore-marigliano', 2), ('salvatore-marigliano', 3), ('salvatore-marigliano', 4),
-  ('sergio-batti', 2),
-  ('francesco-ferrara', 0), ('francesco-ferrara', 2)
+  -- the weekly poll as it stands in the group (Mon=0 .. Fri=4); "Totor" and "Cry More" are not mapped to a
+  -- squad member yet, so their votes are left out
+  ('francesco-ferrara', 0), ('francesco-ferrara', 1), ('francesco-ferrara', 2), ('francesco-ferrara', 3),
+  ('alfonso-avino', 0), ('alfonso-avino', 1), ('alfonso-avino', 2), ('alfonso-avino', 3), ('alfonso-avino', 4),
+  ('daniele-nappo', 1), ('daniele-nappo', 2), ('daniele-nappo', 3)
 ) as v(slug, d);
 
 -- league table as supplied by the owner (the league's teams carry Serie A names; Rall Venezia is "Venezia")

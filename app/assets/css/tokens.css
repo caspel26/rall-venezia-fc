@@ -54,7 +54,7 @@
   --section-space: var(--space-7);
   --gutter: var(--space-4);
   --content-width: 1280px;
-  --nav-h: 64px;
+  --nav-h: 76px; /* the floating dock: 60px + 8px gap + breathing room */
 
   /* shape */
   --r-s: 8px;

@@ -95,7 +95,7 @@ select throws_ok($$update public.user_roles set role = 'staff' where user_id = '
 
 -- derived stats
 select results_eq($$select played, wins, draws, losses, goals_for, goals_against from public.team_season_stats$$,
-  $$values (8, 5, 1, 2, 62, 37)$$, 'team season record matches the seed');
+  $$values (8, 7, 0, 1, 64, 25)$$, 'team season record matches the seed');
 
 select * from finish();
 rollback;

@@ -11,7 +11,7 @@ test('archive: upcoming first, then played; filters narrow the list', async ({ p
   await expect(rows).toHaveCount(10) // 2 upcoming + 8 played
   await expect(rows.first()).toContainText('Real Mestre')
   await expect(rows.nth(1)).toContainText('Burano Boys')
-  await expect(rows.nth(2)).toContainText('Murano United')
+  await expect(rows.nth(2)).toContainText('Monza')
   await page.waitForLoadState('networkidle')
 
   await page.getByRole('tab', { name: 'Giocate' }).click()
@@ -25,20 +25,19 @@ test('archive: upcoming first, then played; filters narrow the list', async ({ p
 test('match programme: score, goals timeline, lineup and MVP', async ({ page }) => {
   await login(page, 'player')
   await page.goto(`/matches/${M1}`)
-  await expect(page.getByLabel('10 a 5')).toBeVisible()
+  await expect(page.getByLabel('7 a 1')).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Gol' })).toBeVisible()
-  await expect(page.locator('.timeline li')).toHaveCount(10)
-  await expect(page.locator('.timeline li').first()).toContainText("3'")
+  await expect(page.locator('.timeline li')).toHaveCount(7)
+  await expect(page.locator('.timeline li').first()).toContainText("5'")
   await expect(page.locator('.hero').getByText('MVP')).toBeVisible()
   await expect(page.getByText('Titolari')).toBeVisible()
   await expect(page.locator('.lineup li')).toHaveCount(7)
-  await expect(page.getByText('Partita a senso unico')).toBeVisible()
 })
 
 test('viewer can read the match programme', async ({ page }) => {
   await login(page, 'viewer')
   await page.goto(`/matches/${M1}`)
-  await expect(page.getByLabel('10 a 5')).toBeVisible()
+  await expect(page.getByLabel('7 a 1')).toBeVisible()
 })
 
 test('upcoming match offers the availability answer to a player', async ({ page }) => {

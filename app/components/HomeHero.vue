@@ -50,7 +50,7 @@ function leave() {
     </div>
     <span class="spot" aria-hidden="true" />
     <span class="floor" aria-hidden="true" />
-    <div class="squad">
+    <div class="squad" :style="{ '--n': row.length }">
       <div v-for="(p, i) in row" :key="p.id" class="p" :style="{ '--d': ((i % 3) + 1), '--i': i }">
         <NuxtLink :to="`/team/${p.slug}`" tabindex="-1"><span class="rise"><span class="idle"><PlayerShot :name="`${p.first_name} ${p.last_name}`" :photo-path="p.photo_path" /></span></span></NuxtLink>
       </div>
@@ -82,6 +82,13 @@ function leave() {
   .squad:hover .p:not(:hover) { opacity: .7; }
   .p:hover { transform: translate(calc(var(--px) * var(--d) * 7px), -10px); filter: brightness(1.1); z-index: 5; }
   .p:hover .idle { animation-play-state: paused; }
+}
+/* below desktop the whole squad is laid out across the width, overlapping like a team photo, so nobody is cut off */
+@media (max-width: 1050px) {
+  .squad { --slot: calc(100% / (var(--n) + 1.1)); display: block; }
+  .p { position: absolute; bottom: 0; left: calc(var(--i) * var(--slot)); width: calc(var(--slot) * 2.1); margin: 0 !important; }
+  .p :deep(a), .p :deep(.rise), .p :deep(.idle) { height: 100%; display: block; }
+  .p :deep(.pshot) { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
 }
 @media (min-width: 701px) {
   .home-hero { height: 420px; margin: 0 0 var(--space-5); border-radius: var(--r-panel); }

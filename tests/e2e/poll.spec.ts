@@ -35,11 +35,12 @@ test('the most voted day is marked and the page lists who is coming each day', a
   await page.goto('/clubhouse/poll')
   const cols = page.getByRole('list', { name: 'Chi viene, giorno per giorno' })
   await expect(cols.locator('> li')).toHaveCount(5)
-  // seeded: Wednesday has the most votes (Verrone, Avino, Marigliano, Batti, Ferrara and maybe the player)
+  // seeded: Wednesday has the most votes (Ferrara, Avino, Nappo)
   const wed = cols.locator('> li').nth(2)
-  await expect(wed).toContainText('Antonio Verrone')
-  await expect(wed).toContainText('Salvatore Marigliano')
-  await expect(page.getByLabel('Giorno più votato')).toHaveCount(1)
+  await expect(wed).toContainText('Francesco Ferrara')
+  await expect(wed).toContainText('Alfonso Avino')
+  // ties share the mark, and the voting test above leaves the player's own picks behind
+  await expect(page.getByLabel('Giorno più votato').first()).toBeVisible()
   // staff do not vote (no linked player): the chips are disabled
   await expect(page.getByRole('group', { name: 'Scegli i giorni in cui ci sei' }).getByRole('button').first()).toBeDisabled()
 })
