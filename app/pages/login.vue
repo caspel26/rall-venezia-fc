@@ -39,31 +39,33 @@ async function submit() {
 </script>
 
 <template>
-  <ClubLogo :size="112" />
-  <div>
-    <h1 class="display brand">Rall Venezia FC</h1>
-    <p class="eyebrow">Accesso allo spogliatoio</p>
+  <div class="auth-stack">
+    <ClubLogo :size="112" />
+    <div>
+      <h1 class="display brand">Rall Venezia FC</h1>
+      <p class="eyebrow">Accesso allo spogliatoio</p>
+    </div>
+
+    <form class="stack" novalidate @submit.prevent="submit">
+      <FormField id="email" label="Email" v-slot="{ describedBy }">
+        <input id="email" v-model="email" class="input" type="email" name="email" autocomplete="username" inputmode="email"
+          required :aria-describedby="describedBy">
+      </FormField>
+      <FormField v-if="mode === 'login'" id="password" label="Password" :error="error" v-slot="{ describedBy, invalid }">
+        <input id="password" v-model="password" class="input" type="password" name="password" autocomplete="current-password"
+          required :aria-invalid="invalid" :aria-describedby="describedBy">
+      </FormField>
+      <p v-if="info" class="muted" role="status">{{ info }}</p>
+      <button class="btn btn-primary btn-block" type="submit" :disabled="busy">
+        {{ mode === 'login' ? 'Entra' : 'Invia il link' }}
+      </button>
+      <button class="btn-link" type="button" @click="mode = mode === 'login' ? 'reset' : 'login'; error = info = ''">
+        {{ mode === 'login' ? 'Password dimenticata?' : 'Torna all’accesso' }}
+      </button>
+    </form>
+
+    <p class="muted quote">Quello che succede nello spogliatoio resta nello spogliatoio.</p>
   </div>
-
-  <form class="stack" novalidate @submit.prevent="submit">
-    <FormField id="email" label="Email" v-slot="{ describedBy }">
-      <input id="email" v-model="email" class="input" type="email" name="email" autocomplete="username" inputmode="email"
-        required :aria-describedby="describedBy">
-    </FormField>
-    <FormField v-if="mode === 'login'" id="password" label="Password" :error="error" v-slot="{ describedBy, invalid }">
-      <input id="password" v-model="password" class="input" type="password" name="password" autocomplete="current-password"
-        required :aria-invalid="invalid" :aria-describedby="describedBy">
-    </FormField>
-    <p v-if="info" class="muted" role="status">{{ info }}</p>
-    <button class="btn btn-primary btn-block" type="submit" :disabled="busy">
-      {{ mode === 'login' ? 'Entra' : 'Invia il link' }}
-    </button>
-    <button class="btn-link" type="button" @click="mode = mode === 'login' ? 'reset' : 'login'; error = info = ''">
-      {{ mode === 'login' ? 'Password dimenticata?' : 'Torna all’accesso' }}
-    </button>
-  </form>
-
-  <p class="muted quote">Quello che succede nello spogliatoio resta nello spogliatoio.</p>
 </template>
 
 <style scoped>

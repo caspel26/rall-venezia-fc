@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
-import { DEV_PASSWORD, login } from './helpers'
+import { DEV_PASSWORD, login, logout } from './helpers'
 
 const MAILPIT = 'http://127.0.0.1:54324'
 
@@ -23,8 +23,7 @@ test('wrong password shows an inline error', async ({ page }) => {
 test('player logs in, sees their role, logs out', async ({ page }) => {
   await login(page, 'player')
   await expect(page.getByText('Ruolo: player')).toBeVisible()
-  await page.getByRole('button', { name: 'Esci' }).click()
-  await expect(page).toHaveURL(/\/login/)
+  await logout(page)
 })
 
 test('admin routes refuse non-admins', async ({ page }) => {

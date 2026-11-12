@@ -23,3 +23,12 @@
 .btn-block { width: 100%; min-height: 48px; }
 .btn-link { background: none; border: 0; color: var(--rv-muted); text-decoration: underline; cursor: pointer; font: inherit; min-height: 44px; }
 .stack { display: grid; gap: var(--space-4); width: 100%; }
+
+.page-enter-active { transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
+.page-leave-active { transition: opacity var(--dur-fast) var(--ease-in); }
+.page-enter-from { opacity: 0; transform: translateY(8px); }
+.page-leave-to { opacity: 0; }
+.skip { position: absolute; left: var(--space-3); top: -48px; z-index: 50; }
+.skip:focus { top: var(--space-3); }
+
+.auth-stack { display: grid; gap: var(--space-5); justify-items: center; width: 100%; }

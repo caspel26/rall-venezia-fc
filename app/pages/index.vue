@@ -1,12 +1,10 @@
 <script setup lang="ts">
-const { user, role, signOut } = useAuth()
+const { user, role } = useAuth()
 </script>
 
 <template>
-  <main class="page">
-    <p class="eyebrow">Stage 3 — autenticazione</p>
-    <h1>Ciao {{ user?.user_metadata?.display_name ?? user?.email }}</h1>
+  <div class="page">
+    <PageHero eyebrow="Stage 4 — shell" :title="`Ciao ${user?.user_metadata?.display_name ?? ''}`" />
     <p class="muted">Ruolo: {{ role }}</p>
-    <button class="btn" type="button" @click="signOut">Esci</button>
-  </main>
+  </div>
 </template>

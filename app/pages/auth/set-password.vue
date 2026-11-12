@@ -47,29 +47,31 @@ async function submit() {
 </script>
 
 <template>
-  <ClubLogo :size="96" />
-  <div v-if="state === 'checking'" class="muted" role="status">Controllo il tuo invito…</div>
+  <div class="auth-stack">
+    <ClubLogo :size="96" />
+    <div v-if="state === 'checking'" class="muted" role="status">Controllo il tuo invito…</div>
 
-  <div v-else-if="state === 'invalid'" class="stack">
-    <h1 class="display">Link scaduto</h1>
-    <p class="muted">Questo invito non è più valido. Chiedi a un admin di inviartene uno nuovo.</p>
-    <NuxtLink class="btn btn-block" to="/login">Vai all’accesso</NuxtLink>
-  </div>
-
-  <template v-else>
-    <div>
-      <h1 class="display">Scegli la password</h1>
-      <p class="eyebrow">Benvenuto nello spogliatoio</p>
+    <div v-else-if="state === 'invalid'" class="stack">
+      <h1 class="display">Link scaduto</h1>
+      <p class="muted">Questo invito non è più valido. Chiedi a un admin di inviartene uno nuovo.</p>
+      <NuxtLink class="btn btn-block" to="/login">Vai all’accesso</NuxtLink>
     </div>
-    <form class="stack" novalidate @submit.prevent="submit">
-      <FormField id="pw" label="Nuova password" hint="Almeno 10 caratteri." v-slot="{ describedBy }">
-        <input id="pw" v-model="password" class="input" type="password" autocomplete="new-password" required :aria-describedby="describedBy">
-      </FormField>
-      <FormField id="pw2" label="Ripeti la password" :error="error" v-slot="{ describedBy, invalid }">
-        <input id="pw2" v-model="confirm" class="input" type="password" autocomplete="new-password" required
-          :aria-invalid="invalid" :aria-describedby="describedBy">
-      </FormField>
-      <button class="btn btn-primary btn-block" type="submit" :disabled="busy">Entra</button>
-    </form>
-  </template>
+
+    <template v-else>
+      <div>
+        <h1 class="display">Scegli la password</h1>
+        <p class="eyebrow">Benvenuto nello spogliatoio</p>
+      </div>
+      <form class="stack" novalidate @submit.prevent="submit">
+        <FormField id="pw" label="Nuova password" hint="Almeno 10 caratteri." v-slot="{ describedBy }">
+          <input id="pw" v-model="password" class="input" type="password" autocomplete="new-password" required :aria-describedby="describedBy">
+        </FormField>
+        <FormField id="pw2" label="Ripeti la password" :error="error" v-slot="{ describedBy, invalid }">
+          <input id="pw2" v-model="confirm" class="input" type="password" autocomplete="new-password" required
+            :aria-invalid="invalid" :aria-describedby="describedBy">
+        </FormField>
+        <button class="btn btn-primary btn-block" type="submit" :disabled="busy">Entra</button>
+      </form>
+    </template>
+  </div>
 </template>

@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     '~/assets/css/components.css',
   ],
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       htmlAttrs: { lang: 'it' },
       title: 'Rall Venezia Clubhouse',

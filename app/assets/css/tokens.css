@@ -42,6 +42,7 @@
   --section-space: var(--space-7);
   --gutter: var(--space-4);
   --content-width: 1280px;
+  --nav-h: 64px;
 
   /* shape */
   --r-s: 6px;
