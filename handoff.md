@@ -22,6 +22,7 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q9 Stage 9 — Spogliatoio hub, availability board (groups + staff timestamps), announcements; 76 e2e~~ (done)
 - ~~Q8 Stage 8 — /stats (team record, rankings with documented tie-break, players table, season filter) and /ratings archive; 18 unit + 68 e2e~~ (done)
 - ~~Q7c Gazzetta: `news_articles` table + RLS (migration 3), /news front page, /news/[slug], home widget; admin CRUD comes in Stage 10~~ (done)
 - Future widgets (owner idea): more home widgets; league standings need opponent results data we do not store (player rankings exist).
@@ -34,7 +35,6 @@ Updated: 12 November 2026.
 - ~~Q3 Stage 3 — auth: login, invite via server route, set-password, role guard, 14 e2e~~ (done; Opus review of auth+RLS queued for end)
 - ~~Q2 Stage 2 — schema, RLS, seed, pgTAP (27 tests)~~ (done; local Supabase via `npx supabase start`)
 - ~~Q1 Stage 1 — Bootstrap and tokens~~ (done; font choice Anton vs Bebas Neue and lion artwork pending owner)
-- Q9 Stage 9 — Availability and Spogliatoio (Opus review)
 - Q10 Stage 10 — Admin (Opus review)
 - Q11 Stage 11 — Deployment and security hardening
 
