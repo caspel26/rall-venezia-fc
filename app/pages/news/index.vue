@@ -7,6 +7,7 @@ const page = computed(() => frontPage(data.value ?? []))
 <template>
   <div class="page">
     <div class="paper grain">
+      <h1 class="sr-only">La Gazzetta Rall, prima pagina</h1>
       <NewsMasthead />
 
       <SkeletonBlock v-if="status === 'pending' && !data" size="hero" />
