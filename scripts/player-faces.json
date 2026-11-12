@@ -172,10 +172,13 @@
       ]
     ],
     "open": 6,
-    "left_limit": 125,
     "head_zone": [
       0.8,
       1.2
+    ],
+    "fade_left": [
+      0.62,
+      0.95
     ]
   },
   "francesco-ferrara": {
@@ -216,6 +219,11 @@
   "francesco-sepe": {
     "x": 0.52,
     "y": 0.23,
+    "model": "u2net_human_seg"
+  },
+  "benito-marciano": {
+    "x": 0.5,
+    "y": 0.2,
     "model": "u2net_human_seg"
   }
 }

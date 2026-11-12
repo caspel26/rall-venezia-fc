@@ -121,6 +121,19 @@ for d in sorted(p for r in roots if r.exists() for p in r.iterdir() if p.is_dir(
         a[top:y1, : max(0, int(cx - hw * hz_w)), 3] = 0
         a[top:y1, int(cx + hw * hz_w):, 3] = 0
         out = Image.fromarray(a, 'RGBA')
+    if f.get('fade_left'):  # soften one side to nothing (a blurred limb), measured in head widths from the head centre
+        a0, b0 = f['fade_left']
+        arr = np.array(out)
+        solid = arr[..., 3] > 40
+        ys, xs = np.where(solid)
+        top = ys.min()
+        rows_ = solid[top:top + max(8, int((ys.max() - top) * 0.13))]
+        hx = np.where(rows_.any(0))[0]
+        hw = hx.max() - hx.min(); cx = (hx.max() + hx.min()) // 2
+        x = np.arange(arr.shape[1])
+        ramp = np.clip((x - (cx - b0 * hw)) / ((b0 - a0) * hw), 0, 1)  # 0 at the far edge, 1 at the near edge
+        arr[..., 3] = (arr[..., 3] * ramp[None, :]).astype(np.uint8)
+        out = Image.fromarray(arr, 'RGBA')
     if f.get('open'):  # morphological opening: removes thin slivers and small blobs left by the matting
         from PIL import ImageFilter
         k = int(f['open']) * 2 + 1

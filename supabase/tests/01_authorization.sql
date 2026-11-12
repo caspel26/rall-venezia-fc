@@ -41,7 +41,7 @@ select is((select count(*)::int from public.announcements), 0, 'viewer sees no a
 select throws_ok($$insert into public.seasons (name, starts_on) values ('X', now())$$, '42501', null, 'viewer cannot write');
 select is((select count(*)::int from public.user_roles), 1, 'viewer sees only their own role row');
 select cmp_ok((select count(*)::int from public.news_articles), '>', 0, 'viewer reads published news');
-select is((select count(*)::int from public.staff_members), 2, 'viewer reads the staff');
+select is((select count(*)::int from public.staff_members), 3, 'viewer reads the staff');
 select is((select count(*)::int from public.polls), 0, 'viewer sees no polls');
 select is((select count(*)::int from public.standings), 20, 'viewer reads the league table');
 select throws_ok($$insert into public.news_articles (slug, title, body) values ('x', 'x', 'x')$$, '42501', null, 'viewer cannot write news');

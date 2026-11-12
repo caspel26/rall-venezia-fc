@@ -79,6 +79,8 @@ test('staff appear under the squad: coach with photo, social media manager', asy
   await expect(staff.getByRole('heading', { name: 'Staff' })).toBeVisible()
   await expect(staff).toContainText('Pasquale')
   await expect(staff).toContainText('Allenatore / Mister')
+  await expect(staff).toContainText('Benito')
+  await expect(staff).toContainText('Secondo allenatore')
   await expect(staff).toContainText('Giuseppe')
   await expect(staff).toContainText('Casillo')
   await expect(staff).toContainText('Social media manager')
