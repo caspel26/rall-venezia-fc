@@ -26,7 +26,7 @@ useHead({ title: () => (a.value ? `${a.value.title} · La Gazzetta Rall` : 'La G
         <div class="body">
           <p v-for="(p, i) in paragraphs(a.body)" :key="i" :class="{ first: i === 0 }">{{ p }}</p>
         </div>
-        <a v-if="a.external_url" :href="a.external_url" class="matchlink" target="_blank" rel="noopener noreferrer">Vedi il post su Instagram →</a>
+        <a v-if="a.external_url?.startsWith('https://')" :href="a.external_url" class="matchlink" target="_blank" rel="noopener noreferrer">Vedi il post su Instagram →</a>
         <NuxtLink v-if="a.match" :to="`/matches/${a.match.id}`" class="matchlink">
           Rall Venezia vs {{ a.match.opponent?.name }} — vai alla partita →
         </NuxtLink>

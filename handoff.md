@@ -6,7 +6,7 @@ Updated: 12 November 2026.
 
 ## State
 
-- Phase: **Stage 1 (Q1) built**: Nuxt 4.6.4 bootstrap, tokens, self-hosted fonts, grain, Playwright smoke (390x844 + 1440x900) passing. Next: Q2 (Supabase schema/RLS, Opus design first). No Cloudflare; deploy = Vercel + Supabase only.
+- Phase (all 11 stages + extras done; owner review next): **Stage 1 (Q1) built**: Nuxt 4.6.4 bootstrap, tokens, self-hosted fonts, grain, Playwright smoke (390x844 + 1440x900) passing. Next: Q2 (Supabase schema/RLS, Opus design first). No Cloudflare; deploy = Vercel + Supabase only.
 - Docs written: PRODUCT, ARCHITECTURE, DATABASE, AUTHORIZATION, ROUTES, DESIGN_SYSTEM, DEPLOYMENT, MVP, IMPLEMENTATION_PLAN, AGENT-WORKFLOW.
 - Migrations used: `20261112000001_schema.sql`, `20261112000002_rls.sql`, `20261112000003_news.sql` (+ dev-only `supabase/seed.sql`).
 
@@ -22,6 +22,7 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q13 Independent Opus security review: no critical/high; 3 fixes + redirect hardening in migration 6 (see AUTHORIZATION.md); pgTAP 33, vitest 39, e2e 113~~
 - ~~Q12 Motion: scroll reveal (`v-reveal`), intro stagger, vanish swaps (skeleton->content, lists), number ticks, scroll meter, blurred header, reduced-motion kill switch (pattern from caspel26.github.io; documented in DESIGN_SYSTEM); also fixed WidgetFrame auto-import (`components.pathPrefix:false`)~~
 - ~~Q11a Player pack (PDF from the Codex brief): numbers/positions applied (Batti #4 defender, Miranda #10 jolly, Ferrara #7, Verrone winger), real photos via `scripts/build-player-assets.sh` + `upload-player-assets.mjs` into private storage (portrait/hero/thumb; originals gitignored in `private-assets/`). NOT done: transparent cutouts (needs a background-removal model) and replacing Verrone's blue bib with the white kit (needs generative editing / a new photo)~~
 - ~~Q11b Instagram -> Gazzetta sync: server route + token store + admin page + mock-API e2e + GitHub Actions/Vercel cron; needs the owner's Meta app/token (docs/INSTAGRAM.md)~~

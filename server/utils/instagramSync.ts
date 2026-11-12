@@ -48,7 +48,8 @@ export async function refreshToken(token: string) {
 async function storeCover(admin: Admin, media: IgMedia): Promise<string | null> {
   const src = media.media_type === 'VIDEO' ? (media.thumbnail_url ?? media.media_url) : media.media_url
   if (!src || !isAllowedImageHost(src, apiBase())) return null
-  const res = await fetch(src, { signal: AbortSignal.timeout(20_000) })
+  // no redirects: the host check above is only valid for the URL we were given
+  const res = await fetch(src, { signal: AbortSignal.timeout(20_000), redirect: 'error' })
   const type = res.headers.get('content-type') ?? ''
   if (!res.ok || !type.startsWith('image/')) return null
   const bytes = new Uint8Array(await res.arrayBuffer())

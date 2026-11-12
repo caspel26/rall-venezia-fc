@@ -72,3 +72,7 @@ Rules shared by all policies:
 ## Tests (priority one)
 
 pgTAP in `supabase/tests/`: for each role (`anon`, viewer, player, staff, admin) assert allowed and forbidden SELECT/INSERT/UPDATE/DELETE per table, view visibility, the own-row availability rule, the kickoff cut-off, storage access, and that every `public` table has RLS enabled. Vitest covers the route guard metadata; Playwright covers the 403 page.
+
+## Independent review (12 Nov 2026)
+
+An independent read-only review found no critical or high issues. Fixed in migration `20261112000006`: `external_url` limited to Instagram https links (and re-checked in the client), account linking admin-only on INSERT as well as UPDATE, and a player can no longer delete or re-point a past availability answer. The cover-image download no longer follows redirects. **Accepted:** viewers can read the whole `players` row (bio, linked account id); none of it is sensitive. Before production, confirm `enable_signup = false` and the auth settings in the hosted Supabase dashboard (`supabase config push`); the local `config.toml` does not apply there by itself.

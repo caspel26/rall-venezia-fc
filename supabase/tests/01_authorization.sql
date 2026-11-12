@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(30);
+select plan(33);
 
 -- seed ids
 \set admin '''a0000000-0000-4000-8000-000000000001'''
@@ -59,6 +59,7 @@ select throws_ok($$insert into public.availability (match_id, player_id, status)
   values ('d0000000-0000-4000-8000-000000000004', 'c0000000-0000-4000-8000-000000000002', 'available')
   on conflict (match_id, player_id) do update set status = 'available'$$, '42501', null, 'player cannot answer for a teammate');
 select throws_ok($$select public.set_availability('d0000000-0000-4000-8000-000000000001', 'available')$$, '42501', null, 'no answer after kickoff');
+select is(pg_temp.rows_changed($$delete from public.availability where match_id = 'd0000000-0000-4000-8000-000000000001'$$), 0, 'a player cannot delete a past answer');
 select throws_ok($$select public.record_match_result('d0000000-0000-4000-8000-000000000004', 1, 0, '[]', '[]', null)$$, '42501', null, 'player cannot record results');
 select is(pg_temp.rows_changed($$update public.user_roles set role = 'admin'$$), 0, 'player role update affects no rows');
 reset role;
@@ -67,6 +68,8 @@ reset role;
 select pg_temp.as_user(:staff);
 select cmp_ok((select count(*)::int from public.ratings where not published), '>', 0, 'staff sees draft ratings');
 select lives_ok($$update public.players set nickname = 'Muro' where slug = 'daniele-nappo'$$, 'staff edits players');
+select throws_ok($$insert into public.players (slug, first_name, last_name, profile_id) values ('x-y', 'X', 'Y', 'a0000000-0000-4000-8000-000000000004')$$, '42501', null, 'staff cannot link an account when adding a player');
+select throws_ok($$insert into public.news_articles (slug, title, body, external_url) values ('xx', 'x', 'x', 'javascript:alert(1)')$$, '23514', null, 'external_url must be an Instagram https link');
 select throws_ok($$update public.players set profile_id = null where slug = 'daniele-nappo'$$, '42501', null, 'staff cannot unlink accounts');
 select throws_ok($$select public.record_match_result('d0000000-0000-4000-8000-000000000004', 1, 0,
   '[{"player_id":"c0000000-0000-4000-8000-000000000001","is_starter":true}]',
