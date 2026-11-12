@@ -32,3 +32,15 @@
 .skip:focus { top: var(--space-3); }
 
 .auth-stack { display: grid; gap: var(--space-5); justify-items: center; width: 100%; }
+
+textarea.input { padding: var(--space-3) var(--space-4); min-height: 96px; line-height: 1.5; resize: vertical; }
+select.input { appearance: auto; }
+.check { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; cursor: pointer; }
+.check input { width: 22px; height: 22px; accent-color: var(--rv-orange); }
+.btn-danger { color: var(--rv-red); border-color: var(--rv-red); background: none; }
+.btn-sm { min-height: 40px; padding: 0 var(--space-4); font-size: var(--fs-sm); }
+.form-grid { display: grid; gap: var(--space-4); max-width: 640px; }
+.row-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+.notice { padding: var(--space-3) var(--space-4); border-radius: var(--r-s); border: 1px solid var(--rv-line); background: var(--rv-surface-2); }
+.notice.ok { border-color: var(--rv-green); }
+.notice.bad { border-color: var(--rv-red); color: var(--rv-red); }

@@ -11,7 +11,7 @@ export async function login(page: Page, who: 'admin' | 'staff' | 'player' | 'vie
 }
 
 export async function logout(page: Page) {
-  if (test.info().project.name === 'phone') await page.getByRole('button', { name: 'Menu' }).click()
+  if (test.info().project.name.endsWith('phone')) await page.getByRole('button', { name: 'Menu' }).click()
   await page.getByRole('button', { name: 'Esci' }).click()
   await expect(page).toHaveURL(/\/login/)
 }

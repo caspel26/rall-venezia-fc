@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { login } from './helpers'
 
-const isPhone = () => test.info().project.name === 'phone'
+const isPhone = () => test.info().project.name.endsWith('phone')
 
 test('player sees the five-item navigation and can move between sections', async ({ page }) => {
   await login(page, 'player')
