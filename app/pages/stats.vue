@@ -44,24 +44,25 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
       </select>
     </div>
 
-    <div v-if="status === 'pending' && !data" class="skel"><SkeletonBlock size="lg" /><SkeletonBlock size="lg" /></div>
+    <Transition name="vanish" mode="out-in">
+    <div v-if="status === 'pending' && !data" key="s" class="skel"><SkeletonBlock size="lg" /><SkeletonBlock size="lg" /></div>
 
-    <template v-else>
+    <div v-else key="c">
       <section v-if="tab === 'team'" role="tabpanel" aria-labelledby="tab-team">
         <div v-if="team" class="team">
-          <div class="panel"><StatCard label="Giocate" :value="team.played" /></div>
-          <div class="panel"><StatCard label="Vinte" :value="team.wins" /></div>
-          <div class="panel"><StatCard label="Pareggiate" :value="team.draws" /></div>
-          <div class="panel"><StatCard label="Perse" :value="team.losses" /></div>
-          <div class="panel"><StatCard label="Gol fatti" :value="team.gf" /></div>
-          <div class="panel"><StatCard label="Gol subiti" :value="team.ga" /></div>
-          <div class="panel wide"><StatCard label="Differenza reti" :value="diff > 0 ? `+${diff}` : String(diff)" /></div>
+          <div v-reveal="0" class="panel"><StatCard label="Giocate" :value="team.played" /></div>
+          <div v-reveal="1" class="panel"><StatCard label="Vinte" :value="team.wins" /></div>
+          <div v-reveal="2" class="panel"><StatCard label="Pareggiate" :value="team.draws" /></div>
+          <div v-reveal="3" class="panel"><StatCard label="Perse" :value="team.losses" /></div>
+          <div v-reveal="4" class="panel"><StatCard label="Gol fatti" :value="team.gf" /></div>
+          <div v-reveal="5" class="panel"><StatCard label="Gol subiti" :value="team.ga" /></div>
+          <div v-reveal="5" class="panel wide"><StatCard label="Differenza reti" :value="diff > 0 ? `+${diff}` : String(diff)" /></div>
         </div>
         <EmptyState v-else title="Nessuna partita giocata" text="I numeri partono dalla prima partita." />
       </section>
 
       <section v-else-if="tab === 'rankings'" role="tabpanel" aria-labelledby="tab-rankings" class="ranks">
-        <div v-for="r in rankings" :key="r.title" class="panel">
+        <div v-for="(r, i) in rankings" :key="r.title" v-reveal="i % 4" class="panel">
           <h2 class="eyebrow">{{ r.title }}</h2>
           <ol v-if="r.rows.length" class="list">
             <RankingRow v-for="x in r.rows" :key="x.row.id" :position="x.position" :name="x.row.name" :slug="x.row.slug"
@@ -86,7 +87,8 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
         </div>
         <EmptyState v-else title="Nessun giocatore ha ancora giocato" text="Il campo aspetta." />
       </section>
-    </template>
+    </div>
+    </Transition>
   </div>
 </template>
 

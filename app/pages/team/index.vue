@@ -6,13 +6,15 @@ const { data: squad, status } = useSquad()
 <template>
   <div class="page">
     <PageHero eyebrow="Rosa" title="Squadra" lead="I giocatori del Rall Venezia." />
-    <div v-if="status === 'pending' && !squad" class="grid">
-      <SkeletonBlock v-for="n in 6" :key="n" size="hero" />
-    </div>
-    <ul v-else-if="squad?.length" class="grid" aria-label="Giocatori">
-      <li v-for="p in squad" :key="p.id"><PlayerCard :player="p" /></li>
-    </ul>
-    <EmptyState v-else title="Nessun giocatore" text="La rosa è vuota. Qualcuno chiami il mister." />
+    <Transition name="vanish" mode="out-in">
+      <div v-if="status === 'pending' && !squad" key="s" class="grid">
+        <SkeletonBlock v-for="n in 6" :key="n" size="hero" />
+      </div>
+      <ul v-else-if="squad?.length" key="l" class="grid" aria-label="Giocatori">
+        <li v-for="(p, i) in squad" :key="p.id" v-reveal="i % 4"><PlayerCard :player="p" /></li>
+      </ul>
+      <EmptyState v-else key="e" title="Nessun giocatore" text="La rosa è vuota. Qualcuno chiami il mister." />
+    </Transition>
   </div>
 </template>
 

@@ -1,5 +1,6 @@
 <template>
   <div class="shell">
+    <ScrollMeter />
     <DesktopNavigation />
     <div class="col">
       <MobileTopBar />

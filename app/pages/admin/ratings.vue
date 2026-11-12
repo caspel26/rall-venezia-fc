@@ -36,7 +36,7 @@ async function remove(id: string) {
       <button class="btn btn-sm btn-primary" type="button" @click="publishAll">Pubblica tutte</button>
     </div>
     <SkeletonBlock v-if="status === 'pending' && !data" size="lg" />
-    <ul v-else-if="data?.length" class="list" aria-label="Pagelle">
+    <TransitionGroup v-else-if="data?.length" tag="ul" name="vlist" class="list" aria-label="Pagelle">
       <li v-for="r in data" :key="r.id" class="row">
         <span class="s display tabular">{{ formatRating(Number(r.score)) }}</span>
         <div>
@@ -50,14 +50,14 @@ async function remove(id: string) {
           <button v-else class="btn btn-sm btn-danger" type="button" @click="remove(r.id)">Conferma</button>
         </div>
       </li>
-    </ul>
+    </TransitionGroup>
     <EmptyState v-else title="Nessuna pagella ancora" text="Il giudice è in ritardo." />
   </div>
 </template>
 
 <style scoped>
 .top { margin-bottom: var(--space-4); }
-.list { list-style: none; margin: 0; padding: 0; display: grid; }
+.list { position: relative; list-style: none; margin: 0; padding: 0; display: grid; }
 .row { display: grid; grid-template-columns: 56px 1fr; gap: var(--space-3); align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid var(--rv-line); }
 .row .row-actions { grid-column: 1 / -1; }
 .s { font-size: var(--fs-h1); color: var(--rv-orange); }

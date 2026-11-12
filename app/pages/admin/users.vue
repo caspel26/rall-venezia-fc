@@ -82,7 +82,7 @@ async function remove(id: string) {
     <p v-if="msg" class="notice msg" :class="msg.kind" role="status">{{ msg.text }}</p>
 
     <SkeletonBlock v-if="status === 'pending' && !data" size="lg" />
-    <ul v-else class="users" aria-label="Utenti">
+    <TransitionGroup v-else tag="ul" name="vlist" class="users" aria-label="Utenti">
       <li v-for="u in data" :key="u.id" class="u">
         <div class="who">
           <p class="nm">{{ u.display_name || u.email }}</p>
@@ -96,13 +96,13 @@ async function remove(id: string) {
           <button v-else type="button" class="btn btn-sm btn-danger" @click="remove(u.id)">Conferma</button>
         </template>
       </li>
-    </ul>
+    </TransitionGroup>
   </div>
 </template>
 
 <style scoped>
 .msg { margin: var(--space-4) 0; }
-.users { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-2); }
+.users { position: relative; list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-2); }
 .u { display: grid; gap: var(--space-2); padding: var(--space-3) 0; border-bottom: 1px solid var(--rv-line); align-items: center; }
 .nm { font-weight: var(--fw-ui); overflow-wrap: anywhere; }
 .sm { font-size: var(--fs-sm); overflow-wrap: anywhere; }

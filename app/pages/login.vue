@@ -40,13 +40,13 @@ async function submit() {
 
 <template>
   <div class="auth-stack">
-    <ClubLogo :size="112" />
-    <div>
+    <ClubLogo :size="112" class="intro" />
+    <div class="intro d1">
       <h1 class="display brand">Rall Venezia FC</h1>
       <p class="eyebrow">Accesso allo spogliatoio</p>
     </div>
 
-    <form class="stack" novalidate @submit.prevent="submit">
+    <form class="stack intro d2" novalidate @submit.prevent="submit">
       <FormField id="email" label="Email" v-slot="{ describedBy }">
         <input id="email" v-model="email" class="input" type="email" name="email" autocomplete="username" inputmode="email"
           required :aria-describedby="describedBy">
@@ -64,7 +64,7 @@ async function submit() {
       </button>
     </form>
 
-    <p class="muted quote">Quello che succede nello spogliatoio resta nello spogliatoio.</p>
+    <p class="muted quote intro d3">Quello che succede nello spogliatoio resta nello spogliatoio.</p>
   </div>
 </template>
 

@@ -7,6 +7,8 @@ export default defineNuxtConfig({
   // session in the browser only; server code is limited to the admin API routes in server/.
   ssr: false,
   modules: ['@nuxtjs/supabase'],
+  // components/widgets/WidgetFrame.vue is used as <WidgetFrame>, without the folder prefix
+  components: [{ path: '~/components', pathPrefix: false }],
   supabase: {
     // Anonymous visitors are sent to /login; roles are enforced by RLS, not here.
     redirect: true,

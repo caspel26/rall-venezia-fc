@@ -33,7 +33,7 @@ const pct = (n: number | null | undefined) => (n == null ? '–' : `${Math.round
     <div v-if="status === 'pending' && !data"><SkeletonBlock size="hero" /></div>
 
     <template v-else-if="p">
-      <header class="hero grain">
+      <header class="hero grain intro">
         <PlayerPortrait class="ph" :first="p.first_name" :last="p.last_name" :number="p.shirt_number" :photo-path="p.photo_path" variant="hero" />
         <div class="id">
           <p class="eyebrow">{{ [p.position ? POSITION_LABELS[p.position] : null, p.is_captain ? 'Capitano' : null].filter(Boolean).join(' · ') }}</p>
@@ -44,7 +44,7 @@ const pct = (n: number | null | undefined) => (n == null ? '–' : `${Math.round
         </div>
       </header>
 
-      <section class="stats" aria-label="Statistiche in carriera">
+      <section v-reveal class="stats" aria-label="Statistiche in carriera">
         <StatCard label="Presenze" :value="stat(c?.appearances)" />
         <StatCard label="Gol" :value="stat(c?.goals)" />
         <StatCard label="Assist" :value="stat(c?.assists)" />

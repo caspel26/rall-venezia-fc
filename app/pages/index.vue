@@ -11,12 +11,12 @@ const visible = (slot: 'main' | 'side') => HOME_WIDGETS.filter((x) => x.slot ===
 <template>
   <div class="page">
     <header class="hello">
-      <p class="eyebrow">Matchday</p>
-      <h1 class="display">Ciao{{ greeting ? ` ${greeting}` : '' }}</h1>
+      <p class="eyebrow intro">Matchday</p>
+      <h1 class="display intro d1">Ciao{{ greeting ? ` ${greeting}` : '' }}</h1>
     </header>
     <div class="grid">
-      <div class="col"><component :is="x.component" v-for="x in visible('main')" :key="x.id" /></div>
-      <div class="col"><component :is="x.component" v-for="x in visible('side')" :key="x.id" /></div>
+      <div class="col stagger"><component :is="x.component" v-for="x in visible('main')" :key="x.id" /></div>
+      <div class="col stagger"><component :is="x.component" v-for="x in visible('side')" :key="x.id" /></div>
     </div>
   </div>
 </template>

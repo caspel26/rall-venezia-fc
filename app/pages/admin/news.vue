@@ -80,7 +80,7 @@ async function remove(id: string) {
     </form>
 
     <SkeletonBlock v-if="status === 'pending' && !data" size="lg" />
-    <ul v-else-if="data?.articles.length" class="list" aria-label="Articoli">
+    <TransitionGroup v-else-if="data?.articles.length" tag="ul" name="vlist" class="list" aria-label="Articoli">
       <li v-for="a in data.articles" :key="a.id" class="row">
         <div><p class="nm">{{ a.title }}</p><p class="muted sm">{{ a.published_at ? formatShortDay(a.published_at) : 'Bozza' }}<template v-if="a.is_lead"> · apertura</template><template v-if="a.source === 'instagram'"> · Instagram</template></p></div>
         <div class="row-actions">
@@ -96,13 +96,13 @@ async function remove(id: string) {
           </template>
         </div>
       </li>
-    </ul>
+    </TransitionGroup>
   </div>
 </template>
 
 <style scoped>
 .tall { min-height: 220px; }
-.list { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; }
+.list { position: relative; list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; }
 .row { display: grid; gap: var(--space-2); padding: var(--space-3) 0; border-bottom: 1px solid var(--rv-line); }
 .nm { font-weight: var(--fw-ui); }
 .sm { font-size: var(--fs-sm); }

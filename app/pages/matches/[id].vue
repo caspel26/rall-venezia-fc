@@ -24,7 +24,7 @@ const name = (pid: string | null) => (pid && data.value?.players.get(pid) ? full
     <SkeletonBlock v-if="status === 'pending' && !data" size="hero" />
 
     <template v-else-if="m && data">
-      <header class="hero grain" :class="{ done }">
+      <header class="hero grain intro" :class="{ done }">
         <p class="eyebrow">{{ [m.competition?.name, m.season?.name, formatDay(m.kickoff_at)].filter(Boolean).join(' · ') }}</p>
         <ScoreBoard v-if="done" :rv="m.rv_score" :opp="m.opp_score" :is-home="m.is_home" :opponent="m.opponent?.name ?? ''" />
         <div v-else class="upcoming">
@@ -44,7 +44,7 @@ const name = (pid: string | null) => (pid && data.value?.players.get(pid) ? full
         <AvailabilitySelector :match-id="m.id" :current="data.myAnswer" />
       </section>
 
-      <section v-if="data.goals.length" class="block">
+      <section v-if="data.goals.length" v-reveal class="block">
         <SectionHeader title="Gol" />
         <ol class="timeline">
           <li v-for="g in data.goals" :key="g.id">
@@ -60,7 +60,7 @@ const name = (pid: string | null) => (pid && data.value?.players.get(pid) ? full
         </p>
       </section>
 
-      <section v-if="data.starters.length || data.bench.length" class="block">
+      <section v-if="data.starters.length || data.bench.length" v-reveal class="block">
         <SectionHeader title="Formazione" />
         <div class="lineup">
           <div>
@@ -74,7 +74,7 @@ const name = (pid: string | null) => (pid && data.value?.players.get(pid) ? full
         </div>
       </section>
 
-      <section v-if="isTeam && done" class="block">
+      <section v-if="isTeam && done" v-reveal class="block">
         <SectionHeader title="Pagelle" to="/ratings" link-label="Archivio" />
         <div v-if="data.ratings.length" class="ratings">
           <RatingCard v-for="r in data.ratings" :key="r.id" :score="Number(r.score)" :player="fullName(r.player!)" :review="r.review" :attributes="r.attributes" />

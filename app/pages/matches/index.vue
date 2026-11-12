@@ -37,14 +37,16 @@ const emptyText = computed(() =>
       </div>
     </div>
 
-    <div v-if="status === 'pending' && !data" class="list"><SkeletonBlock v-for="n in 5" :key="n" size="sm" /></div>
-    <ul v-else-if="list.length" class="list" aria-label="Partite">
-      <li v-for="m in list" :key="m.id">
+    <Transition name="vanish" mode="out-in">
+    <div v-if="status === 'pending' && !data" key="s" class="list"><SkeletonBlock v-for="n in 5" :key="n" size="sm" /></div>
+    <ul v-else-if="list.length" key="l" class="list" aria-label="Partite">
+      <li v-for="(m, i) in list" :key="m.id" v-reveal="i % 5">
         <MatchCard :to="`/matches/${m.id}`" :opponent="m.opponent?.name ?? ''" :short="m.opponent?.short_name" :is-home="m.is_home"
           :kickoff-at="m.kickoff_at" :competition="m.competition?.name" :status="m.status" :rv="m.rv_score" :opp="m.opp_score" />
       </li>
     </ul>
-    <EmptyState v-else :title="emptyText.title" :text="emptyText.text" />
+    <EmptyState v-else key="e" :title="emptyText.title" :text="emptyText.text" />
+    </Transition>
   </div>
 </template>
 

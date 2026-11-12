@@ -19,7 +19,7 @@ const cards = computed(() => [
   <div class="page">
     <PageHero eyebrow="Gestione" title="Admin" lead="Tutto quello che serve, niente di più." />
     <ul class="grid">
-      <li v-for="c in cards" :key="c.to">
+      <li v-for="(c, i) in cards" :key="c.to" v-reveal="i % 3">
         <NuxtLink :to="c.to" class="card"><h2 class="display">{{ c.title }}</h2><p class="muted">{{ c.text }}</p></NuxtLink>
       </li>
     </ul>

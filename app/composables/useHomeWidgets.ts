@@ -67,13 +67,14 @@ export function useTeamRecord() {
   }, { lazy: true })
 }
 
-/** Top-N players by a career stat, from the shared squad query. */
+/** Top-N players by a career stat, with the same tie-break and shared positions as the Stats page. */
 export function useRanking(key: 'goals' | 'assists' | 'mvps', n = 5) {
   const { data, status } = useSquad()
-  const rows = computed(() => (data.value ?? [])
-    .filter((p) => (p.stats?.[key] ?? 0) > 0)
-    .sort((a, b) => (b.stats![key] ?? 0) - (a.stats![key] ?? 0) || a.last_name.localeCompare(b.last_name, 'it'))
-    .slice(0, n)
-    .map((p) => ({ player: p, value: p.stats![key] ?? 0 })))
+  const rows = computed(() => {
+    const people = (data.value ?? []).map((p) => ({
+      id: p.id, name: `${p.first_name} ${p.last_name}`, appearances: p.stats?.appearances ?? 0, player: p, value: p.stats?.[key] ?? 0,
+    }))
+    return rankBy(people, (r) => r.value, n).map((r) => ({ position: r.position, player: r.row.player, value: r.value }))
+  })
   return { rows, status }
 }

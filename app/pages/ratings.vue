@@ -34,15 +34,17 @@ const list = computed(() => (data.value ?? []).filter((r) => (!player.value || r
       </select>
     </div>
 
-    <div v-if="status === 'pending' && !data" class="list"><SkeletonBlock v-for="n in 3" :key="n" size="lg" /></div>
-    <ul v-else-if="list.length" class="list" aria-label="Pagelle">
-      <li v-for="r in list" :key="r.id">
+    <Transition name="vanish" mode="out-in">
+    <div v-if="status === 'pending' && !data" key="s" class="list"><SkeletonBlock v-for="n in 3" :key="n" size="lg" /></div>
+    <ul v-else-if="list.length" key="l" class="list" aria-label="Pagelle">
+      <li v-for="(r, i) in list" :key="r.id" v-reveal="i % 4">
         <RatingCard :score="Number(r.score)" :player="r.player ? fullName(r.player) : ''" :review="r.review" :attributes="r.attributes"
           :context="r.match ? `vs ${r.match.opponent?.name} · ${formatShortDay(r.match.kickoff_at)}` : undefined" />
       </li>
     </ul>
-    <EmptyState v-else-if="data?.length" title="Nessuna pagella con questi filtri" text="Allarga la ricerca." />
-    <EmptyState v-else title="Nessuna pagella ancora" text="Il giudice è in ritardo." />
+    <EmptyState v-else-if="data?.length" key="e1" title="Nessuna pagella con questi filtri" text="Allarga la ricerca." />
+    <EmptyState v-else key="e2" title="Nessuna pagella ancora" text="Il giudice è in ritardo." />
+    </Transition>
   </div>
 </template>
 

@@ -22,6 +22,7 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q12 Motion: scroll reveal (`v-reveal`), intro stagger, vanish swaps (skeleton->content, lists), number ticks, scroll meter, blurred header, reduced-motion kill switch (pattern from caspel26.github.io; documented in DESIGN_SYSTEM); also fixed WidgetFrame auto-import (`components.pathPrefix:false`)~~
 - ~~Q11a Player pack (PDF from the Codex brief): numbers/positions applied (Batti #4 defender, Miranda #10 jolly, Ferrara #7, Verrone winger), real photos via `scripts/build-player-assets.sh` + `upload-player-assets.mjs` into private storage (portrait/hero/thumb; originals gitignored in `private-assets/`). NOT done: transparent cutouts (needs a background-removal model) and replacing Verrone's blue bib with the white kit (needs generative editing / a new photo)~~
 - ~~Q11b Instagram -> Gazzetta sync: server route + token store + admin page + mock-API e2e + GitHub Actions/Vercel cron; needs the owner's Meta app/token (docs/INSTAGRAM.md)~~
 - ~~Q11c Seed stats on request: 8 matchdays, Verrone 31 goals, Nappo 16, others 3, 8 assists each~~

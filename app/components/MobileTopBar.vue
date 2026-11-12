@@ -2,13 +2,14 @@
 const { secondary } = useNav()
 const { user, role, signOut } = useAuth()
 const open = ref(false)
+const scrolled = useScrolled()
 const route = useRoute()
 watch(() => route.fullPath, () => { open.value = false })
 const name = computed(() => user.value?.user_metadata?.display_name ?? user.value?.email ?? '')
 </script>
 
 <template>
-  <header class="top">
+  <header class="top" :class="{ 'hdr-scrolled': scrolled }">
     <NuxtLink to="/" class="brand" aria-label="Rall Venezia FC, home">
       <ClubLogo :size="32" /><span class="display">Rall Venezia</span>
     </NuxtLink>
@@ -26,7 +27,7 @@ const name = computed(() => user.value?.user_metadata?.display_name ?? user.valu
 <style scoped>
 .top {
   position: sticky; top: 0; z-index: 15; display: flex; align-items: center; justify-content: space-between;
-  min-height: 56px; padding: 0 var(--gutter); background: var(--rv-black); border-bottom: 1px solid var(--rv-line);
+  min-height: 56px; padding: 0 var(--gutter); background: var(--rv-black); border-bottom: 1px solid transparent; transition: background-color .25s, border-color .25s;
 }
 .brand { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; font-size: var(--fs-h3); }
 .menu-btn { width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; color: var(--rv-cream); cursor: pointer; }

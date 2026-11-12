@@ -13,17 +13,17 @@ const page = computed(() => frontPage(data.value ?? []))
 
       <template v-else-if="page.lead">
         <div class="front">
-          <NewsStory class="leadcol" size="lead" :slug="page.lead.slug" :cover="page.lead.cover_path" :kicker="page.lead.kicker" :title="page.lead.title"
+          <NewsStory v-reveal class="leadcol" size="lead" :slug="page.lead.slug" :cover="page.lead.cover_path" :kicker="page.lead.kicker" :title="page.lead.title"
             :summary="page.lead.summary" :at="page.lead.published_at" />
           <div v-if="page.secondary.length" class="side">
-            <NewsStory v-for="a in page.secondary" :key="a.id" size="mid" :slug="a.slug" :cover="a.cover_path" :kicker="a.kicker" :title="a.title"
+            <NewsStory v-for="(a, i) in page.secondary" :key="a.id" v-reveal="i + 1" size="mid" :slug="a.slug" :cover="a.cover_path" :kicker="a.kicker" :title="a.title"
               :summary="a.summary" :at="a.published_at" />
           </div>
         </div>
         <section v-if="page.more.length" class="more" aria-label="Archivio">
           <h2 class="rubrica">Edizioni precedenti</h2>
           <div class="cols">
-            <NewsStory v-for="a in page.more" :key="a.id" size="small" :slug="a.slug" :kicker="a.kicker" :title="a.title" :at="a.published_at" />
+            <NewsStory v-for="(a, i) in page.more" :key="a.id" v-reveal="i % 3" size="small" :slug="a.slug" :kicker="a.kicker" :title="a.title" :at="a.published_at" />
           </div>
         </section>
       </template>

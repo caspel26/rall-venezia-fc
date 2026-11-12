@@ -34,7 +34,7 @@ Hex values come from the supplied roundel (winged lion on green and orange strip
 - Shadow: one elevation for sheets/dialogs; no card shadows (surfaces separate by tone and hairline).
 
 ### Motion (borrowed from Shiori)
-`--dur-fast` 120ms, `--dur` 200ms, `--dur-slow` 400ms, `--dur-count` 900ms (stat count-up, score reveal). Easings: `--ease-out` `cubic-bezier(.22,1,.36,1)` for enters/moves, `--ease-in` `cubic-bezier(.4,0,1,1)` for leaves, `--ease-standard` `cubic-bezier(.2,0,0,1)` for state changes. Page transition = short fade/lift (`page-reveal`, `section-arrive` pattern). Sheets slide from the bottom. Signature moments, used once each: score reveal, MVP glow (slow gold pulse, finite), stats count-up on first view. `prefers-reduced-motion: reduce` removes all of it (final values appear immediately). Animate `opacity`/`transform` only.
+`--dur-fast` 120ms, `--dur` 200ms, `--dur-slow` 400ms, `--dur-count` 900ms (stat count-up, score reveal). Easings: `--ease-out` `cubic-bezier(.22,1,.36,1)` for enters/moves, `--ease-in` `cubic-bezier(.4,0,1,1)` for leaves, `--ease-standard` `cubic-bezier(.2,0,0,1)` for state changes. Page transition = short fade/lift (`page-reveal`, `section-arrive` pattern). Sheets slide from the bottom. Signature moments, used once each: score reveal, MVP glow (slow gold pulse, finite), stats count-up on first view. `prefers-reduced-motion: reduce` removes all of it (final values appear immediately). Animate `opacity`/`transform` (and a short `filter: blur` for dissolves) only.
 
 ## Textures and imagery
 
@@ -65,3 +65,20 @@ Loading uses skeletons shaped like the final content, not spinners.
 ## Accessibility
 
 Semantic landmarks (`header`, `nav`, `main`), one `h1` per page, visible 2px orange focus ring offset 2px, full keyboard operation of the availability selector and sheets, contrast ≥ 4.5:1 text and 3:1 UI, status never by colour alone, `aria-live` for availability confirmation, images have meaningful `alt` or `alt=""` if decorative, reduced motion respected.
+
+
+## Motion patterns (shared, in `components.css`)
+
+Borrowed from caspel26.github.io, tuned with the tokens above.
+
+| Pattern | Use | How |
+| --- | --- | --- |
+| **Scroll reveal** | cards, panels, list items | `v-reveal` (optionally `v-reveal="i"` for a stagger): fades and rises 22px the first time it enters the viewport. `.stagger` children delay by position |
+| **Intro stagger** | page headings, login | `.intro` + `.d1…d4`: the eyebrow, title and lead enter one after the other |
+| **Vanish swap** | skeleton → content, filtered lists | `<Transition name="vanish" mode="out-in">`: the placeholder fades and blurs out, the content rises in |
+| **List vanish** | admin lists | `<TransitionGroup name="vlist">`: removed items slide out and blur away, the rest glide up |
+| **Number tick** | availability counts, live updates | `<Transition name="tick">`: the old value drops out, the new one rises in |
+| **Score reveal, count-up, MVP glow** | match score, stat cards, MVP badge | one-off signature moments |
+| **Scroll meter + blurred header** | whole app | 2px orange progress bar; the mobile header blurs once scrolled |
+
+Reduced motion (`prefers-reduced-motion: reduce`) removes every one of these: reveals are never hidden, durations collapse to ~0, the meter disappears. Covered by `tests/e2e/motion.spec.ts`.

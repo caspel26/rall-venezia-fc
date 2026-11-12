@@ -4,9 +4,9 @@ defineProps<{ eyebrow?: string; title: string; lead?: string }>()
 
 <template>
   <header class="hero">
-    <p v-if="eyebrow" class="eyebrow">{{ eyebrow }}</p>
-    <h1 class="display">{{ title }}</h1>
-    <p v-if="lead" class="muted">{{ lead }}</p>
+    <p v-if="eyebrow" class="eyebrow intro">{{ eyebrow }}</p>
+    <h1 class="display intro d1">{{ title }}</h1>
+    <p v-if="lead" class="muted intro d2">{{ lead }}</p>
     <slot />
   </header>
 </template>
