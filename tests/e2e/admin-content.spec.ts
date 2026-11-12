@@ -145,3 +145,15 @@ test('Gazzetta: a hand-written article can carry a photo from the admin', async 
   await page.locator('.row', { hasText: title }).getByRole('button', { name: 'Conferma' }).click()
   await expect(page.locator('.row', { hasText: title })).toHaveCount(0)
 })
+
+test('Gazzetta: a ChatGPT "scheda sito" fills the form and links the match', async ({ page }) => {
+  await login(page, 'staff')
+  await page.goto('/admin/news')
+  await page.getByText('Incolla la scheda da ChatGPT').click()
+  await page.getByLabel('Scheda sito').fill(['SCHEDA SITO', 'CATEGORIA: partita', 'OCCHIELLO: GIORNATA 9', 'TITOLO: Il Rall batte il Monza', 'SOMMARIO: Dieci gol.', 'PARTITA: Monza', 'TESTO:', 'Primo paragrafo.', '', 'Secondo paragrafo.'].join('\n'))
+  await page.getByRole('button', { name: 'Compila il modulo' }).click()
+  await expect(page.getByLabel('Titolo')).toHaveValue('Il Rall batte il Monza')
+  await expect(page.getByLabel('Occhiello')).toHaveValue('GIORNATA 9')
+  await expect(page.getByLabel('Testo', { exact: true })).toHaveValue('Primo paragrafo.\n\nSecondo paragrafo.')
+  await expect(page.getByLabel('Partita collegata')).not.toHaveValue('')
+})

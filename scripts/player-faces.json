@@ -5,7 +5,12 @@
   },
   "salvatore-marigliano": {
     "x": 0.5,
-    "y": 0.34
+    "y": 0.34,
+    "open": 6,
+    "head_zone": [
+      0.85,
+      1.5
+    ]
   },
   "alfonso-avino": {
     "x": 0.5,
@@ -165,17 +170,28 @@
           720
         ]
       ]
+    ],
+    "open": 6,
+    "left_limit": 125,
+    "head_zone": [
+      0.8,
+      1.2
     ]
   },
   "francesco-ferrara": {
     "x": 0.43,
     "y": 0.2,
-    "model": "isnet-general-use"
+    "model": "isnet-general-use",
+    "open": 6,
+    "head_zone": [
+      0.78,
+      1.05
+    ]
   },
   "antonio-verrone": {
-    "x": 0.56,
-    "y": 0.26,
-    "bib_to_white": true
+    "x": 0.42,
+    "y": 0.105,
+    "model": "u2net_human_seg"
   },
   "pasquale-gallo": {
     "x": 0.45,

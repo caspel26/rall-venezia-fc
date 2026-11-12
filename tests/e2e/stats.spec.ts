@@ -5,6 +5,7 @@ test('stats: team record, rankings with tie-break, players table', async ({ page
   await login(page, 'player')
   await page.goto('/stats')
   await page.waitForLoadState('networkidle')
+  await page.getByRole('tab', { name: 'Squadra' }).click()
   // seeded record: 8 played (5W 1D 2L), goals 62-37
   const t = (label: string) => page.locator('.panel', { hasText: label }).first()
   await expect(t('Giocate')).toContainText('8')
@@ -40,4 +41,25 @@ test('the squad numbers add up: goals per player sum to the team goals, everyone
     expect(Number(cells[3])).toBeGreaterThanOrEqual(5) // assists: "tanti"
   }
   expect(goals).toBe(62)
+})
+
+test('the league table lists all 20 teams, highlights us and splits in two columns on desktop', async ({ page }) => {
+  await login(page, 'player')
+  await page.goto('/stats?tab=league')
+  const rows = page.getByRole('list', { name: 'Classifica del campionato' }).locator('> li')
+  await expect(rows).toHaveCount(20)
+  await expect(rows.nth(0)).toContainText('Lazio')
+  await expect(rows.nth(0)).toContainText('21')
+  const us = page.locator('li[aria-current="true"]')
+  await expect(us).toHaveCount(1)
+  await expect(us).toContainText('Venezia')
+  await expect(us.locator('.pos')).toHaveText('3')
+  await expect(rows.nth(3)).toContainText('Napoli') // level on 18 points: the manual order is kept
+})
+
+test('home shows the top of the table and where we stand', async ({ page }) => {
+  await login(page, 'viewer')
+  const w = page.getByRole('region', { name: 'Classifica', exact: true })
+  await expect(w).toContainText('Lazio')
+  await expect(w).toContainText('Venezia')
 })

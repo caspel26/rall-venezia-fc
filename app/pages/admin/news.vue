@@ -23,6 +23,20 @@ function edit(a: NonNullable<typeof data.value>['articles'][number]) {
   Object.assign(f, { id: a.id, cover: a.cover_path ?? '', kicker: a.kicker ?? '', title: a.title, summary: a.summary ?? '', body: a.body, match: a.match_id ?? '', lead: a.is_lead, publish: !!a.published_at })
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+// A "SCHEDA SITO" block written by a chat assistant fills the form in one paste.
+const pasteBlock = ref('')
+const pasteNote = ref('')
+function fillFromBlock() {
+  const b = parseNewsBlock(pasteBlock.value)
+  if (!b.title && !b.body) { pasteNote.value = 'Non trovo titolo e testo. Incolla la scheda intera (con TITOLO: e TESTO:).'; return }
+  Object.assign(f, { kicker: b.kicker || f.kicker, title: b.title || f.title, summary: b.summary || f.summary, body: b.body || f.body })
+  const want = b.match.toLowerCase()
+  const hit = want ? data.value?.matches.find((m) => (m.opponent?.name ?? '').toLowerCase().includes(want) || want.includes((m.opponent?.name ?? '').toLowerCase())) : null
+  if (hit) f.match = hit.id
+  pasteNote.value = `Compilato${hit ? ' e collegato alla partita' : ''}. Controlla, aggiungi la foto e pubblica.`
+  pasteBlock.value = ''
+}
+
 // Photos are shrunk in the browser (max 1600px, JPEG) before they go to the private `graphics` bucket.
 const photoBusy = ref(false)
 const photoError = ref('')
@@ -89,6 +103,13 @@ async function remove(id: string) {
     <AdminTabs />
     <form class="form-grid panel" novalidate @submit.prevent="save">
       <h2 class="eyebrow">{{ f.id ? 'Modifica articolo' : 'Nuovo articolo' }}</h2>
+      <details v-if="!f.id" class="paste">
+        <summary class="eyebrow"><AppIcon name="news" :size="16" /> Incolla la scheda da ChatGPT</summary>
+        <label class="sr-only" for="blk">Scheda sito</label>
+        <textarea id="blk" v-model="pasteBlock" class="input" rows="7" placeholder="CATEGORIA: partita&#10;OCCHIELLO: …&#10;TITOLO: …&#10;SOMMARIO: …&#10;PARTITA: Monza&#10;TESTO:&#10;…" />
+        <div class="row-actions"><button type="button" class="btn btn-sm" :disabled="!pasteBlock.trim()" @click="fillFromBlock">Compila il modulo</button></div>
+        <p v-if="pasteNote" class="muted" role="status">{{ pasteNote }}</p>
+      </details>
       <FormField id="nk" label="Occhiello" hint="La riga piccola sopra il titolo." v-slot="{ describedBy }"><input id="nk" v-model="f.kicker" class="input" :aria-describedby="describedBy"></FormField>
       <div class="photo">
         <FormField id="np" label="Foto di copertina" hint="Facoltativa. JPG, PNG o WebP: viene ridimensionata da sola." v-slot="{ describedBy }">
@@ -141,6 +162,8 @@ async function remove(id: string) {
 
 <style scoped>
 .tall { min-height: 220px; }
+.paste { display: grid; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-radius: 12px; background: var(--rv-surface-2); box-shadow: inset 0 0 0 1px var(--rv-line); }
+.paste summary { cursor: pointer; display: flex; align-items: center; gap: 8px; min-height: 44px; }
 .photo { display: grid; gap: var(--space-3); }
 .preview { display: grid; gap: var(--space-2); justify-items: start; max-width: 420px; }
 .preview :deep(.cover) { width: 100%; border-radius: var(--r-card); }

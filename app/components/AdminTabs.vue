@@ -6,6 +6,7 @@ const route = useRoute()
 const items = [
   { to: '/admin/matches', label: 'Partite' },
   { to: '/admin/players', label: 'Giocatori' },
+  { to: '/admin/standings', label: 'Classifica' },
   { to: '/admin/announcements', label: 'Annunci' },
   { to: '/admin/news', label: 'Gazzetta' },
   { to: '/admin/instagram', label: 'Instagram', roles: ['admin'] as const },

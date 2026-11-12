@@ -108,5 +108,24 @@ for d in sorted(p for r in roots if r.exists() for p in r.iterdir() if p.is_dir(
             draw.polygon([tuple(pt) for pt in poly], fill=0)
         out.putalpha(alpha)
     out = clean_edges(out)
+    if f.get('head_zone'):  # nothing but the head may stand beside the head: drops stray blobs next to it
+        hz_w, hz_d = f['head_zone']
+        a = np.array(out)
+        solid = a[..., 3] > 40
+        ys, xs = np.where(solid)
+        top = ys.min()
+        head_rows = solid[top:top + max(8, int((ys.max() - top) * 0.13))]
+        hx = np.where(head_rows.any(0))[0]
+        hw = hx.max() - hx.min(); cx = (hx.max() + hx.min()) // 2
+        y1 = top + int(hw * hz_d)
+        a[top:y1, : max(0, int(cx - hw * hz_w)), 3] = 0
+        a[top:y1, int(cx + hw * hz_w):, 3] = 0
+        out = Image.fromarray(a, 'RGBA')
+    if f.get('open'):  # morphological opening: removes thin slivers and small blobs left by the matting
+        from PIL import ImageFilter
+        k = int(f['open']) * 2 + 1
+        a = out.getchannel('A').filter(ImageFilter.MinFilter(k)).filter(ImageFilter.MaxFilter(k)).filter(ImageFilter.GaussianBlur(0.8))
+        out.putalpha(a)
+        out = keep_main_person(out, f['x'], f['y'])
     out.save(d / 'cutout.png')
     print('cutout', d.name)

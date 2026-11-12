@@ -17,22 +17,25 @@ const OPTIONS: { value: AvailabilityStatus; label: string; icon: string }[] = [
   { value: 'unavailable', label: 'Non ci sono', icon: '✕' },
 ]
 
-// Optimistic: the tap shows immediately and rolls back if the write is refused.
+// Optimistic: a tap shows at once. Taps are never dropped: the last one wins, and only a refused latest tap rolls back.
+let seq = 0
 async function choose(status: AvailabilityStatus) {
-  if (saving.value || status === answer.value) return
+  if (status === answer.value) return
   const previous = answer.value
   answer.value = status
+  const mine = ++seq
   saving.value = true
   error.value = ''
   const { error: e } = await client.rpc('set_availability', { p_match_id: props.matchId, p_status: status })
-  saving.value = false
+  if (mine === seq) saving.value = false
   if (e) {
-    answer.value = previous
-    error.value = 'Non siamo riusciti a salvare la risposta. Riprova.'
+    if (mine === seq) { answer.value = previous; error.value = 'Non siamo riusciti a salvare la risposta. Riprova.' }
     return
   }
-  announce.value = `Risposta salvata: ${OPTIONS.find((o) => o.value === status)?.label}`
-  emit('saved', status)
+  if (mine === seq) {
+    announce.value = `Risposta salvata: ${OPTIONS.find((o) => o.value === status)?.label}`
+    emit('saved', status)
+  }
 }
 </script>
 

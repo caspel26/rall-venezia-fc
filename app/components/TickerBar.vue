@@ -6,6 +6,7 @@ import type { ResultLetter } from '~/utils/results'
 const { data: next } = useNextMatch()
 const { data: recent } = useRecentMatches()
 const goals = useRanking('goals', 1)
+const { data: league } = useStandings()
 const form = computed(() => formOf([...(recent.value ?? [])].reverse()))
 
 interface Item { icon: IconName; label: string; value: string; score?: string; form?: ResultLetter[] }
@@ -17,6 +18,7 @@ const items = computed(() => {
   if (l) out.push({ icon: 'whistle', label: 'Ultima', value: `Rall Venezia vs ${l.opponent?.name}`, score: `${l.rv_score}–${l.opp_score}` })
   const top = goals.rows.value[0]
   if (top) out.push({ icon: 'ball', label: 'Capocannoniere', value: `${fullName(top.player)} · ${top.value} gol` })
+  if (league.value?.us) out.push({ icon: 'trophy', label: 'Classifica', value: `${league.value.us.position}° · ${league.value.us.points} punti` })
   if (form.value.length) out.push({ icon: 'form', label: 'Forma', value: '', form: form.value })
   return out
 })

@@ -49,12 +49,19 @@ for dir in private-assets/players/*/ private-assets/staff/*/; do
   fi
 
   # width that keeps the head in the middle and the whole body in frame, plus margin
-  left=$(( hcx - bx )); right=$(( bx + bw - hcx )); half_w=$(( (left > right ? left : right) + 28 ))
+  left=$(( hcx - bx )); right=$(( bx + bw - hcx ))
+  # optional limits (px from the head centre) keep a distracting part of the pose, e.g. a blurred hand, outside the frame
+  ll=$(jq -r ".\"$slug\".left_limit // empty" "$faces"); rl=$(jq -r ".\"$slug\".right_limit // empty" "$faces")
+  [ -n "$ll" ] && [ "$left" -gt "$ll" ] && left=$ll
+  [ -n "$rl" ] && [ "$right" -gt "$rl" ] && right=$rl
+  half_w=$(( (left > right ? left : right) + 28 ))
 
   cardw=$(jq -r ".\"$slug\".cardw // empty" "$faces")
   for variant in portrait:$bust half:$half; do
     name=${variant%%:*}; k=${variant##*:}
     ph=$(awk -v b="$bh" -v k="$k" 'BEGIN{printf "%d", b*k}'); pw=$(( half_w * 2 )); cx=$(( hcx - half_w )); cy=$(( by - 14 ))
+    # asymmetric frame when a side is limited (the pose is cropped on that side instead of showing the part)
+    if [ -n "$ll" ] || [ -n "$rl" ]; then pw=$(( left + right + 56 )); cx=$(( hcx - left - 28 )); fi
     # staff: a 4:5 box sized by the head, so the person fills the card instead of floating in it
     if [ -n "$cardw" ] && [ "$name" = portrait ]; then
       pw=$(awk -v h="$hw" -v m="$cardw" 'BEGIN{printf "%d", h*m}'); ph=$(( pw * 5 / 4 )); cx=$(( hcx - pw / 2 )); cy=$(( by_head - hw * 55 / 100 ))

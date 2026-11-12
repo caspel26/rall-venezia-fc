@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(36);
+select plan(39);
 
 -- seed ids
 \set admin '''a0000000-0000-4000-8000-000000000001'''
@@ -43,6 +43,7 @@ select is((select count(*)::int from public.user_roles), 1, 'viewer sees only th
 select cmp_ok((select count(*)::int from public.news_articles), '>', 0, 'viewer reads published news');
 select is((select count(*)::int from public.staff_members), 2, 'viewer reads the staff');
 select is((select count(*)::int from public.polls), 0, 'viewer sees no polls');
+select is((select count(*)::int from public.standings), 20, 'viewer reads the league table');
 select throws_ok($$insert into public.news_articles (slug, title, body) values ('x', 'x', 'x')$$, '42501', null, 'viewer cannot write news');
 reset role;
 
@@ -50,6 +51,7 @@ reset role;
 select pg_temp.as_user(:player);
 select throws_ok($$insert into public.news_articles (slug, title, body) values ('x', 'x', 'x')$$, '42501', null, 'player cannot write news');
 select throws_ok($$insert into public.staff_members (slug, first_name, last_name, role_title) values ('x', 'x', 'x', 'x')$$, '42501', null, 'player cannot write staff');
+select is(pg_temp.rows_changed($$update public.standings set points = 99$$), 0, 'player cannot change the league table');
 select lives_ok($$select public.set_poll_votes('e0000000-0000-4000-8000-000000000001',
   array[(date_trunc('week', now() + interval '7 days'))::date, (date_trunc('week', now() + interval '7 days'))::date + 1])$$, 'player votes for several days');
 select is((select count(*)::int from public.poll_votes where player_id = 'c0000000-0000-4000-8000-000000000001'), 2, 'both days are stored');
@@ -74,6 +76,7 @@ reset role;
 -- staff
 select pg_temp.as_user(:staff);
 select lives_ok($$update public.players set nickname = 'Muro' where slug = 'daniele-nappo'$$, 'staff edits players');
+select is(pg_temp.rows_changed($$update public.standings set points = points where team = 'Lazio'$$), 1, 'staff edits the league table');
 select throws_ok($$insert into public.players (slug, first_name, last_name, profile_id) values ('x-y', 'X', 'Y', 'a0000000-0000-4000-8000-000000000004')$$, '42501', null, 'staff cannot link an account when adding a player');
 select throws_ok($$insert into public.news_articles (slug, title, body, external_url) values ('xx', 'x', 'x', 'javascript:alert(1)')$$, '23514', null, 'external_url must be an Instagram https link');
 select throws_ok($$update public.players set profile_id = null where slug = 'daniele-nappo'$$, '42501', null, 'staff cannot unlink accounts');

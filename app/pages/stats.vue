@@ -4,7 +4,9 @@ import { rankBy } from '~/utils/ranking'
 useHead({ title: 'Stats · Rall Venezia' })
 const season = ref('')
 const { data, status, rows, team } = useStats(season)
-const tab = ref('team')
+const route = useRoute()
+const tab = ref(route.query.tab === 'league' || route.query.tab === 'team' ? String(route.query.tab) : 'league')
+const { data: league, status: leagueStatus } = useStandings()
 
 // default to the current season once the list is known
 watch(() => data.value?.seasons, (list) => {
@@ -12,6 +14,7 @@ watch(() => data.value?.seasons, (list) => {
 }, { immediate: true })
 
 const tabs = [
+  { key: 'league', label: 'Campionato' },
   { key: 'team', label: 'Squadra' },
   { key: 'rankings', label: 'Classifiche' },
   { key: 'players', label: 'Giocatori' },
@@ -33,7 +36,7 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
 
     <div class="bar">
       <Segmented v-model="tab" :items="tabs" label="Sezioni delle statistiche" />
-      <select v-model="season" class="input sel" aria-label="Stagione">
+      <select v-if="tab !== 'league'" v-model="season" class="input sel" aria-label="Stagione">
         <option value="">Sempre</option>
         <option v-for="s in data?.seasons" :key="s.id" :value="s.id">{{ s.name }}</option>
       </select>
@@ -43,7 +46,16 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
     <div v-if="status === 'pending' && !data" key="s" class="skel"><SkeletonBlock size="lg" /><SkeletonBlock size="lg" /></div>
 
     <div v-else key="c">
-      <section v-if="tab === 'team'" role="tabpanel" aria-labelledby="tab-team">
+      <section v-if="tab === 'league'" role="tabpanel" aria-labelledby="tab-league">
+        <SkeletonBlock v-if="leagueStatus === 'pending' && !league" size="hero" />
+        <template v-else-if="league?.rows.length">
+          <StandingsTable :rows="league.rows" split />
+          <p v-if="league.updated" class="muted upd">Classifica aggiornata il {{ formatDay(league.updated) }}</p>
+        </template>
+        <EmptyState v-else title="Classifica non ancora inserita" text="Appena la mettiamo, la trovi qui." />
+      </section>
+
+      <section v-else-if="tab === 'team'" role="tabpanel" aria-labelledby="tab-team">
         <div v-if="team" class="team">
           <div v-reveal="0" class="panel"><StatCard label="Giocate" :value="team.played" /></div>
           <div v-reveal="1" class="panel"><StatCard label="Vinte" :value="team.wins" /></div>
@@ -89,6 +101,7 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
 <style scoped>
 .bar { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; justify-content: space-between; margin-bottom: var(--space-5); }
 .sel { width: auto; min-width: 160px; }
+.upd { margin-top: var(--space-4); font-size: var(--fs-sm); }
 .skel { display: grid; gap: var(--space-3); }
 .team { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
 .team .wide { grid-column: 1 / -1; }

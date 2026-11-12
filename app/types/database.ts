@@ -443,6 +443,26 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"standings": {
+                  Row: {
+                    "created_at": string,"id": string,"is_us": boolean,"points": number,"season_id": string,"sort_order": number,"team": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"is_us"?: boolean,"points"?: number,"season_id": string,"sort_order"?: number,"team": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"is_us"?: boolean,"points"?: number,"season_id"?: string,"sort_order"?: number,"team"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "standings_season_id_fkey"
+      columns: ["season_id"]
+isOneToOne: false
+      referencedRelation: "seasons"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"user_roles": {
                   Row: {
                     "created_at": string,"role": string,"updated_at": string,"user_id": string
