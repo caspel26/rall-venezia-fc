@@ -26,7 +26,7 @@ See `.env.example`. Names only are committed.
 | --- | --- | --- |
 | `SUPABASE_URL` | all | public |
 | `SUPABASE_KEY` (anon/publishable) | all | public (RLS protects) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Vercel server env only | **secret**, server routes only |
+| `SUPABASE_SECRET_KEY` | Vercel server env only | **secret**, server routes only |
 | `NUXT_PUBLIC_SITE_URL` | all | public |
 
 The service-role key is never prefixed `NUXT_PUBLIC_`/`VITE_` and never set in preview environments that untrusted people can open.

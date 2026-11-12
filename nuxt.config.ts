@@ -1,6 +1,16 @@
+const isDev = process.env.NODE_ENV !== 'production'
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-01',
   devtools: { enabled: false },
+  modules: ['@nuxtjs/supabase'],
+  supabase: {
+    // Anonymous visitors are sent to /login; roles are enforced by RLS, not here.
+    redirect: true,
+    redirectOptions: { login: '/login', callback: '/login', exclude: ['/login', '/auth/*'], saveRedirectToCookie: true },
+    types: '~/types/database.ts',
+    cookieOptions: { maxAge: 60 * 60 * 24 * 60, sameSite: 'lax', secure: !isDev },
+  },
   css: [
     '@fontsource/geist/latin-400.css',
     '@fontsource/geist/latin-600.css',

@@ -22,9 +22,9 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q3 Stage 3 — auth: login, invite via server route, set-password, role guard, 14 e2e~~ (done; Opus review of auth+RLS queued for end)
 - ~~Q2 Stage 2 — schema, RLS, seed, pgTAP (27 tests)~~ (done; local Supabase via `npx supabase start`)
 - ~~Q1 Stage 1 — Bootstrap and tokens~~ (done; font choice Anton vs Bebas Neue and lion artwork pending owner)
-- Q3 Stage 3 — Authentication (Opus review)
 - Q4 Stage 4 — Shell and navigation
 - Q5 Stage 5 — Dashboard
 - Q6 Stage 6 — Players
@@ -38,4 +38,4 @@ Details per stage: `docs/IMPLEMENTATION_PLAN.md`.
 
 ## Test commands
 
-`npm run typecheck`, `npm run build`, `npx playwright test` (own dev server on port 3100; `SHOTS=<dir>` saves screenshots). `lint`, `test` (Vitest) and `supabase test db` arrive with Stage 2.
+`npm run typecheck`, `npm run build`, `npx supabase test db`, `npx playwright test` (needs `supabase start` + `.env` from `.env.example` with the local keys; own dev server on port 3100; `SHOTS=<dir>` saves screenshots). `lint`, `test` (Vitest) and `supabase test db` arrive with Stage 2.

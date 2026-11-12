@@ -11,3 +11,15 @@
 .pill-w { background: var(--rv-green); } .pill-d { background: var(--rv-muted); } .pill-l { background: var(--rv-red); }
 @keyframes section-arrive { from { opacity: .35; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .arrive { animation: section-arrive var(--dur-slow) var(--ease-out) both; }
+
+.input {
+  width: 100%; min-height: 48px; padding: 0 var(--space-4); border-radius: var(--r-s);
+  border: 1px solid var(--rv-line); background: var(--rv-surface-2); color: var(--rv-cream);
+  font: var(--fw-text) max(16px, 1em)/1.2 var(--font-ui);
+}
+.input::placeholder { color: var(--rv-muted); }
+.input[aria-invalid='true'] { border-color: var(--rv-red); }
+.btn[disabled] { opacity: .6; cursor: progress; }
+.btn-block { width: 100%; min-height: 48px; }
+.btn-link { background: none; border: 0; color: var(--rv-muted); text-decoration: underline; cursor: pointer; font: inherit; min-height: 44px; }
+.stack { display: grid; gap: var(--space-4); width: 100%; }
