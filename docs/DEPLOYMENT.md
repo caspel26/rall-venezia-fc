@@ -28,6 +28,8 @@ See `.env.example`. Names only are committed.
 | `SUPABASE_KEY` (anon/publishable) | all | public (RLS protects) |
 | `SUPABASE_SECRET_KEY` | Vercel server env only | **secret**, server routes only |
 | `NUXT_PUBLIC_SITE_URL` | all | public |
+| `CRON_SECRET` | Vercel server env + GitHub secret | **secret**: authenticates the Instagram sync scheduler (see [INSTAGRAM.md](INSTAGRAM.md)) |
+| `INSTAGRAM_API_BASE` | never in production | dev/test only: points the sync at a mock |
 
 The service-role key is never prefixed `NUXT_PUBLIC_`/`VITE_` and never set in preview environments that untrusted people can open.
 

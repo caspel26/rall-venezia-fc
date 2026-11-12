@@ -25,11 +25,11 @@ Everything is **private and invite-only**. There is no signup, no public profile
 | --- | --- |
 | **Home** | Next match, your availability, last result with MVP, form, top performers, latest pagella |
 | **Partite** | Full match archive and a match "programme" page: score, goals timeline, lineup, MVP, ratings |
-| **Squadra** | Editorial player cards and profiles with derived stats |
+| **Squadra** | Editorial player cards with real photos (private storage) and profiles with derived stats |
 | **Stats** | Team record and rankings: scorers, assists, MVPs, average rating |
 | **Pagelle** | Ratings archive rendered natively (score, review, attributes) |
 | **Spogliatoio** | Availability for the next match and internal announcements |
-| **Gazzetta** | Newspaper-style club news with a front page and articles |
+| **Gazzetta** | Newspaper-style club news: front page, articles, and new Instagram posts imported automatically ([docs/INSTAGRAM.md](docs/INSTAGRAM.md)) |
 | **Admin** | Quick post-match flow, players, matches, ratings, announcements, Gazzetta, invites |
 
 Roles: `admin`, `staff`, `player`, `viewer` (details in [docs/AUTHORIZATION.md](docs/AUTHORIZATION.md)).
@@ -67,11 +67,13 @@ Requirements: Node 22+, Docker.
 npm install
 cp .env.example .env            # then fill in the keys printed by `supabase start`
 npx supabase start              # local Postgres + Auth + Storage
-npx supabase db reset           # apply migrations and seed data
+npm run db:reset                # apply migrations + seed data (+ re-upload private player photos if you have them)
 npm run dev                     # http://localhost:3000
 ```
 
-Local invite emails land in Mailpit at http://127.0.0.1:54324.
+Local invite emails land in Mailpit at http://127.0.0.1:54324. Dev logins (seed only): `admin@`, `staff@`, `player@`, `viewer@example.invalid`, password `rall-dev-password`.
+
+**Player photos** are private: they are never committed. Put each player's original at `private-assets/players/<slug>/source.jpg`, run `scripts/build-player-assets.sh` (portrait, hero and thumbnail derivatives) and `node --env-file=.env scripts/upload-player-assets.mjs`.
 
 ### Scripts
 
@@ -82,7 +84,8 @@ Local invite emails land in Mailpit at http://127.0.0.1:54324.
 | `npm run typecheck` | `vue-tsc` strict |
 | `npm test` | Vitest unit tests |
 | `npx supabase test db` | pgTAP: RLS and stats views |
-| `npx playwright test` | E2E at 390x844 and 1440x900 |
+| `npx playwright test` | E2E at 390x844 and 1440x900 (read-only specs in parallel, then the data-changing admin specs) |
+| `npm run db:reset` | Reseed the local database and re-upload player photos |
 
 ## Project layout
 
@@ -96,7 +99,7 @@ tests/e2e/    Playwright specs
 
 ## Documentation
 
-[Product](docs/PRODUCT.md) · [Architecture](docs/ARCHITECTURE.md) · [Database](docs/DATABASE.md) · [Authorization](docs/AUTHORIZATION.md) · [Routes](docs/ROUTES.md) · [Design system](docs/DESIGN_SYSTEM.md) · [Deployment](docs/DEPLOYMENT.md) · [MVP](docs/MVP.md) · [Implementation plan](docs/IMPLEMENTATION_PLAN.md) · [Agent workflow](docs/AGENT-WORKFLOW.md)
+[Product](docs/PRODUCT.md) · [Architecture](docs/ARCHITECTURE.md) · [Database](docs/DATABASE.md) · [Authorization](docs/AUTHORIZATION.md) · [Routes](docs/ROUTES.md) · [Design system](docs/DESIGN_SYSTEM.md) · [Deployment](docs/DEPLOYMENT.md) · [MVP](docs/MVP.md) · [Implementation plan](docs/IMPLEMENTATION_PLAN.md) · [Instagram sync](docs/INSTAGRAM.md) · [Agent workflow](docs/AGENT-WORKFLOW.md)
 
 ## Security
 

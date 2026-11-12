@@ -23,6 +23,9 @@ R = read, W = create/update/delete, own = only own row, — = none.
 | Announcements (Spogliatoio) | R W | R W | R | — |
 | Basic statistics / rankings | R | R | R | R |
 | Hall of Fame | R | R | R | R |
+| Gazzetta (published articles) | R W | R W | R | R |
+| Gazzetta drafts | R W | R W | — | — |
+| Instagram connection and token | R W (via server routes only) | — | — | — |
 | Media (`min_role = viewer`) | R W | R W | R | R |
 | Media (`min_role = player`) | R W | R W | R | — |
 | Internal documents | R W | R | R | — |
@@ -45,6 +48,8 @@ RLS is enabled on **every** table in `public`; no table is created without it (a
 | `ratings` | admin, staff, player (published); not viewer | admin, staff |
 | `availability` | admin, staff all; player: all teammates' answers for the next match (counts) and own row | player: own row only (`player_id` = the player linked to `auth.uid()`) and only while kickoff is in the future; admin, staff all |
 | `announcements` | admin, staff, player (published) | admin, staff |
+| `news_articles` | published: every signed-in role; drafts: staff, admin | admin, staff |
+| `instagram_connection` | nobody (RLS on, no policies): service role only | service role only (admin routes) |
 | `media` | by `min_role` | admin, staff |
 | `mascot` | any signed-in role | admin |
 
