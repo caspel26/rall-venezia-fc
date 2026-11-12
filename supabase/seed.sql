@@ -140,14 +140,6 @@ from (select match_id, scorer_id, count(*) c from public.goals group by 1, 2) g
 join public.players p on p.id = g.scorer_id
 order by g.match_id, g.c desc, p.last_name;
 
-insert into public.ratings (match_id, player_id, author_id, score, review, attributes, published) values
-  ('d0000000-0000-4000-8000-000000000001', pg_temp.pid('sergio-batti'), 'a0000000-0000-4000-8000-000000000002', 7.5, 'Solido in difesa e affidabile in copertura. Non sbaglia un posizionamento.', '{DIFESA,POSIZIONAMENTO,CARATTERE}', true),
-  ('d0000000-0000-4000-8000-000000000001', pg_temp.pid('salvatore-marigliano'), 'a0000000-0000-4000-8000-000000000002', 9.0, 'Una serata da pivot vero: sponde pulite e gol quando servono.', '{FINALIZZAZIONE,FISICO,FAME}', true),
-  ('d0000000-0000-4000-8000-000000000001', pg_temp.pid('alfonso-avino'), 'a0000000-0000-4000-8000-000000000002', 8.5, 'Sulla fascia è ingiocabile: corsa, dribbling e assist a ripetizione.', '{VELOCITA,DRIBBLING,VISIONE}', true),
-  ('d0000000-0000-4000-8000-000000000001', pg_temp.pid('daniele-nappo'), 'a0000000-0000-4000-8000-000000000002', 6.5, 'Cinque gol subiti, ma il capitano ci mette sempre la faccia.', '{LEADERSHIP,CARATTERE}', true),
-  ('d0000000-0000-4000-8000-000000000002', pg_temp.pid('daniele-nappo'), 'a0000000-0000-4000-8000-000000000002', 8.0, 'Una serata di parate impossibili. Senza di lui sarebbe stata una goleada.', '{RIFLESSI,LEADERSHIP}', true),
-  ('d0000000-0000-4000-8000-000000000003', pg_temp.pid('antonio-verrone'), 'a0000000-0000-4000-8000-000000000002', 8.0, 'Il metronomo del campo: gol e tanta qualità.', '{VISIONE,TECNICA}', false);
-
 -- availability for the next match
 insert into public.availability (match_id, player_id, status) values
   ('d0000000-0000-4000-8000-000000000004', pg_temp.pid('antonio-verrone'), 'available'),
@@ -178,3 +170,23 @@ insert into public.news_articles (slug, kicker, title, summary, body, author_id,
    'Riscaldamento, maglie nere e nessuna scusa. La prossima è in casa.',
    E'Si torna in campo contro il Real Mestre. Appuntamento al palazzetto alle 19:30 per il riscaldamento.\n\nMister e capitano chiedono concentrazione: contro una squadra che gioca a ritmi alti servirà una partenza decisa.',
    'a0000000-0000-4000-8000-000000000002', 'd0000000-0000-4000-8000-000000000004', false, now() - interval '1 day');
+
+-- staff, as given in the reference pack (v3)
+insert into public.staff_members (slug, first_name, last_name, role_title, sort_order) values
+  ('pasquale-gallo', 'Pasquale', 'Gallo', 'Allenatore / Mister', 1),
+  ('giuseppe-caselli', 'Giuseppe', 'Caselli', 'Social media manager · Grafico · Videomaker', 2);
+
+-- next week's poll (Mon-Fri), already open, with a few votes so the preview has something to show
+insert into public.polls (id, week_start, closes_at)
+values ('e0000000-0000-4000-8000-000000000001',
+        (date_trunc('week', now() + interval '7 days'))::date,
+        (date_trunc('week', now() + interval '7 days'))::date + interval '4 days 20 hours');
+insert into public.poll_votes (poll_id, player_id, day)
+select 'e0000000-0000-4000-8000-000000000001', pg_temp.pid(v.slug), (date_trunc('week', now() + interval '7 days'))::date + v.d
+from (values
+  ('antonio-verrone', 0), ('antonio-verrone', 2), ('antonio-verrone', 3),
+  ('alfonso-avino', 1), ('alfonso-avino', 2),
+  ('salvatore-marigliano', 2), ('salvatore-marigliano', 3), ('salvatore-marigliano', 4),
+  ('sergio-batti', 2),
+  ('francesco-ferrara', 0), ('francesco-ferrara', 2)
+) as v(slug, d);

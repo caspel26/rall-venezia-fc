@@ -74,13 +74,6 @@ const name = (pid: string | null) => (pid && data.value?.players.get(pid) ? full
         </div>
       </section>
 
-      <section v-if="isTeam && done" v-reveal class="block">
-        <SectionHeader title="Pagelle" to="/ratings" link-label="Archivio" />
-        <div v-if="data.ratings.length" class="ratings">
-          <RatingCard v-for="r in data.ratings" :key="r.id" :score="Number(r.score)" :player="fullName(r.player!)" :review="r.review" :attributes="r.attributes" />
-        </div>
-        <EmptyState v-else title="Nessuna pagella ancora" text="Il giudice è in ritardo." />
-      </section>
 
       <section v-if="m.notes" class="block">
         <SectionHeader title="Note" />
@@ -108,8 +101,6 @@ const name = (pid: string | null) => (pid && data.value?.players.get(pid) ? full
 .names { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: grid; gap: var(--space-1); }
 .names a { display: flex; align-items: center; gap: var(--space-3); min-height: 44px; text-decoration: none; }
 .n { width: 32px; color: var(--rv-orange); font-size: var(--fs-h3); text-align: right; }
-.ratings { display: grid; gap: var(--space-3); }
 .notes { max-width: 70ch; white-space: pre-line; }
 @media (min-width: 701px) { .lineup { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1051px) { .ratings { grid-template-columns: 1fr 1fr; } }
 </style>

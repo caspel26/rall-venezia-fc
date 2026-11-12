@@ -47,6 +47,3 @@ export function buildResultPayload(d: ResultDraft) {
   }
 }
 
-/** Parse "difesa, posizionamento" into at most four upper-case attributes. */
-export const parseAttributes = (s: string): string[] =>
-  s.split(',').map((x) => x.trim().toUpperCase()).filter(Boolean).slice(0, 4)

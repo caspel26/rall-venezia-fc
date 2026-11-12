@@ -23,6 +23,7 @@ export function useNextMatch() {
       myPlayerId: me.data?.id ?? null,
       myAnswer: (rows.find((a) => a.player_id === me.data?.id)?.status ?? null) as AvailabilityStatus | null,
       counts: countAvailability(rows.map((a) => a.status), squad.count ?? 0),
+      answers: rows.map((a) => ({ playerId: a.player_id, status: a.status as AvailabilityStatus })),
     }
   }, { lazy: true })
 }
@@ -34,16 +35,6 @@ export function useRecentMatches() {
       .select('*, opponent:opponents(*), mvp_awards(player:players(*))')
       .eq('status', 'completed').order('kickoff_at', { ascending: false }).limit(5)
     return data ?? []
-  }, { lazy: true })
-}
-
-export function useLatestRating() {
-  const client = useSupabaseClient<Database>()
-  return useAsyncData('latest-rating', async () => {
-    const { data } = await client.from('ratings')
-      .select('*, player:players(*), match:matches(kickoff_at, opponent:opponents(name))')
-      .eq('published', true).order('updated_at', { ascending: false }).limit(1).maybeSingle()
-    return data
   }, { lazy: true })
 }
 
@@ -77,4 +68,17 @@ export function useRanking(key: 'goals' | 'assists' | 'mvps', n = 5) {
     return rankBy(people, (r) => r.value, n).map((r) => ({ position: r.position, player: r.row.player, value: r.value }))
   })
   return { rows, status }
+}
+
+/** Goals of one match with scorer ids, for the result card. */
+export function useMatchScorers(matchId: MaybeRefOrGetter<string | undefined>) {
+  const client = useSupabaseClient<Database>()
+  return useAsyncData(() => `scorers-${toValue(matchId) ?? 'none'}`, async () => {
+    const id = toValue(matchId)
+    if (!id) return []
+    const { data } = await client.from('goals').select('scorer_id, is_own_goal').eq('match_id', id)
+    const tally = new Map<string, number>()
+    for (const g of data ?? []) if (g.scorer_id) tally.set(g.scorer_id, (tally.get(g.scorer_id) ?? 0) + 1)
+    return [...tally].map(([playerId, n]) => ({ playerId, n })).sort((a, b) => b.n - a.n)
+  }, { lazy: true, watch: [() => toValue(matchId)] })
 }

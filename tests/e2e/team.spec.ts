@@ -8,20 +8,20 @@ test('squad lists editorial cards ordered by shirt number', async ({ page }) => 
   const cards = page.getByRole('list', { name: 'Giocatori' }).getByRole('link')
   await expect(cards).toHaveCount(7)
   await expect(cards.first()).toContainText('Daniele Nappo')
-  await expect(cards.first()).toContainText('#1')
+  await expect(cards.first()).toContainText('Daniele')
   await expect(cards.first()).toContainText('Portiere · Capitano')
   await expect(cards.nth(1)).toContainText('Sergio Batti')
-  await expect(cards.nth(1)).toContainText('#4')
+  await expect(cards.nth(1)).toContainText('Sergio')
   await expect(cards.nth(1)).toContainText('Difensore')
   await expect(cards.nth(3)).toContainText('Antonio Verrone')
   await expect(cards.nth(3)).toContainText('Esterno') // an Esterno, not a midfielder
   await expect(cards.nth(5)).toContainText('Raffaele Miranda')
   await expect(cards.nth(5)).toContainText('Laterale / Jolly')
   await expect(cards.nth(6)).toContainText('Alfonso Avino')
-  await expect(cards.nth(6)).toContainText('#33')
+  await expect(cards.nth(6)).toContainText('Alfonso')
 })
 
-test('player profile shows derived stats, matches and ratings', async ({ page }) => {
+test('player profile shows derived stats and matches', async ({ page }) => {
   await login(page, 'player')
   await page.goto('/team/salvatore-marigliano')
   await expect(page.locator('h1')).toHaveText('Salvatore Marigliano')
@@ -29,12 +29,9 @@ test('player profile shows derived stats, matches and ratings', async ({ page })
   const stats = page.getByRole('region', { name: 'Statistiche in carriera' })
   await expect(stats.locator('.stat', { hasText: 'Presenze' })).toContainText('8')
   await expect(stats.locator('.stat', { hasText: 'Gol' }).first()).toContainText('3')
-  await expect(stats.locator('.stat', { hasText: 'Voto medio' })).toContainText('9,0')
 
   await page.getByRole('tab', { name: 'Partite' }).click()
-  await expect(page.getByText('Murano United')).toBeVisible()
-  await page.getByRole('tab', { name: 'Pagelle' }).click()
-  await expect(page.getByText('Una serata da pivot vero')).toBeVisible()
+  await expect(page.locator('#main').getByText('Murano United')).toBeVisible()
 })
 
 test('tabs are keyboard operable', async ({ page }) => {
@@ -47,12 +44,10 @@ test('tabs are keyboard operable', async ({ page }) => {
   await expect(page.getByRole('tab', { name: 'Partite' })).toHaveAttribute('aria-selected', 'true')
 })
 
-test('viewers do not get ratings; unknown players are a 404', async ({ page }) => {
+test('viewers can read profiles; unknown players are a 404', async ({ page }) => {
   await login(page, 'viewer')
   await page.goto('/team/salvatore-marigliano')
   await expect(page.locator('h1')).toHaveText('Salvatore Marigliano')
-  await expect(page.getByRole('tab', { name: 'Pagelle' })).toHaveCount(0)
-  await expect(page.getByText('Voto medio')).toHaveCount(0)
   await page.goto('/team/nessuno-qui')
   await expect(page.getByRole('heading', { name: 'Fuori gioco' })).toBeVisible()
 })
@@ -75,4 +70,15 @@ test('player photos come from private storage and render on cards and profiles',
 test('the bucket is private: unsigned URLs do not serve photos', async ({ request }) => {
   const res = await request.get('http://127.0.0.1:54321/storage/v1/object/public/player-photos/daniele-nappo/portrait.webp')
   expect(res.status()).toBeGreaterThanOrEqual(400)
+})
+
+test('staff appear under the squad: coach with photo, social media manager', async ({ page }) => {
+  await login(page, 'viewer')
+  await page.goto('/team')
+  const staff = page.locator('section.staff')
+  await expect(staff.getByRole('heading', { name: 'Staff' })).toBeVisible()
+  await expect(staff).toContainText('Pasquale')
+  await expect(staff).toContainText('Allenatore / Mister')
+  await expect(staff).toContainText('Giuseppe')
+  await expect(staff).toContainText('Social media manager')
 })

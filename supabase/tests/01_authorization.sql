@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(33);
+select plan(36);
 
 -- seed ids
 \set admin '''a0000000-0000-4000-8000-000000000001'''
@@ -36,20 +36,27 @@ reset role;
 select pg_temp.as_user(:viewer);
 select cmp_ok((select count(*)::int from public.matches), '>', 0, 'viewer reads matches');
 select cmp_ok((select count(*)::int from public.goals), '>', 0, 'viewer reads goals');
-select is((select count(*)::int from public.ratings), 0, 'viewer sees no ratings');
 select is((select count(*)::int from public.availability), 0, 'viewer sees no availability');
 select is((select count(*)::int from public.announcements), 0, 'viewer sees no announcements');
 select throws_ok($$insert into public.seasons (name, starts_on) values ('X', now())$$, '42501', null, 'viewer cannot write');
 select is((select count(*)::int from public.user_roles), 1, 'viewer sees only their own role row');
 select cmp_ok((select count(*)::int from public.news_articles), '>', 0, 'viewer reads published news');
+select is((select count(*)::int from public.staff_members), 2, 'viewer reads the staff');
+select is((select count(*)::int from public.polls), 0, 'viewer sees no polls');
 select throws_ok($$insert into public.news_articles (slug, title, body) values ('x', 'x', 'x')$$, '42501', null, 'viewer cannot write news');
 reset role;
 
 -- player
 select pg_temp.as_user(:player);
 select throws_ok($$insert into public.news_articles (slug, title, body) values ('x', 'x', 'x')$$, '42501', null, 'player cannot write news');
-select is((select count(*)::int from public.ratings where not published), 0, 'player sees no draft ratings');
-select cmp_ok((select count(*)::int from public.ratings), '>', 0, 'player reads published ratings');
+select throws_ok($$insert into public.staff_members (slug, first_name, last_name, role_title) values ('x', 'x', 'x', 'x')$$, '42501', null, 'player cannot write staff');
+select lives_ok($$select public.set_poll_votes('e0000000-0000-4000-8000-000000000001',
+  array[(date_trunc('week', now() + interval '7 days'))::date, (date_trunc('week', now() + interval '7 days'))::date + 1])$$, 'player votes for several days');
+select is((select count(*)::int from public.poll_votes where player_id = 'c0000000-0000-4000-8000-000000000001'), 2, 'both days are stored');
+select throws_ok($$select public.set_poll_votes('e0000000-0000-4000-8000-000000000001',
+  array[(date_trunc('week', now() + interval '7 days'))::date + 5])$$, 'P0001', 'day_out_of_range', 'weekend days are refused');
+select throws_ok($$insert into public.poll_votes (poll_id, player_id, day) values ('e0000000-0000-4000-8000-000000000001', 'c0000000-0000-4000-8000-000000000002', (date_trunc('week', now() + interval '7 days'))::date)
+  on conflict do nothing$$, '42501', null, 'player cannot vote for a teammate');
 select is((select count(*)::int from public.announcements), 2, 'player reads published announcements');
 select is(pg_temp.rows_changed($$update public.players set nickname = 'x'$$), 0, 'player update of players affects no rows');
 select lives_ok($$select public.set_availability('d0000000-0000-4000-8000-000000000004', 'maybe')$$, 'player answers own availability');
@@ -66,7 +73,6 @@ reset role;
 
 -- staff
 select pg_temp.as_user(:staff);
-select cmp_ok((select count(*)::int from public.ratings where not published), '>', 0, 'staff sees draft ratings');
 select lives_ok($$update public.players set nickname = 'Muro' where slug = 'daniele-nappo'$$, 'staff edits players');
 select throws_ok($$insert into public.players (slug, first_name, last_name, profile_id) values ('x-y', 'X', 'Y', 'a0000000-0000-4000-8000-000000000004')$$, '42501', null, 'staff cannot link an account when adding a player');
 select throws_ok($$insert into public.news_articles (slug, title, body, external_url) values ('xx', 'x', 'x', 'javascript:alert(1)')$$, '23514', null, 'external_url must be an Instagram https link');

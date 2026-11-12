@@ -8,7 +8,7 @@ export function useMatchDetail(id: MaybeRef<string>) {
     const { data: match, error } = await client.from('matches')
       .select(`*, opponent:opponents(*), competition:competitions(name), season:seasons(name),
         goals(*), match_players(is_starter, minutes, player:players(*)),
-        mvp_awards(player:players(*)), ratings(id, score, review, attributes, published, player:players(*))`)
+        mvp_awards(player:players(*))`)
       .eq('id', toValue(id)).maybeSingle()
     if (error || !match) throw createError({ statusCode: 404, statusMessage: 'Partita non trovata' })
 
@@ -30,7 +30,6 @@ export function useMatchDetail(id: MaybeRef<string>) {
       starters: match.match_players.filter((m) => m.is_starter).map((m) => m.player!),
       bench: match.match_players.filter((m) => !m.is_starter).map((m) => m.player!),
       mvps: match.mvp_awards.map((a) => a.player!).filter(Boolean),
-      ratings: match.ratings.filter((r) => r.published && r.player).sort((a, b) => Number(b.score) - Number(a.score)),
       topScorer: best && players.get(best[0]) ? { player: players.get(best[0])!, goals: best[1] } : null,
       myPlayerId: me.data?.id ?? null,
       myAnswer: (answers.find((a) => a.player_id === me.data?.id)?.status ?? null) as AvailabilityStatus | null,

@@ -18,7 +18,7 @@ R = read, W = create/update/delete, own = only own row, — = none.
 | Matches, results | R W | R W | R | R |
 | Lineups (`match_players`) | R W | R W | R | R |
 | Goals, assists, MVP | R W | R W | R | R |
-| Ratings / pagelle | R W | R W | R | — |
+| Weekly poll (read / vote own) | R W | R W | R + vote own | — |
 | Availability | R W | R W | R + W own | — |
 | Announcements (Spogliatoio) | R W | R W | R | — |
 | Basic statistics / rankings | R | R | R | R |
@@ -45,7 +45,9 @@ RLS is enabled on **every** table in `public`; no table is created without it (a
 | `user_roles` | own row; admin all | admin only (via server route / RPC) |
 | `players`, `seasons`, `competitions`, `opponents` | any signed-in role | admin, staff |
 | `matches`, `match_players`, `goals`, `mvp_awards` | any signed-in role, `published` rows only for non-staff | admin, staff |
-| `ratings` | admin, staff, player (published); not viewer | admin, staff |
+| `polls`, `poll_votes` | admin, staff, player | staff all; a player only their own votes while the poll is open |
+| `staff_members` | every signed-in role | admin |
+| `ratings` (removed) | admin, staff, player (published); not viewer | admin, staff |
 | `availability` | admin, staff all; player: all teammates' answers for the next match (counts) and own row | player: own row only (`player_id` = the player linked to `auth.uid()`) and only while kickoff is in the future; admin, staff all |
 | `announcements` | admin, staff, player (published) | admin, staff |
 | `news_articles` | published: every signed-in role; drafts: staff, admin | admin, staff |

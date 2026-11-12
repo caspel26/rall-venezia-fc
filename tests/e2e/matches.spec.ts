@@ -22,7 +22,7 @@ test('archive: upcoming first, then played; filters narrow the list', async ({ p
   await expect(rows).toHaveCount(2)
 })
 
-test('match programme: score, goals timeline, lineup, MVP and ratings', async ({ page }) => {
+test('match programme: score, goals timeline, lineup and MVP', async ({ page }) => {
   await login(page, 'player')
   await page.goto(`/matches/${M1}`)
   await expect(page.getByLabel('10 a 5')).toBeVisible()
@@ -32,16 +32,13 @@ test('match programme: score, goals timeline, lineup, MVP and ratings', async ({
   await expect(page.locator('.hero').getByText('MVP')).toBeVisible()
   await expect(page.getByText('Titolari')).toBeVisible()
   await expect(page.locator('.lineup li')).toHaveCount(7)
-  await expect(page.getByText('Solido in difesa')).toBeVisible()
   await expect(page.getByText('Partita a senso unico')).toBeVisible()
 })
 
-test('viewer sees the match but not the ratings', async ({ page }) => {
+test('viewer can read the match programme', async ({ page }) => {
   await login(page, 'viewer')
   await page.goto(`/matches/${M1}`)
   await expect(page.getByLabel('10 a 5')).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Pagelle' })).toHaveCount(0)
-  await expect(page.getByText('Solido in difesa')).toHaveCount(0)
 })
 
 test('upcoming match offers the availability answer to a player', async ({ page }) => {

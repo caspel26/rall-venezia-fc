@@ -8,7 +8,6 @@ export interface StatRow extends Rankable {
   assists: number
   mvps: number
   wins: number
-  avgRating: number | null
 }
 
 /** Season stats (or all-time when `season` is empty) for the whole squad, one query round. */
@@ -42,7 +41,7 @@ export function useStats(season: Ref<string>) {
       return [{
         id: p.id, slug: p.slug, name: `${p.first_name} ${p.last_name}`, number: p.shirt_number,
         appearances: s.appearances ?? 0, goals: s.goals ?? 0, assists: s.assists ?? 0, mvps: s.mvps ?? 0,
-        wins: s.wins ?? 0, avgRating: s.avg_rating == null ? null : Number(s.avg_rating),
+        wins: s.wins ?? 0,
       }]
     })
   })

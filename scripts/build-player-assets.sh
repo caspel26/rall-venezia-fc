@@ -1,37 +1,43 @@
 #!/usr/bin/env bash
-# Builds the website derivatives for every player from private-assets/players/<slug>/source.jpg:
-#   portrait.webp  3:4 bust crop for squad cards   (native pixels, never upscaled)
-#   hero.webp      full 3:4 frame for profile headers
-#   thumb.webp     512x512 face crop for lists, stats and admin
-# The face position per player is in scripts/player-faces.json. Identity is never altered: only crop,
-# scale and format. Requires ImageMagick and jq.
+# Builds the website derivatives for every player from private-assets/players/<slug>/cutout.png
+# (made by scripts/cutout-players.py). All outputs are TRANSPARENT: the page paints the branded background.
+#   portrait.webp  bust, 3:4      squad cards
+#   hero.webp      full body      profile header, home hero
+#   thumb.webp     head+shoulders lists, admin
+# Only crop, scale and format change; identity is never altered. Requires ImageMagick and jq.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-root=private-assets/players
 faces=scripts/player-faces.json
 
 clamp() { awk -v v="$1" -v lo="$2" -v hi="$3" 'BEGIN{ if (v<lo) v=lo; if (v>hi) v=hi; printf "%d", v }'; }
 
-for dir in "$root"/*/; do
+for dir in private-assets/players/*/ private-assets/staff/*/; do
+  [ -d "$dir" ] || continue
   slug=$(basename "$dir")
-  src="$dir/source.jpg"
-  [ -f "$src" ] || continue
-  fx=$(jq -r ".\"$slug\".x // empty" "$faces"); fy=$(jq -r ".\"$slug\".y // empty" "$faces")
-  [ -n "$fx" ] || { echo "no face position for $slug, skipping"; continue; }
+  src="$dir/cutout.png"
+  [ -f "$src" ] || { echo "no cutout for $slug (run scripts/cutout-players.py), skipping"; continue; }
+  fx=$(jq -r ".\"$slug\".x" "$faces")
+  bust=$(jq -r ".\"$slug\".bust // 0.52" "$faces")
   read -r w h < <(magick identify -format '%w %h\n' "$src")
+  # alpha bounding box of the player: WxH+X+Y
+  bbox=$(magick "$src" -alpha extract -threshold 10% -format '%@' info:)
+  bw=${bbox%%x*}; rest=${bbox#*x}; bh=${rest%%+*}; rest=${rest#*+}; bx=${rest%%+*}; by=${rest#*+}
 
-  # portrait: 70% of the width, 3:4, face at ~30% of the crop height
-  cw=$(awk -v w="$w" 'BEGIN{printf "%d", w*0.70}'); ch=$(awk -v c="$cw" 'BEGIN{printf "%d", c*4/3}')
-  cx=$(clamp "$(awk -v w="$w" -v f="$fx" -v c="$cw" 'BEGIN{print w*f-c/2}')" 0 $((w-cw)))
-  cy=$(clamp "$(awk -v h="$h" -v f="$fy" -v c="$ch" 'BEGIN{print h*f-c*0.30}')" 0 $((h-ch)))
-  magick "$src" -crop "${cw}x${ch}+${cx}+${cy}" +repage -strip -quality 86 "$dir/portrait.webp"
+  # hero: the whole player with a small margin
+  pad=24
+  hx=$(clamp $((bx-pad)) 0 $w); hy=$(clamp $((by-pad)) 0 $h)
+  magick "$src" -crop "$((bw+2*pad))x$((bh+2*pad))+${hx}+${hy}" +repage -strip -define webp:alpha-quality=100 -quality 88 "$dir/hero.webp"
 
-  # thumbnail: 512px square around the face
-  tx=$(clamp "$(awk -v w="$w" -v f="$fx" 'BEGIN{print w*f-256}')" 0 $((w-512)))
-  ty=$(clamp "$(awk -v h="$h" -v f="$fy" 'BEGIN{print h*f-230}')" 0 $((h-512)))
-  magick "$src" -crop "512x512+${tx}+${ty}" +repage -strip -quality 86 "$dir/thumb.webp"
+  # portrait: bust = top 52% of the player's height, 3:4, centred on the face
+  ph=$(awk -v b="$bh" -v k="$bust" 'BEGIN{printf "%d", b*k}'); pw=$(awk -v p="$ph" 'BEGIN{printf "%d", p*0.75}')
+  px=$(clamp "$(awk -v w="$w" -v f="$fx" -v c="$pw" 'BEGIN{print w*f-c/2}')" 0 $((w-pw)))
+  py=$(clamp $((by-12)) 0 $((h-ph)))
+  magick "$src" -crop "${pw}x${ph}+${px}+${py}" +repage -strip -define webp:alpha-quality=100 -quality 88 "$dir/portrait.webp"
 
-  # hero: the whole frame
-  magick "$src" -strip -quality 86 "$dir/hero.webp"
-  echo "built $slug (${cw}x${ch} portrait @ ${cx},${cy})"
+  # thumb: head and shoulders, square
+  ts=$(awk -v b="$bh" 'BEGIN{printf "%d", b*0.30}')
+  tx=$(clamp "$(awk -v w="$w" -v f="$fx" -v c="$ts" 'BEGIN{print w*f-c/2}')" 0 $((w-ts)))
+  ty=$(clamp $((by-8)) 0 $((h-ts)))
+  magick "$src" -crop "${ts}x${ts}+${tx}+${ty}" +repage -strip -define webp:alpha-quality=100 -quality 88 "$dir/thumb.webp"
+  echo "built $slug (player ${bw}x${bh}, portrait ${pw}x${ph}, thumb ${ts}px)"
 done

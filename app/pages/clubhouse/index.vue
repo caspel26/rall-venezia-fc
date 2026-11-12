@@ -28,7 +28,13 @@ const counts = computed(() => {
         <SkeletonBlock v-else size="lg" />
       </section>
 
-      <section v-reveal="1" class="panel" aria-labelledby="an">
+      <section v-reveal="1" class="panel" aria-labelledby="pl">
+        <header class="h"><h2 id="pl" class="eyebrow">Sondaggio della settimana</h2><NuxtLink to="/clubhouse/poll" class="muted more">Apri</NuxtLink></header>
+        <p class="muted">Scegli i giorni da lunedì a venerdì in cui ci sei.</p>
+        <NuxtLink to="/clubhouse/poll" class="btn btn-primary">Vota i giorni</NuxtLink>
+      </section>
+
+      <section v-reveal="2" class="panel" aria-labelledby="an">
         <header class="h"><h2 id="an" class="eyebrow">Annunci</h2><NuxtLink to="/clubhouse/announcements" class="muted more">Tutti</NuxtLink></header>
         <div v-if="ann.data.value?.length" class="stack">
           <AnnouncementCard v-for="a in ann.data.value" :key="a.id" :title="a.title" :body="a.body" :at="a.published_at" :pinned="a.pinned" />

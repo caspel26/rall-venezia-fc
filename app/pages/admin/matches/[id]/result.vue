@@ -10,25 +10,22 @@ const client = useSupabaseClient<Database>()
 const id = String(route.params.id)
 
 const { data, status } = useAsyncData(`admin-result-${id}`, async () => {
-  const [match, players, lineup, goals, mvps, ratings, availability] = await Promise.all([
+  const [match, players, lineup, goals, mvps, availability] = await Promise.all([
     client.from('matches').select('*, opponent:opponents(name)').eq('id', id).maybeSingle(),
     client.from('players').select('*').eq('is_active', true),
     client.from('match_players').select('player_id, is_starter').eq('match_id', id),
     client.from('goals').select('*').eq('match_id', id).order('minute'),
     client.from('mvp_awards').select('player_id').eq('match_id', id),
-    client.from('ratings').select('*').eq('match_id', id),
     client.from('availability').select('player_id, status').eq('match_id', id),
   ])
   return {
     match: match.data,
     players: (players.data ?? []).sort((a, b) => (a.shirt_number ?? 999) - (b.shirt_number ?? 999) || a.last_name.localeCompare(b.last_name, 'it')),
-    lineup: lineup.data ?? [], goals: goals.data ?? [], mvps: mvps.data ?? [], ratings: ratings.data ?? [], availability: availability.data ?? [],
+    lineup: lineup.data ?? [], goals: goals.data ?? [], mvps: mvps.data ?? [], availability: availability.data ?? [],
   }
 }, { lazy: true })
 
 const draft = reactive<ResultDraft>({ rv: null, opp: null, lineup: {}, goals: [], mvp: '' })
-const rate = reactive<Record<string, { score: string; review: string; attrs: string }>>({})
-const publish = ref(true)
 const busy = ref(false)
 const done = ref(false)
 const serverError = ref('')
@@ -44,12 +41,9 @@ watch(data, (d) => {
     const l = d.lineup.find((x) => x.player_id === p.id)
     // a match not yet closed starts from the players who said they were available
     draft.lineup[p.id] = { played: d.lineup.length ? played.has(p.id) : asked.has(p.id), starter: l?.is_starter ?? false }
-    const r = d.ratings.find((x) => x.player_id === p.id)
-    rate[p.id] = { score: r ? String(r.score) : '', review: r?.review ?? '', attrs: r?.attributes?.join(', ') ?? '' }
   }
   draft.goals = d.goals.map((g) => ({ scorer: g.scorer_id ?? '', assist: g.assist_id ?? '', minute: g.minute, own: g.is_own_goal }))
   draft.mvp = d.mvps[0]?.player_id ?? ''
-  publish.value = d.ratings.length ? d.ratings.every((r) => r.published) : true
 }, { immediate: true })
 
 const errors = computed(() => (submitted.value ? validateResult(draft) : {}))
@@ -71,16 +65,6 @@ async function save() {
     serverError.value = /goals_exceed_score/.test(error.message) ? 'I gol inseriti superano il risultato.' : 'Non siamo riusciti a salvare il risultato. Riprova.'
     busy.value = false
     return
-  }
-  const rows = playedPlayers.value
-    .filter((p) => rate[p.id]?.score !== '' && rate[p.id]?.score != null)
-    .map((p) => ({
-      match_id: id, player_id: p.id, score: Math.min(10, Math.max(0, Number(rate[p.id]!.score))),
-      review: rate[p.id]!.review.trim() || null, attributes: parseAttributes(rate[p.id]!.attrs), published: publish.value,
-    }))
-  if (rows.length) {
-    const { error: e } = await client.from('ratings').upsert(rows, { onConflict: 'match_id,player_id' })
-    if (e) { serverError.value = 'Risultato salvato, ma le pagelle no. Riprova.'; busy.value = false; return }
   }
   busy.value = false
   done.value = true
@@ -158,24 +142,9 @@ async function save() {
           <p v-if="errors.mvp" class="err" role="alert">{{ errors.mvp }}</p>
         </section>
 
-        <section class="panel step" aria-labelledby="s5">
-          <details>
-            <summary id="s5" class="eyebrow sum">5 · Pagelle (opzionale)</summary>
-            <div class="rates">
-              <div v-for="p in playedPlayers" :key="p.id" class="rate">
-                <p class="rname">{{ fullName(p) }}</p>
-                <input v-model="rate[p.id]!.score" class="input sc2" type="number" step="0.5" min="0" max="10" inputmode="decimal" placeholder="Voto" :aria-label="`Voto ${fullName(p)}`">
-                <input v-model="rate[p.id]!.attrs" class="input" type="text" placeholder="Punti di forza (max 4, separati da virgola)" :aria-label="`Punti di forza ${fullName(p)}`">
-                <textarea v-model="rate[p.id]!.review" class="input" rows="2" placeholder="Giudizio" :aria-label="`Giudizio ${fullName(p)}`" />
-              </div>
-              <p v-if="!playedPlayers.length" class="muted">Seleziona prima chi ha giocato.</p>
-              <label class="check"><input v-model="publish" type="checkbox"> Pubblica le pagelle</label>
-            </div>
-          </details>
-        </section>
 
         <p v-if="serverError" class="notice bad" role="alert">{{ serverError }}</p>
-        <div class="savebar"><button class="btn btn-primary btn-block" type="submit" :disabled="busy">Salva e pubblica</button></div>
+        <div class="savebar"><button class="btn btn-primary btn-block" type="submit" :disabled="busy">Salva il risultato</button></div>
       </form>
     </template>
     <EmptyState v-else title="Partita non trovata" />
@@ -200,10 +169,6 @@ async function save() {
 .goal .check, .goal .btn { grid-column: auto; }
 .err { color: var(--rv-red); font-size: var(--fs-sm); }
 .sum { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
-.rates { display: grid; gap: var(--space-4); margin-top: var(--space-3); }
-.rate { display: grid; gap: var(--space-2); padding-bottom: var(--space-3); border-bottom: 1px solid var(--rv-line); }
-.rname { font-weight: var(--fw-ui); }
-.sc2 { max-width: 120px; }
 .savebar { position: sticky; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + var(--space-2)); z-index: 5; }
 @media (max-width: 700px) {
   .goal { grid-template-columns: 28px 1fr; }

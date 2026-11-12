@@ -82,3 +82,13 @@ Borrowed from caspel26.github.io, tuned with the tokens above.
 | **Scroll meter + blurred header** | whole app | 2px orange progress bar; the mobile header blurs once scrolled |
 
 Reduced motion (`prefers-reduced-motion: reduce`) removes every one of these: reveals are never hidden, durations collapse to ~0, the meter disappears. Covered by `tests/e2e/motion.spec.ts`.
+
+## Stage, widgets and life (v2)
+
+Feedback on the first version: too static, too little character. The answer is one recurring device from the crest, not more decoration.
+
+- **The stage** (`.stage`): green and orange vertical stripes from the crest, a warm spotlight behind the head, fading into the surface. Every player appears on it as a transparent cutout with a huge outlined shirt number behind (`PlayerPortrait`). Squad cards, profile headers and the home hero all use it.
+- **Home hero**: the squad lined up on the stage, with a small pointer parallax.
+- **Ticker**: an orange strip with the next match, the last result, the scoring leader and the form (pauses on hover, static under reduced motion).
+- **Widgets each have their own form**: a countdown poster (live seconds, a pulsing dot on matchday), a result card tinted by the result, a W/D/L donut that draws itself, scorer bars with faces, availability faces ringed by answer, a weekly poll with day chips and a gold best day, a taped noticeboard note, and the Gazzetta paper.
+- **Player images**: cutouts made by `scripts/cutout-players.py` (background removal and an even grade only; faces untouched), derivatives by `scripts/build-player-assets.sh`. Originals stay in the gitignored `private-assets/`.

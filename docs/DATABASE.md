@@ -122,3 +122,10 @@ All private. Write: staff/admin (admin only for `internal-documents`). Storage R
 ## Seed data
 
 `supabase/seed.sql` (dev only, never applied to production; also creates four dev logins `admin@/staff@/player@/viewer@example.invalid`, password `rall-dev-password`): one season, one competition, opponents, the seven players with the numbers and positions supplied by the owner (Nappo #1 GK captain, Batti #4 defender, Ferrara #7, Verrone #8 and Avino #33 wingers, Marigliano #9 pivot, Miranda #10 "laterale / jolly"), eight played matchdays and two upcoming ones, plus ratings, availability, announcements and Gazzetta articles, all clearly fake sample data. Season totals are set on request: Verrone 31 goals, Nappo 16, everyone else 3, 8 assists each. `npm run db:reset` reseeds and re-uploads the private player photos (kept in the gitignored `private-assets/`, never in the repository).
+
+## Changes since the first schema
+
+- **Ratings (pagelle) were removed** (migration 7): the `ratings` table and `player_rating_summary` are gone, and the player stat views no longer have `avg_rating`.
+- `staff_members` (migration 8): coach and social media manager, shown under the squad; admin-writable, visible to every signed-in role.
+- `polls` / `poll_votes` (migration 9): one poll per week (`week_start` is always a Monday), many votes per player (one row per chosen day, Monday to Friday). `set_poll_votes(poll, days[])` replaces a player's picks atomically and refuses days outside the week or a closed poll. A poll is opened the day after a match by `/api/polls/ensure`.
+- `players.position` also allows `jolly` (Laterale / Jolly).

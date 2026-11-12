@@ -22,6 +22,7 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- ~~Q14 Feedback round: Pagelle removed (UI + schema, migration 7); player cutouts on the club stage; home hero, ticker and distinct widgets; staff (coach + social media manager, migration 8); weekly Mon-Fri multi-day poll created the day after a match (migration 9, /api/polls/ensure + workflow); pgTAP 38, vitest 43, e2e 115~~
 - ~~Q13 Independent Opus security review: no critical/high; 3 fixes + redirect hardening in migration 6 (see AUTHORIZATION.md); pgTAP 33, vitest 39, e2e 113~~
 - ~~Q12 Motion: scroll reveal (`v-reveal`), intro stagger, vanish swaps (skeleton->content, lists), number ticks, scroll meter, blurred header, reduced-motion kill switch (pattern from caspel26.github.io; documented in DESIGN_SYSTEM); also fixed WidgetFrame auto-import (`components.pathPrefix:false`)~~
 - ~~Q11a Player pack (PDF from the Codex brief): numbers/positions applied (Batti #4 defender, Miranda #10 jolly, Ferrara #7, Verrone winger), real photos via `scripts/build-player-assets.sh` + `upload-player-assets.mjs` into private storage (portrait/hero/thumb; originals gitignored in `private-assets/`). NOT done: transparent cutouts (needs a background-removal model) and replacing Verrone's blue bib with the white kit (needs generative editing / a new photo)~~

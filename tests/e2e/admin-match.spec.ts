@@ -39,11 +39,7 @@ test('staff creates a match, closes it in under a minute, then removes it', asyn
   await page.getByRole('button', { name: '+ Aggiungi gol' }).click() // repeats the last scorer
   await page.getByLabel('Minuto gol 2').fill('12')
   await page.getByLabel('MVP', { exact: true }).selectOption({ label: 'Salvatore Marigliano' })
-  await page.getByText('5 · Pagelle (opzionale)').click()
-  await page.getByLabel('Voto Salvatore Marigliano').fill('8.5')
-  await page.getByLabel('Punti di forza Salvatore Marigliano').fill('finalizzazione, fisico')
-  await page.getByLabel('Giudizio Salvatore Marigliano').fill('Una doppietta da vero pivot.')
-  await page.getByRole('button', { name: 'Salva e pubblica' }).click()
+  await page.getByRole('button', { name: 'Salva il risultato' }).click()
   await expect(page.getByText('Tre punti portati a casa')).toBeVisible()
   expect(Date.now() - started).toBeLessThan(60_000)
 
@@ -52,7 +48,6 @@ test('staff creates a match, closes it in under a minute, then removes it', asyn
   await expect(page.getByLabel('5 a 2')).toBeVisible()
   await expect(page.locator('.timeline li')).toHaveCount(2)
   await expect(page.locator('.timeline li').first()).toContainText('assist Antonio Verrone')
-  await expect(page.getByText('Una doppietta da vero pivot.')).toBeVisible()
   await expect(page.locator('.hero').getByText('Salvatore Marigliano')).toBeVisible()
 
   // 4. clean up through the UI
@@ -75,6 +70,6 @@ test('the result form refuses more goals than the score', async ({ page }) => {
   await page.getByRole('button', { name: '+ Aggiungi gol' }).click()
   await page.getByRole('button', { name: '+ Aggiungi gol' }).click()
   await page.getByLabel('Marcatore gol 1').selectOption({ label: 'Salvatore Marigliano' })
-  await page.getByRole('button', { name: 'Salva e pubblica' }).click()
+  await page.getByRole('button', { name: 'Salva il risultato' }).click()
   await expect(page.getByRole('alert').filter({ hasText: '2 gol ma il risultato è 1' })).toBeVisible()
 })

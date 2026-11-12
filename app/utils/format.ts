@@ -10,9 +10,6 @@ export const formatTime = (iso: string) => timeFmt.format(new Date(iso))
 
 export const formatScore = (n: number | null | undefined) => (n == null ? '–' : String(n))
 
-/** Rating shown with one decimal, Italian comma. */
-export const formatRating = (n: number | null | undefined) => (n == null ? '–' : n.toFixed(1).replace('.', ','))
-
 export interface NamedPlayer {
   first_name: string
   last_name: string
@@ -28,4 +25,15 @@ export const POSITION_LABELS: Record<string, string> = {
   midfielder: 'Centrocampista',
   pivot: 'Pivot',
   jolly: 'Laterale / Jolly',
+}
+
+const pollDow = new Intl.DateTimeFormat('it-IT', { weekday: 'short', timeZone: 'UTC' })
+const pollNum = new Intl.DateTimeFormat('it-IT', { day: 'numeric', timeZone: 'UTC' })
+const pollFull = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' })
+const pollMonth = new Intl.DateTimeFormat('it-IT', { month: 'long', timeZone: 'UTC' })
+
+/** A plain 'YYYY-MM-DD' (the poll's days are dates, not instants) as labels. */
+export function pollDay(d: string) {
+  const at = new Date(`${d}T12:00:00Z`)
+  return { dow: pollDow.format(at).replace('.', ''), num: pollNum.format(at), full: pollFull.format(at), month: pollMonth.format(at) }
 }

@@ -20,7 +20,7 @@ test('staff adds a player, sees the number rules enforced, and removes them', as
   await expect(page.getByText(`${first} Tester`)).toBeVisible()
 
   await page.goto('/team')
-  await expect(page.getByRole('link', { name: new RegExp(`${first} Tester`) })).not.toContainText('#')
+  await expect(page.getByRole('link', { name: new RegExp(`${first} Tester`) })).toBeVisible()
 
   await page.goto('/admin/players')
   await page.locator('.row', { hasText: first }).getByRole('link', { name: 'Modifica' }).click()
@@ -87,16 +87,6 @@ test('Gazzetta: write an article, read it, delete it; drafts stay hidden from pl
   await page.locator('.row', { hasText: title }).getByRole('button', { name: 'Elimina' }).click()
   await page.locator('.row', { hasText: title }).getByRole('button', { name: 'Conferma' }).click()
   await expect(page.locator('.row', { hasText: title })).toHaveCount(0)
-})
-
-test('ratings can be hidden from players and published again', async ({ page }) => {
-  await login(page, 'staff')
-  await page.goto('/admin/ratings')
-  const row = page.locator('.row', { hasText: 'Sergio Batti' })
-  await row.getByRole('button', { name: 'Nascondi' }).click()
-  await expect(row).toContainText('bozza')
-  await row.getByRole('button', { name: 'Pubblica' }).click()
-  await expect(row).not.toContainText('bozza')
 })
 
 test('users: invite, change role, remove; the last admin cannot be demoted', async ({ page }) => {

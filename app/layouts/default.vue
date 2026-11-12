@@ -4,6 +4,7 @@
     <DesktopNavigation />
     <div class="col">
       <MobileTopBar />
+      <TickerBar />
       <main id="main" class="main"><slot /></main>
     </div>
     <MobileBottomNav />

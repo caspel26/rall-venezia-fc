@@ -10,18 +10,21 @@ const key = process.env.SUPABASE_SECRET_KEY
 if (!url || !key) throw new Error('SUPABASE_URL and SUPABASE_SECRET_KEY are required')
 const admin = createClient(url, key, { auth: { persistSession: false } })
 
-const root = 'private-assets/players'
-for (const slug of await readdir(root)) {
+for (const [root, table] of [['private-assets/players', 'players'], ['private-assets/staff', 'staff_members']]) {
+const slugs = await readdir(root).catch(() => [])
+for (const slug of slugs) {
   const files = { portrait: 'portrait.webp', hero: 'hero.webp', thumb: 'thumb.webp' }
   for (const f of Object.values(files)) {
     const body = await readFile(`${root}/${slug}/${f}`).catch(() => null)
     if (!body) { console.log(`skip ${slug}/${f} (missing, run scripts/build-player-assets.sh)`); continue }
-    const { error } = await admin.storage.from('player-photos').upload(`${slug}/${f}`, body, { contentType: 'image/webp', upsert: true })
+    const { error } = await admin.storage.from('player-photos').upload(`${table === 'staff_members' ? 'staff/' : ''}${slug}/${f}`, body, { contentType: 'image/webp', upsert: true })
     if (error) throw error
   }
-  const { data, error } = await admin.from('players')
-    .update({ photo_path: `${slug}/${files.portrait}`, avatar_path: `${slug}/${files.thumb}` })
+  const folder = table === 'staff_members' ? `staff/${slug}` : slug
+  const { data, error } = await admin.from(table)
+    .update(table === 'staff_members' ? { photo_path: `${folder}/${files.portrait}` } : { photo_path: `${slug}/${files.portrait}`, avatar_path: `${slug}/${files.thumb}` })
     .eq('slug', slug).select('id')
   if (error) throw error
   console.log(data?.length ? `ok   ${slug}` : `no player with slug ${slug}`)
+}
 }

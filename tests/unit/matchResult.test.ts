@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildResultPayload, parseAttributes, validateResult, type ResultDraft } from '../../app/utils/matchResult'
+import { buildResultPayload, validateResult, type ResultDraft } from '../../app/utils/matchResult'
 import { isoToRomeLocal, romeLocalToIso } from '../../app/utils/time'
 
 const draft = (over: Partial<ResultDraft> = {}): ResultDraft => ({
@@ -39,12 +39,6 @@ describe('buildResultPayload', () => {
       { scorer_id: null, assist_id: null, minute: null, is_own_goal: true },
     ])
     expect(p.p_mvp_ids).toEqual(['a'])
-  })
-})
-
-describe('parseAttributes', () => {
-  it('uppercases, trims and keeps at most four', () => {
-    expect(parseAttributes(' difesa, posizionamento ,, carattere, a, b')).toEqual(['DIFESA', 'POSIZIONAMENTO', 'CARATTERE', 'A'])
   })
 })
 

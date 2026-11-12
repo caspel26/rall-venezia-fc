@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { hasRole, TEAM_ROLES } from '~/types/domain'
 import { rankBy } from '~/utils/ranking'
 
 useHead({ title: 'Stats · Rall Venezia' })
-const { role } = useAuth()
 const season = ref('')
 const { data, status, rows, team } = useStats(season)
 const tab = ref('team')
@@ -13,19 +11,16 @@ watch(() => data.value?.seasons, (list) => {
   if (list && !season.value) season.value = list.find((s) => s.is_current)?.id ?? ''
 }, { immediate: true })
 
-const canRate = computed(() => hasRole(role.value, TEAM_ROLES))
 const tabs = [
   { key: 'team', label: 'Squadra' },
   { key: 'rankings', label: 'Classifiche' },
   { key: 'players', label: 'Giocatori' },
 ]
-const fmt = (n: number | null) => (n == null ? '–' : formatRating(n))
 
 const rankings = computed(() => [
   { title: 'Marcatori', rows: rankBy(rows.value, (r) => r.goals), unit: 'gol' },
   { title: 'Assist', rows: rankBy(rows.value, (r) => r.assists), unit: 'assist' },
   { title: 'MVP', rows: rankBy(rows.value, (r) => r.mvps), unit: 'MVP' },
-  ...(canRate.value ? [{ title: 'Voto medio', rows: rankBy(rows.value, (r) => r.avgRating), unit: 'voto', rating: true }] : []),
   { title: 'Presenze', rows: rankBy(rows.value, (r) => r.appearances), unit: 'presenze' },
 ])
 const table = computed(() => [...rows.value].sort((a, b) => b.goals - a.goals || b.assists - a.assists || a.name.localeCompare(b.name, 'it')))
@@ -66,7 +61,7 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
           <h2 class="eyebrow">{{ r.title }}</h2>
           <ol v-if="r.rows.length" class="list">
             <RankingRow v-for="x in r.rows" :key="x.row.id" :position="x.position" :name="x.row.name" :slug="x.row.slug"
-              :value="r.rating ? formatRating(x.value) : x.value" />
+              :value="x.value" />
           </ol>
           <p v-else class="muted">Ancora nessun dato.</p>
         </div>
@@ -75,12 +70,11 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
       <section v-else role="tabpanel" aria-labelledby="tab-players">
         <div v-if="table.length" class="panel table-wrap">
           <table>
-            <thead><tr><th>Giocatore</th><th>Pres.</th><th>Gol</th><th>Assist</th><th>MVP</th><th v-if="canRate">Voto</th></tr></thead>
+            <thead><tr><th>Giocatore</th><th>Pres.</th><th>Gol</th><th>Assist</th><th>MVP</th></tr></thead>
             <tbody>
               <tr v-for="r in table" :key="r.id">
                 <td><NuxtLink :to="`/team/${r.slug}`">{{ r.name }}</NuxtLink></td>
                 <td>{{ r.appearances }}</td><td>{{ r.goals }}</td><td>{{ r.assists }}</td><td>{{ r.mvps }}</td>
-                <td v-if="canRate">{{ fmt(r.avgRating) }}</td>
               </tr>
             </tbody>
           </table>

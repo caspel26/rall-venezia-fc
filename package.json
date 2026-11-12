@@ -9,7 +9,7 @@
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
     "test": "vitest run",
-    "db:reset": "supabase db reset && (test -d private-assets/players && node --env-file=.env scripts/upload-player-assets.mjs || echo 'no private-assets/players: skipping photo upload')",
+    "db:reset": "supabase db reset && sleep 6 && (test -d private-assets/players && node --env-file=.env scripts/upload-player-assets.mjs || echo 'no private-assets/players: skipping photo upload')",
     "db:test": "supabase test db",
     "test:e2e": "playwright test"
   },

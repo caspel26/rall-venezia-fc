@@ -90,3 +90,21 @@ select.input { appearance: auto; }
 .stagger > .reveal:nth-child(2) { transition-delay: 70ms; } .stagger > .reveal:nth-child(3) { transition-delay: 140ms; }
 .stagger > .reveal:nth-child(4) { transition-delay: 210ms; } .stagger > .reveal:nth-child(5) { transition-delay: 280ms; }
 .stagger > .reveal:nth-child(n+6) { transition-delay: 350ms; }
+
+/* ---------------------------------------------------------------- stage: the club's backdrop for players
+   Crest stripes (green/orange), a warm spotlight behind the head, fading into the surface. */
+.stage {
+  position: relative; isolation: isolate; overflow: hidden;
+  background:
+    radial-gradient(62% 48% at 50% 30%, rgb(253 127 16 / .26), transparent 72%),
+    repeating-linear-gradient(90deg, transparent 0 20px, rgb(25 82 43 / .34) 20px 42px, transparent 42px 62px, rgb(253 127 16 / .12) 62px 82px),
+    linear-gradient(180deg, #131611 0%, #0b0b09 100%);
+}
+.stage::after { content: ''; position: absolute; inset: auto 0 0 0; height: 34%; z-index: 1; pointer-events: none; background: linear-gradient(180deg, transparent, var(--stage-fade, var(--rv-surface))); }
+.outline-text { font-family: var(--font-display); text-transform: uppercase; color: transparent; -webkit-text-stroke: 2px rgb(253 127 16 / .5); line-height: .8; user-select: none; pointer-events: none; }
+
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes pulse-dot { 0% { box-shadow: 0 0 0 0 rgb(253 127 16 / .7); } 100% { box-shadow: 0 0 0 10px rgb(253 127 16 / 0); } }
+@keyframes sweep { from { transform: translateX(-120%); } to { transform: translateX(220%); } }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--rv-orange); animation: pulse-dot 1.6s ease-out infinite; }

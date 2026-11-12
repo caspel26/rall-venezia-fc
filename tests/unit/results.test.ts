@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { countAvailability, formOf, resultOf } from '../../app/utils/results'
-import { formatRating, formatScore } from '../../app/utils/format'
+import { formatScore } from '../../app/utils/format'
 
 describe('resultOf', () => {
   it('is W, D or L from our point of view', () => {
@@ -35,9 +35,7 @@ describe('countAvailability', () => {
 })
 
 describe('formatting', () => {
-  it('uses the Italian decimal comma for ratings', () => expect(formatRating(7.5)).toBe('7,5'))
   it('shows a dash for missing values', () => {
-    expect(formatRating(null)).toBe('–')
     expect(formatScore(undefined)).toBe('–')
   })
 })

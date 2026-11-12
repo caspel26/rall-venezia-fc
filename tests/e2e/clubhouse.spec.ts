@@ -5,7 +5,7 @@ test('hub shows next match availability and announcements', async ({ page }) => 
   await login(page, 'player')
   await page.goto('/clubhouse')
   await expect(page.locator('h1')).toHaveText('Spogliatoio')
-  await expect(page.getByText('Rall Venezia vs Real Mestre')).toBeVisible()
+  await expect(page.locator('#main').getByText('Rall Venezia vs Real Mestre')).toBeVisible()
   await expect(page.getByRole('group', { name: /disponibilità/i })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Ritrovo prima della partita' })).toBeVisible()
 })

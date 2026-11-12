@@ -361,6 +361,46 @@ isOneToOne: true
       referencedColumns: ["id"]
     }
                   ]
+                },"poll_votes": {
+                  Row: {
+                    "created_at": string,"day": string,"player_id": string,"poll_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"day": string,"player_id": string,"poll_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"day"?: string,"player_id"?: string,"poll_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "poll_votes_player_id_fkey"
+      columns: ["player_id"]
+isOneToOne: false
+      referencedRelation: "players"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "poll_votes_poll_id_fkey"
+      columns: ["poll_id"]
+isOneToOne: false
+      referencedRelation: "polls"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"polls": {
+                  Row: {
+                    "closes_at": string,"created_at": string,"id": string,"week_start": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "closes_at": string,"created_at"?: string,"id"?: string,"week_start": string
+                  }
+                  Update: {
+                    "closes_at"?: string,"created_at"?: string,"id"?: string,"week_start"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"display_name": string | null,"email": string,"id": string,"updated_at": string
@@ -375,44 +415,6 @@ isOneToOne: true
                   Relationships: [
                     
                   ]
-                },"ratings": {
-                  Row: {
-                    "attributes": (string)[],"author_id": string | null,"created_at": string,"id": string,"match_id": string,"player_id": string,"published": boolean,"review": string | null,"score": number,"updated_at": string
-                  }
-                  ComputedFields: never
-                  Insert: {
-                    "attributes"?: (string)[],"author_id"?: string | null,"created_at"?: string,"id"?: string,"match_id": string,"player_id": string,"published"?: boolean,"review"?: string | null,"score": number,"updated_at"?: string
-                  }
-                  Update: {
-                    "attributes"?: (string)[],"author_id"?: string | null,"created_at"?: string,"id"?: string,"match_id"?: string,"player_id"?: string,"published"?: boolean,"review"?: string | null,"score"?: number,"updated_at"?: string
-                  }
-                  Relationships: [
-                    {
-      foreignKeyName: "ratings_author_id_fkey"
-      columns: ["author_id"]
-isOneToOne: false
-      referencedRelation: "profiles"
-      referencedColumns: ["id"]
-    },{
-      foreignKeyName: "ratings_match_id_fkey"
-      columns: ["match_id"]
-isOneToOne: false
-      referencedRelation: "match_result_issues"
-      referencedColumns: ["match_id"]
-    },{
-      foreignKeyName: "ratings_match_id_fkey"
-      columns: ["match_id"]
-isOneToOne: false
-      referencedRelation: "matches"
-      referencedColumns: ["id"]
-    },{
-      foreignKeyName: "ratings_player_id_fkey"
-      columns: ["player_id"]
-isOneToOne: false
-      referencedRelation: "players"
-      referencedColumns: ["id"]
-    }
-                  ]
                 },"seasons": {
                   Row: {
                     "created_at": string,"ends_on": string | null,"id": string,"is_current": boolean,"name": string,"starts_on": string,"updated_at": string
@@ -423,6 +425,20 @@ isOneToOne: false
                   }
                   Update: {
                     "created_at"?: string,"ends_on"?: string | null,"id"?: string,"is_current"?: boolean,"name"?: string,"starts_on"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"staff_members": {
+                  Row: {
+                    "created_at": string,"first_name": string,"id": string,"last_name": string,"photo_path": string | null,"role_title": string,"slug": string,"sort_order": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"first_name": string,"id"?: string,"last_name": string,"photo_path"?: string | null,"role_title": string,"slug": string,"sort_order"?: number,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"first_name"?: string,"id"?: string,"last_name"?: string,"photo_path"?: string | null,"role_title"?: string,"slug"?: string,"sort_order"?: number,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -498,7 +514,7 @@ isOneToOne: false
                   ]
                 },"player_career_stats": {
                   Row: {
-                    "appearances": number | null,"assists": number | null,"attendance": number | null,"avg_rating": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"wins": number | null
+                    "appearances": number | null,"assists": number | null,"attendance": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"wins": number | null
                   }
                   ComputedFields: never
                   Relationships: [
@@ -510,23 +526,9 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"player_rating_summary": {
-                  Row: {
-                    "avg_score": number | null,"best_score": number | null,"player_id": string,"ratings_count": number | null,"worst_score": number | null
-                  }
-                  ComputedFields: never
-                  Relationships: [
-                    {
-      foreignKeyName: "ratings_player_id_fkey"
-      columns: ["player_id"]
-isOneToOne: false
-      referencedRelation: "players"
-      referencedColumns: ["id"]
-    }
-                  ]
                 },"player_season_stats": {
                   Row: {
-                    "appearances": number | null,"assists": number | null,"attendance": number | null,"avg_rating": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"season_id": string,"wins": number | null
+                    "appearances": number | null,"assists": number | null,"attendance": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"season_id": string,"wins": number | null
                   }
                   ComputedFields: never
                   Relationships: [
@@ -569,6 +571,9 @@ isOneToOne: false
                            },
 "set_availability":
 { Args: { "p_match_id": string,"p_status": string }; Returns: undefined
+                           },
+"set_poll_votes":
+{ Args: { "p_days": (string)[],"p_poll_id": string }; Returns: undefined
                            }
           }
           Enums: {

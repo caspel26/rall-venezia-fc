@@ -35,7 +35,8 @@ The full matrix is in [AUTHORIZATION.md](AUTHORIZATION.md).
 | Home dashboard | yes | | |
 | Squad + player profile | yes | media tab, season history | achievements |
 | Matches + detail, result, goals, assists, MVP | yes | match media | lineup management, tactical board |
-| Ratings (pagelle) | yes | | AI summaries |
+| Weekly availability poll (Mon-Fri, several days) | yes | | reminders |
+| Staff on the squad page | yes | | |
 | Availability | yes | | reminders, notifications, lineup suggestions |
 | Basic statistics + rankings | yes | advanced stats, season comparison | |
 | Announcements (Spogliatoio) | yes | | polls |

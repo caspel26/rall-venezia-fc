@@ -21,38 +21,9 @@ test('stats: team record, rankings with tie-break, players table', async ({ page
   // the other five are level on 3 goals and 8 games: they share third place
   await expect(scorers.locator('li').nth(2).locator('.pos')).toHaveText('3')
   await expect(scorers.locator('li').nth(4).locator('.pos')).toHaveText('3')
-  await expect(page.getByRole('heading', { name: 'Voto medio' })).toBeVisible()
 
   await page.getByRole('tab', { name: 'Giocatori' }).click()
   await expect(page.locator('tbody tr').first()).toContainText('Antonio Verrone')
-})
-
-test('viewers get no rating columns or ranking', async ({ page }) => {
-  await login(page, 'viewer')
-  await page.goto('/stats')
-  await page.waitForLoadState('networkidle')
-  await page.getByRole('tab', { name: 'Classifiche' }).click()
-  await expect(page.getByRole('heading', { name: 'Voto medio' })).toHaveCount(0)
-  await page.getByRole('tab', { name: 'Giocatori' }).click()
-  await expect(page.getByRole('columnheader', { name: 'Voto' })).toHaveCount(0)
-})
-
-test('ratings archive renders pagelle natively and filters by player', async ({ page }) => {
-  await login(page, 'player')
-  await page.goto('/ratings')
-  const cards = page.locator('ul[aria-label="Pagelle"] > li')
-  await expect(cards).toHaveCount(5) // the unpublished draft is not shown
-  await expect(page.getByText('Solido in difesa e affidabile')).toBeVisible()
-  await expect(page.getByText('POSIZIONAMENTO', { exact: true })).toBeVisible()
-  await page.waitForLoadState('networkidle')
-  await page.getByLabel('Giocatore').selectOption({ label: 'Daniele Nappo' })
-  await expect(cards).toHaveCount(2)
-})
-
-test('viewer is refused the ratings archive', async ({ page }) => {
-  await login(page, 'viewer')
-  await page.goto('/ratings')
-  await expect(page.getByRole('heading', { name: 'Accesso negato' })).toBeVisible()
 })
 
 test('the squad numbers add up: goals per player sum to the team goals, everyone has assists', async ({ page }) => {

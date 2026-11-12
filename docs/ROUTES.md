@@ -12,9 +12,9 @@ All routes require a session except `/login` and `/auth/*`. `roles` is the UX gu
 | `/team` | Squad as editorial cards | all | 1 |
 | `/team/[slug]` | Player profile: overview, matches, ratings (not viewer), media | all | 1 |
 | `/stats` | Team + player stats, rankings (tabs) | all | 1 |
-| `/ratings` | Pagelle archive, native rendering, filter by player/match | player+ | 1 |
 | `/clubhouse` | Spogliatoio home: latest announcements, next-match availability summary | player+ | 1 |
 | `/clubhouse/availability` | Answer for next match; staff see counts and who | player+ | 1 |
+| `/clubhouse/poll` | Weekly Mon-Fri availability poll: pick several days, see who comes each day | player+ | 1 |
 | `/clubhouse/announcements` | Announcement list | player+ | 1 |
 | `/news` | La Gazzetta Rall: newspaper front page (lead, secondary stories, archive) | all | 1 |
 | `/news/[slug]` | Article (cover, headline, body, link to the match or the Instagram post) | all | 1 |
@@ -26,7 +26,6 @@ All routes require a session except `/login` and `/auth/*`. `roles` is the UX gu
 | `/admin/players` (+ `/new`, `/[id]`) | Player CRUD, link account | admin (staff edit) | 1 |
 | `/admin/matches` (+ `/new`, `/[id]`) | Match CRUD | staff+ | 1 |
 | `/admin/matches/[id]/result` | Post-match flow: score → scorers → assists → MVP → ratings → media → publish | staff+ | 1 |
-| `/admin/ratings` | Ratings CRUD | staff+ | 1 |
 | `/admin/announcements` | Announcements CRUD | staff+ | 1 |
 | `/admin/media` | Upload / manage | staff+ | 2 |
 | `/admin/news` | Gazzetta articles (draft/publish, lead story); Instagram posts can be hidden | staff+ | 1 |
@@ -45,6 +44,7 @@ Desktop: left rail with the same five items plus secondary links and the profile
 | --- | --- | --- | --- |
 | `/api/admin/invite` | POST | Invite email with role | admin |
 | `/api/admin/users/[id]` | DELETE | Remove user | admin |
+| `/api/polls/ensure` | POST | Open the weekly poll the day after a match (staff can force next week's) | `CRON_SECRET`, or staff/admin session |
 | `/api/instagram/sync` | POST | Import new Instagram posts into the Gazzetta | `CRON_SECRET` header/bearer, or admin session |
 | `/api/admin/instagram` | GET / DELETE | Connection status (never the token) / disconnect | admin |
 | `/api/admin/instagram/connect` | POST | Validate and store the Instagram token (write-only) | admin |

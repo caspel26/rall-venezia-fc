@@ -8,7 +8,6 @@ const cards = computed(() => [
   { to: '/admin/matches/new', title: 'Nuova partita', text: 'Programma una partita.' },
   { to: '/admin/matches', title: 'Partite e risultati', text: 'Chiudi una partita: risultato, gol, MVP, pagelle.' },
   { to: '/admin/players', title: 'Giocatori', text: 'Rosa, numeri, foto e account collegati.' },
-  { to: '/admin/ratings', title: 'Pagelle', text: 'Pubblica o nascondi i voti.' },
   { to: '/admin/announcements', title: 'Annunci', text: 'Comunicazioni dello spogliatoio.' },
   { to: '/admin/news', title: 'Gazzetta', text: 'Scrivi le notizie.' },
   ...(hasRole(role.value, ['admin']) ? [{ to: '/admin/instagram', title: 'Instagram', text: 'Collega il profilo: i nuovi post finiscono in Gazzetta.' }, { to: '/admin/users', title: 'Utenti', text: 'Inviti, ruoli, collegamenti ai giocatori.' }] : []),

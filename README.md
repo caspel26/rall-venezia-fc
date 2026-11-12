@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Accesso allo spogliatoio.</b><br>
-  The private digital clubhouse of Rall Venezia FC: matches, squad, stats, pagelle, the Gazzetta and the locker room, all in one place.
+  The private digital clubhouse of Rall Venezia FC: matches, squad, stats, the Gazzetta and the locker room, all in one place.
 </p>
 
 <p align="center">
@@ -23,14 +23,13 @@ Everything is **private and invite-only**. There is no signup, no public profile
 
 | | |
 | --- | --- |
-| **Home** | Next match, your availability, last result with MVP, form, top performers, latest pagella |
+| **Home** | The squad on the club's stage, a live ticker, next match with countdown, availability, the weekly Mon-Fri poll, last result, form, scorers |
 | **Partite** | Full match archive and a match "programme" page: score, goals timeline, lineup, MVP, ratings |
 | **Squadra** | Editorial player cards with real photos (private storage) and profiles with derived stats |
 | **Stats** | Team record and rankings: scorers, assists, MVPs, average rating |
-| **Pagelle** | Ratings archive rendered natively (score, review, attributes) |
 | **Spogliatoio** | Availability for the next match and internal announcements |
 | **Gazzetta** | Newspaper-style club news: front page, articles, and new Instagram posts imported automatically ([docs/INSTAGRAM.md](docs/INSTAGRAM.md)) |
-| **Admin** | Quick post-match flow, players, matches, ratings, announcements, Gazzetta, invites |
+| **Admin** | Quick post-match flow, players, matches, announcements, Gazzetta, Instagram, invites |
 
 Roles: `admin`, `staff`, `player`, `viewer` (details in [docs/AUTHORIZATION.md](docs/AUTHORIZATION.md)).
 
