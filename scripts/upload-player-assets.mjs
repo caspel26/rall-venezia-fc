@@ -28,3 +28,11 @@ for (const slug of slugs) {
   console.log(data?.length ? `ok   ${slug}` : `no player with slug ${slug}`)
 }
 }
+
+// official club crests (private-assets/logos/<slug>.png, fetched from public sources, never committed) -> teams/<slug>.png
+for (const f of await readdir('private-assets/logos').catch(() => [])) {
+  if (!f.endsWith('.png')) continue
+  const { error } = await admin.storage.from('player-photos').upload(`teams/${f}`, await readFile(`private-assets/logos/${f}`), { contentType: 'image/png', upsert: true })
+  if (error) throw error
+  console.log(`ok   logo ${f}`)
+}

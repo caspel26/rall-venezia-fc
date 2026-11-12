@@ -54,3 +54,10 @@ Details per stage: `docs/IMPLEMENTATION_PLAN.md`.
 ## Test commands
 
 `npm run typecheck`, `npm run build`, `npx supabase test db`, `npx playwright test` (needs `supabase start` + `.env` from `.env.example` with the local keys; own dev server on port 3100; `SHOTS=<dir>` saves screenshots). `lint`, `test` (Vitest) and `supabase test db` arrive with Stage 2.
+
+
+## 2026-11-13 update: real data
+- Seed now holds the real results, dates, MVPs and match reports (from the club's Instagram). Only the Monza match (10-5) has scorers; events of earlier matches are *unavailable* by decision and recorded from the next match on. No upcoming match is seeded (still to be designated); e2e adds fixtures from `tests/e2e/fixtures.sql` via `tests/e2e/global-setup.ts`.
+- Miranda's second missed match (Torino) is a stand-in until confirmed. League table is the old one; the owner updates it by hand in the admin.
+- Official club crests: fetched from Wikipedia into `private-assets/logos/` (gitignored), uploaded by `scripts/upload-player-assets.mjs` to `player-photos/teams/<slug>.png`, shown by `OpponentBadge` via `useTeamLogo`. Trademarks of their owners; private use only.
+- Miranda's cutout needed manual patches (bystander); `scripts/cutout-players.py` alone does not reproduce them.
