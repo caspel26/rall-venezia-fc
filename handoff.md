@@ -22,6 +22,10 @@ Updated: 12 November 2026.
 
 ## Open work (ordered queue)
 
+- Q7c Gazzetta (newspaper-style news section): migration, /news front page, article page, home widget, admin CRUD in Stage 10 (in progress)
+- Future widgets (owner idea): more home widgets; league standings need opponent results data we do not store (player rankings exist).
+
+- ~~Q7b Home widget system: `app/widgets/registry.ts` + `components/widgets/*` (next match, availability, last result, last 5, record, top performers, scorers ranking, rating, announcement); app switched to SPA mode (`ssr:false`)~~ (done)
 - ~~Q7 Stage 7 — matches archive + programme page; 10 unit + 52 e2e~~ (done)
 - ~~Q6 Stage 6 — squad + player profile (derived stats, tabs); 42 e2e~~ (done)
 - ~~Q5 Stage 5 — dashboard (hero, availability, last result, form, top, pagella, announcement); 7 unit + 32 e2e~~ (done)

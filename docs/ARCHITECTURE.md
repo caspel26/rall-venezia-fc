@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart LR
-  U[Player phone / desktop] --> V[Vercel<br/>Nuxt SSR app]
+  U[Player phone / desktop] --> V[Vercel<br/>Nuxt SPA + admin API]
   V -->|user JWT, anon key| SB[(Supabase<br/>Postgres + RLS)]
   V -->|service role, server only| SBA[Supabase Auth admin<br/>invite / role changes]
   V --> ST[(Supabase Storage<br/>private buckets)]
@@ -19,7 +19,7 @@ Single protection layer, deliberately simple (hobby site, no Cloudflare or other
 
 | Concern | Choice | Why |
 | --- | --- | --- |
-| Framework | Nuxt 4 (Vue 3 Composition API, TypeScript strict) | Requested; `app/` + `server/` layout, SSR for fast first paint on phones |
+| Framework | Nuxt 4 (Vue 3 Composition API, TypeScript strict), **SPA mode (`ssr: false`)** | Requested. Every page is behind a login, so SSR adds nothing but server-side auth edge cases (role/session on the server, hydration mismatches); the Nitro server only serves `server/api/admin/*` |
 | Supabase integration | `@nuxtjs/supabase` | Handles SSR cookie sessions and typed client; avoids hand-rolled auth plumbing. One dependency instead of ~150 lines of risky cookie code |
 | Styling | Plain CSS with design tokens (`app/assets/css/`) | Same approach as Shiori: one tokens block, shared component classes, no UI kit. No Tailwind, no component library |
 | State | Nuxt `useAsyncData` / `useState`; **no Pinia** unless a real need appears | Server data is fetched per page; the only global state is the session and profile |
@@ -57,7 +57,7 @@ Private buckets, per [DATABASE.md](DATABASE.md#storage): `player-avatars`, `play
 
 ## Performance
 
-SSR first paint, route-level code splitting (Nuxt default), `NuxtImg`-style responsive images with explicit width/height, lazy loading below the fold, skeletons for loading. Stats come from SQL views (one query per page), not client-side aggregation of many rows.
+Route-level code splitting (Nuxt default), `NuxtImg`-style responsive images with explicit width/height, lazy loading below the fold, skeletons for loading. Stats come from SQL views (one query per page), not client-side aggregation of many rows.
 
 ## Security assumptions
 
