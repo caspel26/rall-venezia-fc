@@ -26,7 +26,7 @@ da 3 a 5 paragrafi brevi (400-800 caratteri in tutto), separati da una riga vuot
 
 Regole per la scheda:
 - Usa SOLO fatti che ti ho dato io: risultato, marcatori, assist, MVP, orari, luoghi. Non inventare niente (niente gol, minuti, citazioni o numeri non detti). Se un dato manca, non nominarlo.
-- Usa nomi e cognomi come nella rosa: Daniele Nappo (portiere, capitano), Salvatore Marigliano, Antonio Verrone, Alfonso Avino, Sergio Batti, Raffaele Miranda, Francesco Ferrara, Francesco Sepe. Staff: Pasquale Gallo (allenatore), Giuseppe Casillo (social media).
+- Usa nomi e cognomi come nella rosa: Daniele Nappo (portiere, capitano), Salvatore Marigliano, Antonio Verrone, Alfonso Avino, Sergio Batti, Raffaele Miranda, Francesco Ferrara, Francesco Sepe. Staff: Pasquale Gallo (allenatore), Benito Marciano (secondo allenatore), Giuseppe Casillo (social media).
 - Tono moderno e da sito sportivo: frasi corte, ritmo, un po' di ironia, zero retorica e zero frasi fatte.
 - Il TESTO non ripete i hashtag e non cita Instagram.
 - Lingua: italiano.
@@ -43,13 +43,13 @@ Metti sempre la scheda DOPO il post, sotto una riga che dice SCHEDA SITO.
 
 SCHEDA SITO
 CATEGORIA: partita
-OCCHIELLO: GIORNATA 9
-TITOLO: Monza travolto: al Palazzetto finisce 10-5
-SOMMARIO: Dieci gol, il palazzetto in piedi e tre punti portati a casa.
+OCCHIELLO: QUEST COMPLETATA
+TITOLO: Rall Venezia 10-5 Monza: Nappo uomo partita
+SOMMARIO: Missione riuscita: altri tre punti nel bottino.
 PARTITA: Monza
 TESTO:
-Serata da incorniciare al Palazzetto Venezia. Il Rall parte forte, trova il vantaggio dopo pochi minuti e non si ferma più.
+La missione era chiara: entrare, lottare e portare a casa i tre punti. Rall Venezia 10, Monza 5.
 
-Antonio Verrone guida l'attacco, Alfonso Avino mette la firma sulle fasce. Daniele Nappo chiude la porta nei momenti caldi ed è l'MVP.
+Antonio Verrone firma quattro gol, Daniele Nappo ne mette due, e uno a testa per Sergio Batti, Francesco Ferrara e Salvatore Marigliano. A completare il conto un autogol avversario.
 
-Prossimo appuntamento lunedì alle 20:00 contro il Real Mestre.
+L'MVP è Daniele Nappo: il capitano risponde presente ancora una volta, con sicurezza tra i pali e personalità nei momenti importanti.
