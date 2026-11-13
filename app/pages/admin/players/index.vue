@@ -13,14 +13,14 @@ const { data, status } = useAsyncData('admin-players', async () =>
   <div class="page">
     <PageHero eyebrow="Admin" title="Giocatori" />
     <AdminTabs />
-    <div class="row-actions top"><NuxtLink to="/admin/players/new" class="btn btn-primary">Nuovo giocatore</NuxtLink></div>
+    <div class="row-actions top"><NuxtLink to="/admin/players/new" class="btn btn-primary">Nuovo giocatore</NuxtLink><NuxtLink to="/admin/stats" class="btn">Statistiche rosa</NuxtLink></div>
     <div v-if="status === 'pending' && !data" class="list"><SkeletonBlock v-for="n in 5" :key="n" size="sm" /></div>
     <ul v-else-if="data?.length" class="list" aria-label="Giocatori">
       <li v-for="p in data" :key="p.id" class="row">
         <PlayerAvatar :first="p.first_name" :last="p.last_name" :photo-path="p.photo_path" :size="40" />
         <span class="n display tabular">{{ p.shirt_number ?? '·' }}</span>
         <span class="nm">{{ fullName(p) }}<span v-if="!p.is_active" class="eyebrow"> · non attivo</span></span>
-        <NuxtLink :to="`/admin/players/${p.id}`" class="btn btn-sm">Modifica</NuxtLink>
+        <NuxtLink :to="`/admin/players/${p.id}`" class="btn btn-sm" :aria-label="`Modifica dati e statistiche di ${fullName(p)}`">Modifica</NuxtLink>
       </li>
     </ul>
     <EmptyState v-else title="Nessun giocatore" text="La rosa è vuota. Qualcuno chiami il mister." />

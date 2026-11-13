@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Database } from '~/types/database'
+import PlayerStatsEditor from '~/components/admin/PlayerStatsEditor.vue'
 import { STAFF_ROLES } from '~/types/domain'
 
 definePageMeta({ roles: STAFF_ROLES })
@@ -25,6 +26,7 @@ const { data: player, status } = useAsyncData(`admin-player-${id}`, async () => 
       <button v-if="!confirmDelete" type="button" class="btn btn-danger" @click="confirmDelete = true">Elimina</button>
       <button v-else type="button" class="btn btn-danger" @click="remove">Conferma eliminazione</button>
     </PlayerForm>
+    <PlayerStatsEditor v-if="player" :player-id="player.id" />
     <p v-if="deleteError" class="notice bad" role="alert">{{ deleteError }}</p>
     <EmptyState v-else title="Giocatore non trovato" />
   </div>
