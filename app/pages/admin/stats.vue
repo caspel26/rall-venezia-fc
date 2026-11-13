@@ -7,7 +7,7 @@ useHead({ title: 'Statistiche · Admin' })
 const client = useSupabaseClient<Database>()
 
 type Season = { id: string; name: string; is_current: boolean }
-type Row = { player_id: string; first_name: string; last_name: string; shirt_number: number | null; goals: number; assists: number; assists_many: boolean; appearances: number }
+type Row = { player_id: string; first_name: string; last_name: string; shirt_number: number | null; goals: number; assists: number; assists_many: boolean; appearances: number; derived_goals: number; derived_assists: number; derived_appearances: number }
 const seasons = ref<Season[]>([])
 const seasonId = ref('')
 const rows = ref<Row[]>([])
@@ -22,14 +22,22 @@ async function load() {
   seasons.value = seasonResult.data ?? []
   const current = seasonResult.data?.find((s) => s.id === seasonId.value) ?? seasonResult.data?.find((s) => s.is_current) ?? seasonResult.data?.[0]
   if (current) seasonId.value = current.id
-  const baselineResult = current
-    ? await client.from('player_stat_baselines').select('*').eq('season_id', current.id)
-    : { data: [] }
+  const [baselineResult, seasonStatsResult] = current ? await Promise.all([
+    client.from('player_stat_baselines').select('*').eq('season_id', current.id),
+    client.from('player_season_stats').select('player_id, goals, assists, appearances').eq('season_id', current.id),
+  ]) : [{ data: [] }, { data: [] }]
   const baselineByPlayer = new Map((baselineResult.data ?? []).map((b) => [b.player_id, b]))
+  const statsByPlayer = new Map((seasonStatsResult.data ?? []).map((s) => [s.player_id, s]))
   rows.value = (playersResult.data ?? []).map((p) => {
     const b = baselineByPlayer.get(p.id)
+    const s = statsByPlayer.get(p.id)
+    const derivedGoals = Math.max(0, (s?.goals ?? 0) - (b?.goals ?? 0))
+    const derivedAssists = Math.max(0, (s?.assists ?? 0) - (b?.assists ?? 0))
+    const derivedAppearances = Math.max(0, (s?.appearances ?? 0) - (b?.appearances ?? 0))
     return { player_id: p.id, first_name: p.first_name, last_name: p.last_name, shirt_number: p.shirt_number,
-      goals: b?.goals ?? 0, assists: b?.assists ?? 0, assists_many: b?.assists_many ?? false, appearances: b?.appearances ?? 0 }
+      goals: s?.goals ?? b?.goals ?? 0, assists: s?.assists ?? b?.assists ?? 0,
+      assists_many: b?.assists_many ?? false, appearances: s?.appearances ?? b?.appearances ?? 0,
+      derived_goals: derivedGoals, derived_assists: derivedAssists, derived_appearances: derivedAppearances }
   })
 }
 
@@ -39,14 +47,16 @@ watch(seasonId, async (value, old) => { if (old && value !== old) await load() }
 async function save() {
   msg.value = null
   if (!seasonId.value) return
-  if (rows.value.some((r) => [r.goals, r.assists, r.appearances].some((n) => !Number.isInteger(Number(n)) || Number(n) < 0 || Number(n) > 32767))) {
-    msg.value = { kind: 'bad', text: 'Inserisci valori interi da 0 a 32767.' }
+  if (rows.value.some((r) => [r.goals, r.assists, r.appearances].some((n) => !Number.isInteger(Number(n)) || Number(n) < 0 || Number(n) > 32767)
+    || Number(r.goals) < r.derived_goals || Number(r.assists) < r.derived_assists || Number(r.appearances) < r.derived_appearances)) {
+    msg.value = { kind: 'bad', text: 'Inserisci totali validi, non inferiori agli eventi già registrati nelle partite (da 0 a 32767).' }
     return
   }
   busy.value = true
   const { error } = await client.from('player_stat_baselines').upsert(rows.value.map((r) => ({
-    player_id: r.player_id, season_id: seasonId.value, goals: Number(r.goals), assists: Number(r.assists),
-    assists_many: r.assists_many, appearances: Number(r.appearances),
+    player_id: r.player_id, season_id: seasonId.value, goals: Number(r.goals) - r.derived_goals,
+    assists: Number(r.assists) - r.derived_assists, assists_many: r.assists_many,
+    appearances: Number(r.appearances) - r.derived_appearances,
   })), { onConflict: 'player_id,season_id' })
   busy.value = false
   msg.value = error
@@ -57,7 +67,7 @@ async function save() {
 
 <template>
   <div class="page">
-    <PageHero eyebrow="Admin" title="Statistiche giocatori" lead="Correggi i totali storici della stagione, prima della registrazione partita per partita." />
+    <PageHero eyebrow="Admin" title="Statistiche giocatori" lead="Modifica i totali attuali della stagione. Le statistiche delle partite registrate sono già incluse." />
     <AdminTabs />
     <SkeletonBlock v-if="status === 'pending' && !rows.length" size="hero" />
     <template v-else>
@@ -80,7 +90,7 @@ async function save() {
             </tbody>
           </table>
         </div>
-        <p class="muted sm">Questi valori si sommano alle statistiche ricavate dalle partite registrate.</p>
+        <p class="muted sm">I valori mostrati includono gli eventi delle partite registrate e non possono scendere sotto quei totali.</p>
         <p v-if="msg" class="notice" :class="msg.kind" role="status">{{ msg.text }}</p>
         <div class="savebar"><button class="btn btn-primary" type="submit" :disabled="busy">Salva statistiche</button></div>
       </form>
