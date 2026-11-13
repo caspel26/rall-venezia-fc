@@ -62,3 +62,7 @@ Use provider-native tools; no custom engine.
 ## Observability
 
 Vercel function/deployment logs and Supabase logs (auth, postgres, storage). No third-party monitoring or analytics in MVP. If analytics are ever added, use a privacy-respecting, cookieless tool.
+
+## Keep-alive (external cron)
+
+The free Supabase project pauses after about a week without activity. `GET /api/health` (public, returns `{"ok":true}`, runs one trivial query) exists for that. Point an external scheduler at `https://rall-venezia-fc.vercel.app/api/health` (for example cron-job.org or UptimeRobot, every 6-12 hours or more often). Nothing in the repo schedules it: it lives in that service.
