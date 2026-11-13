@@ -27,7 +27,7 @@ test('stats: team record, rankings with tie-break, players table', async ({ page
   await expect(page.locator('tbody tr').first()).toContainText('Antonio Verrone')
 })
 
-test('the squad numbers add up: goals per player sum to the team goals, everyone has assists', async ({ page }) => {
+test('the squad numbers add up: goals per player sum to the team goals, assists read TANTI', async ({ page }) => {
   await login(page, 'player')
   await page.goto('/stats')
   await page.waitForLoadState('networkidle')
@@ -38,7 +38,7 @@ test('the squad numbers add up: goals per player sum to the team goals, everyone
   for (const r of await rows.all()) {
     const cells = await r.locator('td').allInnerTexts()
     goals += Number(cells[2])
-    expect(Number(cells[3])).toBeGreaterThanOrEqual(5) // assists: "tanti"
+    expect(cells[3]).toBe('TANTI') // assists are not counted: the word, not a number
   }
   expect(goals).toBe(64)
 })

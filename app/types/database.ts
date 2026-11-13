@@ -534,7 +534,7 @@ isOneToOne: false
                   ]
                 },"player_career_stats": {
                   Row: {
-                    "appearances": number | null,"assists": number | null,"attendance": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"wins": number | null
+                    "appearances": number | null,"assists": number | null,"assists_many": boolean | null,"attendance": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"wins": number | null
                   }
                   ComputedFields: never
                   Relationships: [
@@ -548,7 +548,7 @@ isOneToOne: false
                   ]
                 },"player_season_stats": {
                   Row: {
-                    "appearances": number | null,"assists": number | null,"attendance": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"season_id": string,"wins": number | null
+                    "appearances": number | null,"assists": number | null,"assists_many": boolean | null,"attendance": number | null,"goals": number | null,"goals_per_game": number | null,"mvps": number | null,"player_id": string,"season_id": string,"wins": number | null
                   }
                   ComputedFields: never
                   Relationships: [

@@ -47,7 +47,7 @@ const pct = (n: number | null | undefined) => (n == null ? '–' : `${Math.round
           <div v-if="p.shirt_number != null" class="cell"><dd class="v display tabular no">#{{ p.shirt_number }}</dd><dt>Maglia</dt></div>
           <div class="cell"><StatCard label="Presenze" :value="stat(c?.appearances)" /></div>
           <div class="cell"><StatCard label="Gol" :value="stat(c?.goals)" /></div>
-          <div class="cell"><StatCard label="Assist" :value="stat(c?.assists)" /></div>
+          <div class="cell"><StatCard label="Assist" :value="c?.assists_many ? 'TANTI' : stat(c?.assists)" /></div>
           <div class="cell"><StatCard label="MVP" :value="stat(c?.mvps)" /></div>
         </dl>
       </header>
@@ -67,7 +67,7 @@ const pct = (n: number | null | undefined) => (n == null ? '–' : `${Math.round
             <thead><tr><th>Stagione</th><th>Pres.</th><th>Gol</th><th>Assist</th><th>MVP</th></tr></thead>
             <tbody>
               <tr v-for="s in data.seasons" :key="s.season_id ?? ''">
-                <td>{{ s.seasonName }}</td><td>{{ s.appearances }}</td><td>{{ s.goals }}</td><td>{{ s.assists }}</td><td>{{ s.mvps }}</td>
+                <td>{{ s.seasonName }}</td><td>{{ s.appearances }}</td><td>{{ s.goals }}</td><td>{{ s.assists_many ? 'TANTI' : s.assists }}</td><td>{{ s.mvps }}</td>
               </tr>
             </tbody>
           </table>

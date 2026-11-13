@@ -7,7 +7,7 @@ const tops = computed(() => ([
   { label: 'Capocannoniere', icon: 'ball' as IconName, row: goals.rows.value[0], unit: 'gol', gold: false },
   { label: 'Re degli assist', icon: 'assist' as IconName, row: assists.rows.value[0], unit: 'assist', gold: false },
   { label: 'MVP', icon: 'star' as IconName, row: mvps.rows.value[0], unit: 'volte', gold: true },
-]).filter((t) => t.row))
+]).filter((t) => t.row && t.row.value > 0))
 </script>
 
 <template>

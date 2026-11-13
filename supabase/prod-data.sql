@@ -72,10 +72,10 @@ select 'd0000000-0000-4000-8000-000000000003', pg_temp.pid(v.slug), null, null, 
 from (values ('daniele-nappo'), ('daniele-nappo'), ('sergio-batti'), ('francesco-ferrara'), ('salvatore-marigliano'),
   ('antonio-verrone'), ('antonio-verrone'), ('antonio-verrone'), ('antonio-verrone'), (null)) as v(slug);
 
--- Season totals as supplied by the owner (Verrone 31, Nappo 18, everyone else 3 goals; "tanti" assists, read as 8 each),
+-- Season totals as supplied by the owner (Verrone 31, Nappo 18, everyone else 3 goals; assists shown as TANTI),
 -- minus what the recorded Monza goals already give. Kept as a baseline: stats stay derived, nothing per match is invented.
-insert into public.player_stat_baselines (player_id, season_id, goals, assists)
-select pg_temp.pid(v.slug), 'b0000000-0000-4000-8000-000000000001', v.goals, 8
+insert into public.player_stat_baselines (player_id, season_id, goals, assists, appearances, assists_many)
+select pg_temp.pid(v.slug), 'b0000000-0000-4000-8000-000000000001', v.goals, 0, 0, true
 from (values ('antonio-verrone', 27), ('daniele-nappo', 16), ('sergio-batti', 2), ('francesco-ferrara', 2),
              ('salvatore-marigliano', 2), ('alfonso-avino', 3), ('raffaele-miranda', 3)) as v(slug, goals);
 

@@ -6,6 +6,7 @@ export interface StatRow extends Rankable {
   number: number | null
   goals: number
   assists: number
+  assistsMany: boolean
   mvps: number
   wins: number
 }
@@ -40,7 +41,7 @@ export function useStats(season: Ref<string>) {
       if (!s) return []
       return [{
         id: p.id, slug: p.slug, name: `${p.first_name} ${p.last_name}`, number: p.shirt_number,
-        appearances: s.appearances ?? 0, goals: s.goals ?? 0, assists: s.assists ?? 0, mvps: s.mvps ?? 0,
+        appearances: s.appearances ?? 0, goals: s.goals ?? 0, assists: s.assists ?? 0, assistsMany: s.assists_many ?? false, mvps: s.mvps ?? 0,
         wins: s.wins ?? 0,
       }]
     })

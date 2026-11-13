@@ -25,7 +25,7 @@ const rankings = computed(() => [
   { title: 'Assist', rows: rankBy(rows.value, (r) => r.assists), unit: 'assist' },
   { title: 'MVP', rows: rankBy(rows.value, (r) => r.mvps), unit: 'MVP' },
   { title: 'Presenze', rows: rankBy(rows.value, (r) => r.appearances), unit: 'presenze' },
-])
+].filter((r) => r.rows.some((x) => x.value > 0))) // no assists ranking while they are only "TANTI"
 const table = computed(() => [...rows.value].sort((a, b) => b.goals - a.goals || b.assists - a.assists || a.name.localeCompare(b.name, 'it')))
 const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
 </script>
@@ -86,7 +86,7 @@ const diff = computed(() => (team.value ? team.value.gf - team.value.ga : 0))
             <tbody>
               <tr v-for="r in table" :key="r.id">
                 <td><NuxtLink :to="`/team/${r.slug}`">{{ r.name }}</NuxtLink></td>
-                <td>{{ r.appearances }}</td><td>{{ r.goals }}</td><td>{{ r.assists }}</td><td>{{ r.mvps }}</td>
+                <td>{{ r.appearances }}</td><td>{{ r.goals }}</td><td>{{ r.assistsMany ? 'TANTI' : r.assists }}</td><td>{{ r.mvps }}</td>
               </tr>
             </tbody>
           </table>
