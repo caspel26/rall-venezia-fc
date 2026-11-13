@@ -14,9 +14,9 @@ const broken = ref(false)
 
 <style scoped>
 .badge { display: inline-grid; place-items: center; border-radius: var(--r-pill); background: radial-gradient(70% 70% at 50% 30%, rgb(255 255 255 / .1), transparent 70%), var(--rv-surface-3); box-shadow: inset 0 0 0 1px var(--rv-line-strong); color: var(--rv-cream); flex: none; }
-/* official crests sit on a light plate so dark ones (Juventus) stay readable */
-.crest { background: radial-gradient(80% 80% at 50% 25%, #fff, #e9e6dc); box-shadow: inset 0 0 0 1px rgb(0 0 0 / .08), 0 2px 10px rgb(0 0 0 / .35); animation: crest-in var(--dur-hover, 200ms) var(--ease-spring, ease-out) both; }
-.crest img { width: 78%; height: 78%; object-fit: contain; }
+/* official crests stand on their own: no plate, no ring */
+.crest { background: none; box-shadow: none; animation: crest-in var(--dur-hover, 200ms) var(--ease-spring, ease-out) both; }
+.crest img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 6px rgb(0 0 0 / .45)); }
 .sm { width: 40px; height: 40px; font-size: var(--fs-sm); }
 .md { width: 72px; height: 72px; font-size: var(--fs-h3); }
 .lg { width: 96px; height: 96px; font-size: var(--fs-h2); }
