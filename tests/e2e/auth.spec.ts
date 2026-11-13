@@ -16,7 +16,7 @@ test('wrong password shows an inline error', async ({ page }) => {
   await page.getByLabel('Email').fill('player@example.invalid')
   await page.getByLabel('Password').fill('not-the-password')
   await page.getByRole('button', { name: 'Entra' }).click()
-  await expect(page.getByRole('alert')).toContainText('Email o password non corretti')
+  await expect(page.getByRole('alert')).toContainText('Username o password non corretti')
   await expect(page).toHaveURL(/\/login/)
 })
 

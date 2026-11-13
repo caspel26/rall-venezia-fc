@@ -6,34 +6,28 @@ const client = useSupabaseClient()
 const user = useSupabaseUser()
 const redirectCookie = useSupabaseCookieRedirect()
 
-const mode = ref<'login' | 'reset'>('login')
 const email = ref('')
 const password = ref('')
 const busy = ref(false)
 const error = ref('')
-const info = ref('')
 
 watchEffect(() => {
   if (user.value) navigateTo(redirectCookie.pluck() || '/')
 })
 
 function message(raw: string) {
-  if (/invalid login/i.test(raw)) return 'Email o password non corretti.'
+  if (/invalid login/i.test(raw)) return 'Username o password non corretti.'
   if (/rate limit|too many/i.test(raw)) return 'Troppi tentativi. Riprova tra qualche minuto.'
   return 'Qualcosa non ha funzionato. Riprova.'
 }
 
 async function submit() {
   busy.value = true
-  error.value = info.value = ''
-  if (mode.value === 'login') {
-    const { error: e } = await client.auth.signInWithPassword({ email: email.value.trim(), password: password.value })
-    if (e) error.value = message(e.message)
-  } else {
-    // The reply is identical whether or not the address exists, so the form cannot be used to probe members.
-    await client.auth.resetPasswordForEmail(email.value.trim())
-    info.value = 'Se l’indirizzo è nello spogliatoio, riceverai un’email con il link.'
-  }
+  error.value = ''
+  // a bare username maps to the reserved address the admin created it with (same rule as server/utils/username.ts)
+  const id = email.value.trim().toLowerCase()
+  const { error: e } = await client.auth.signInWithPassword({ email: id.includes('@') ? id : `${id}@rall.invalid`, password: password.value })
+  if (e) error.value = message(e.message)
   busy.value = false
 }
 </script>
@@ -47,21 +41,16 @@ async function submit() {
     </div>
 
     <form class="stack intro d2" novalidate @submit.prevent="submit">
-      <FormField id="email" label="Email" v-slot="{ describedBy }">
-        <input id="email" v-model="email" class="input" type="email" name="email" autocomplete="username" inputmode="email"
+      <FormField id="email" label="Username o email" v-slot="{ describedBy }">
+        <input id="email" v-model="email" class="input" type="text" name="email" autocomplete="username" autocapitalize="none" spellcheck="false"
           required :aria-describedby="describedBy">
       </FormField>
-      <FormField v-if="mode === 'login'" id="password" label="Password" :error="error" v-slot="{ describedBy, invalid }">
+      <FormField id="password" label="Password" :error="error" v-slot="{ describedBy, invalid }">
         <input id="password" v-model="password" class="input" type="password" name="password" autocomplete="current-password"
           required :aria-invalid="invalid" :aria-describedby="describedBy">
       </FormField>
-      <p v-if="info" class="muted" role="status">{{ info }}</p>
-      <button class="btn btn-primary btn-block" type="submit" :disabled="busy">
-        {{ mode === 'login' ? 'Entra' : 'Invia il link' }}
-      </button>
-      <button class="btn-link" type="button" @click="mode = mode === 'login' ? 'reset' : 'login'; error = info = ''">
-        {{ mode === 'login' ? 'Password dimenticata?' : 'Torna all’accesso' }}
-      </button>
+      <button class="btn btn-primary btn-block" type="submit" :disabled="busy">Entra</button>
+      <p class="muted help">Password dimenticata? Chiedila a chi gestisce il sito.</p>
     </form>
 
     <p class="muted quote intro d3">Quello che succede nello spogliatoio resta nello spogliatoio.</p>
@@ -70,5 +59,6 @@ async function submit() {
 
 <style scoped>
 .brand { font-size: var(--fs-h1); margin-bottom: var(--space-2); }
+.help { font-size: var(--fs-sm); text-align: center; }
 .quote { font-size: var(--fs-sm); font-style: italic; }
 </style>

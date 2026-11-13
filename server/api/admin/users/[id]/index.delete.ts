@@ -1,4 +1,4 @@
-import { requireAdmin } from '../../../utils/requireAdmin'
+import { requireAdmin } from '../../../../utils/requireAdmin'
 
 // Remove a member. The last-admin trigger blocks removing the final admin.
 export default defineEventHandler(async (event) => {

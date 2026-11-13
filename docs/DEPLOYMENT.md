@@ -16,7 +16,7 @@
 2. Auth settings: **disable signups**, disable unused providers, set Site URL and redirect URLs to the production and preprod domains, set the invite email template (Italian), enforce a minimum password length.
 3. Apply migrations: `supabase link --project-ref <ref>` then `supabase db push`. Never edit the production schema by hand; every change is a migration.
 4. Create storage buckets as private (migration, not dashboard).
-5. Create the first admin: run once, locally against the project, `select` the invited user's id and insert `user_roles(role='admin')` via the SQL editor. After that, all invites go through the app.
+5. Create the accounts: `node --env-file=.env scripts/create-members.mjs` against the project (username + password, `<username>@rall.invalid` internally; only `g.casillo` is admin, everyone else `player`). Passwords go to `private-assets/credentials.txt` (gitignored). After that the admin adds accounts and resets passwords from `/admin/users`; there is no email flow.
 
 ## 2. Environment variables
 
@@ -43,7 +43,7 @@ The service-role key is never prefixed `NUXT_PUBLIC_`/`VITE_` and never set in p
 
 The default `<project>.vercel.app` URL is enough. For a custom domain add it in Vercel and create the DNS record Vercel shows (CNAME/A) at your registrar; then add the URL to Supabase Auth redirect URLs. No proxy or extra service.
 
-Adding a member = invite from `/admin/users`. That is the only access control step.
+Adding a member = create the account from `/admin/users` (username + password). That is the only access control step.
 
 ## 5. Production checklist
 

@@ -94,7 +94,7 @@ test('users: invite, change role, remove; the last admin cannot be demoted', asy
   await login(page, 'admin')
   await page.goto('/admin/users')
   await page.getByLabel('Email').fill(email)
-  await page.getByLabel('Ruolo', { exact: true }).selectOption('viewer')
+  await page.locator('#irole').selectOption('viewer')
   await page.getByRole('button', { name: 'Invia invito' }).click()
   await expect(page.getByRole('status')).toContainText('Invito inviato')
 
