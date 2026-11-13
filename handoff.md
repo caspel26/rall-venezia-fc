@@ -61,3 +61,7 @@ Details per stage: `docs/IMPLEMENTATION_PLAN.md`.
 - Miranda's second missed match (Torino) is a stand-in until confirmed. League table is the old one; the owner updates it by hand in the admin.
 - Official club crests: fetched from Wikipedia into `private-assets/logos/` (gitignored), uploaded by `scripts/upload-player-assets.mjs` to `player-photos/teams/<slug>.png`, shown by `OpponentBadge` via `useTeamLogo`. Trademarks of their owners; private use only.
 - Miranda's cutout needed manual patches (bystander); `scripts/cutout-players.py` alone does not reproduce them.
+
+- Stats: `player_stat_baselines` (migration 11) holds season totals from before per-match recording (Verrone 31, Nappo 18, others 3; assists "tanti" read as 8 each; Alessandro Nappo: 2 appearances, 3 goals). Views add the baseline to what is derived. Individual goals (67 with Alessandro) exceed the team's 64: the totals are the owner's.
+- Prod: 9 players (Alessandro Nappo added, with photo), accounts created, `.env.prod` / `private-assets/credentials.txt` / `private-assets/cron-secret.txt` are local only. Keep-alive is an external cron on `/api/health`.
+- Miranda's cutout: `scripts/cutout-players.py` then `scripts/patch-miranda.py`.

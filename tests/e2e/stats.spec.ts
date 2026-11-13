@@ -16,18 +16,18 @@ test('stats: team record, rankings with tie-break, players table', async ({ page
   await page.getByRole('tab', { name: 'Classifiche' }).click()
   const scorers = page.locator('.panel', { has: page.getByRole('heading', { name: 'Marcatori' }) })
   await expect(scorers.locator('li').first()).toContainText('Antonio Verrone')
-  await expect(scorers.locator('li').first()).toContainText('4')
+  await expect(scorers.locator('li').first()).toContainText('31')
   await expect(scorers.locator('li').nth(1)).toContainText('Daniele Nappo')
-  await expect(scorers.locator('li').nth(1)).toContainText('2')
-  // only the Monza match has recorded scorers: Batti, Ferrara and Marigliano are level on one goal
+  await expect(scorers.locator('li').nth(1)).toContainText('18')
+  // five players on 3 goals: Miranda played fewer games so she is third alone, the other four share fourth
   await expect(scorers.locator('li').nth(2).locator('.pos')).toHaveText('3')
-  await expect(scorers.locator('li').nth(4).locator('.pos')).toHaveText('3')
+  await expect(scorers.locator('li').nth(4).locator('.pos')).toHaveText('4')
 
   await page.getByRole('tab', { name: 'Giocatori' }).click()
   await expect(page.locator('tbody tr').first()).toContainText('Antonio Verrone')
 })
 
-test('the squad numbers add up: recorded goals per player equal the Monza goals minus the own goal', async ({ page }) => {
+test('the squad numbers add up: goals per player sum to the team goals, everyone has assists', async ({ page }) => {
   await login(page, 'player')
   await page.goto('/stats')
   await page.waitForLoadState('networkidle')
@@ -38,9 +38,9 @@ test('the squad numbers add up: recorded goals per player equal the Monza goals 
   for (const r of await rows.all()) {
     const cells = await r.locator('td').allInnerTexts()
     goals += Number(cells[2])
-    expect(Number(cells[3])).toBe(0) // assists were not recorded before the Monza match
+    expect(Number(cells[3])).toBeGreaterThanOrEqual(5) // assists: "tanti"
   }
-  expect(goals).toBe(9) // 10 goals at Monza, one of them an opponent own goal
+  expect(goals).toBe(64)
 })
 
 test('the league table lists all 20 teams, highlights us and splits in two columns on desktop', async ({ page }) => {
