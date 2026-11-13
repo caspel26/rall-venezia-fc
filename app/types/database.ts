@@ -341,6 +341,14 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"player_stat_baselines": {
+                  Row: { "player_id": string,"season_id": string,"goals": number,"assists": number,"assists_many": boolean,"appearances": number,"updated_at": string }
+                  Insert: { "player_id": string,"season_id": string,"goals"?: number,"assists"?: number,"assists_many"?: boolean,"appearances"?: number,"updated_at"?: string }
+                  Update: { "player_id"?: string,"season_id"?: string,"goals"?: number,"assists"?: number,"assists_many"?: boolean,"appearances"?: number,"updated_at"?: string }
+                  Relationships: [
+                    { foreignKeyName: "player_stat_baselines_player_id_fkey"; columns: ["player_id"]; isOneToOne: false; referencedRelation: "players"; referencedColumns: ["id"] },
+                    { foreignKeyName: "player_stat_baselines_season_id_fkey"; columns: ["season_id"]; isOneToOne: false; referencedRelation: "seasons"; referencedColumns: ["id"] }
+                  ]
                 },"players": {
                   Row: {
                     "avatar_path": string | null,"bio": string | null,"created_at": string,"first_name": string,"id": string,"is_active": boolean,"is_captain": boolean,"last_name": string,"nickname": string | null,"photo_path": string | null,"position": string | null,"profile_id": string | null,"shirt_number": number | null,"slug": string,"updated_at": string

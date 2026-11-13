@@ -82,7 +82,7 @@ function leave() {
 .p:nth-child(odd) { height: 94%; }
 .p:nth-child(4) { height: 100%; z-index: 3; }
 .p.torso :deep(.idle) { display: flex; align-items: flex-end; justify-content: center; }
-.p.torso :deep(.pshot) { height: 56%; width: auto; -webkit-mask-image: linear-gradient(#000 82%, transparent); mask-image: linear-gradient(#000 82%, transparent); }
+.p.torso :deep(.pshot) { height: 88%; width: auto; -webkit-mask-image: linear-gradient(#000 82%, transparent); mask-image: linear-gradient(#000 82%, transparent); }
 @media (hover: hover) {
   .squad:hover .p:not(:hover) { opacity: .7; }
   .p:hover { transform: translate(calc(var(--px) * var(--d) * 7px), -10px); filter: brightness(1.1); z-index: 5; }
@@ -94,7 +94,8 @@ function leave() {
   .p { position: absolute; bottom: 0; left: calc(var(--i) * var(--slot)); width: calc(var(--slot) * 2.1); margin: 0 !important; }
   .p :deep(a), .p :deep(.rise), .p :deep(.idle) { height: 100%; display: block; }
   .p :deep(.pshot) { width: 100%; height: 100%; object-fit: contain; object-position: bottom center; }
-  .p.torso :deep(.pshot) { height: 56%; width: 100%; }
+  .p.torso :deep(.idle) { display: flex; align-items: flex-end; justify-content: center; }
+  .p.torso :deep(.pshot) { height: 88%; width: 100%; object-fit: contain; object-position: bottom center; }
 }
 @media (min-width: 701px) {
   .home-hero { height: 420px; margin: 0 0 var(--space-5); border-radius: var(--r-panel); }
